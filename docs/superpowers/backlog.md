@@ -75,10 +75,10 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 
 **How to apply:** During Task 9 implementation, confirm Flyway-enabled context boot before AND after V1 is added — both should be green. No standalone fix needed if Task 9 verifies both states.
 
-### Phase 5 — Testcontainers reuse mode
-**Why:** `AbstractMysqlContainerTest` spawns a fresh `mysql:8.0` container per test class (~25s warm). Tasks 9 and 10 will extend it; future Phase 4-5 repository tests will too. CI time can balloon.
+### Phase 5 — Testcontainers cross-run reuse
+**Why:** Singleton container pattern (commit `6fb4d6e`) shares one container across test classes within a JVM, but each fresh `./gradlew test` still pays the ~25s container start. With `.withReuse(true)`, a Ryuk-managed container persists across runs locally and (with cache mounts) on CI. Becomes meaningful once `forkEvery` or `maxParallelForks` is added, OR when CI cold-start is the bottleneck.
 
-**How to apply:** Add `.withReuse(true)` to the static container, document `testcontainers.reuse.enable=true` in `~/.testcontainers.properties` for local dev. Evaluate after Task 10 lands and Flyway state interaction across reused containers is observable.
+**How to apply:** Add `.withReuse(true)` to the static container, document `testcontainers.reuse.enable=true` in `~/.testcontainers.properties` for local dev. Evaluate when CI is set up.
 
 ### Optional polish — drop or update `MySQL8Dialect`
 **Why:** `application-test.yml` (and `application.yml`) sets `hibernate.dialect: org.hibernate.dialect.MySQL8Dialect`. Hibernate 6.4 deprecates this in favor of `MySQLDialect` with auto-version detection. Currently emits a startup deprecation warning.
