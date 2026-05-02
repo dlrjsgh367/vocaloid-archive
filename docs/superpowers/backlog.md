@@ -143,3 +143,30 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** `FlywayMigrationTest` checks table existence + 2 column properties but doesn't exercise FK actions, unique constraints, or indexes. Phase 2's `ddl-auto: validate` covers column types but NOT FK/unique behavior.
 
 **How to apply:** Add one integration test that inserts a user + song, then attempts to delete the user — assert it fails with constraint violation. Costs ~10 lines, locks in the I-1 decision.
+
+## From Task 11 review (Frontend Vite + Vue 3 skeleton — commit `630eff7`)
+
+### Task 12 — handle dangling `favicon.ico` reference
+**Why:** `index.html` declares `<link rel="icon" href="/favicon.ico" />` but no file exists. Each dev page load logs a 404.
+
+**How to apply:** Either drop the `<link>` line (browsers fall back) or add a 1 KB placeholder under `frontend/public/favicon.ico`. Cleanest as part of Task 12.
+
+### Task 12 — add `frontend/.env.example`
+**Why:** Once `api/index.js` reads `import.meta.env.VITE_API_BASE_URL` (Task 12), a committed `.env.example` documents expected envs.
+
+**How to apply:** Create `frontend/.env.example` with `VITE_API_BASE_URL=http://localhost:8080/api` and add `.env` to `.gitignore` patterns if not already covered.
+
+### Phase 6 — split `global.css` into `tokens.css` + `reset.css`
+**Why:** Current `global.css` mixes CSS reset and design tokens (only `--bg`, `--text`). Phase 6 UI design will need a full token system (palette, spacing scale, typography, radii, shadows, breakpoints). The `global.css` filename will outgrow its content.
+
+**How to apply:** Phase 6 design pass — split into `assets/styles/reset.css` and `assets/styles/tokens.css`, import both from `main.js`. Add full token system.
+
+### Phase 2-5 — add Prettier (no ESLint/TS yet)
+**Why:** Across Phase 2-5 frontend work, multiple `.vue` files will accumulate without formatter enforcement. Task 12 alone adds ~10 view stubs + router/store/api. Natural inflection point to add Prettier (zero-config, ~30 sec setup) before code volume makes later cleanup painful.
+
+**How to apply:** `npm i -D prettier` + `.prettierrc` (default config). Optional `npm run format` script. Defer ESLint/TypeScript until Phase 6 unless a pain point appears.
+
+### Phase 2+ — i18n via reactive `lang` attribute
+**Why:** `<html lang="ko">` is hard-coded. Spec is Korean-first for v1; if i18n is added later, `document.documentElement.lang` should update reactively from a locale store.
+
+**How to apply:** Defer until i18n is on the roadmap.
