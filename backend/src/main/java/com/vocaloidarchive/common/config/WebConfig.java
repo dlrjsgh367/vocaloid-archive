@@ -1,5 +1,6 @@
 package com.vocaloidarchive.common.config;
 
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -13,7 +14,10 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Override
   public void addCorsMappings(CorsRegistry registry) {
-    String[] origins = corsOrigins.split(",");
+    String[] origins = Arrays.stream(corsOrigins.split(","))
+        .map(String::trim)
+        .filter(s -> !s.isEmpty())
+        .toArray(String[]::new);
     registry.addMapping("/api/**")
         .allowedOrigins(origins)
         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")

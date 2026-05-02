@@ -40,3 +40,30 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 ### Optional polish (after Task 14 verification)
 - `cp .env.example .env` is POSIX (works in PowerShell via alias, breaks in cmd.exe). Mention `Windows: copy .env.example .env` if cmd users hit it.
 - Annotate `docker compose up db` as `# starts MySQL only` for clarity.
+
+## From Task 6 review (SecurityConfig + WebConfig — commit `adc2b31`)
+
+### Phase 2 — document or consolidate CORS source
+**Why:** `SecurityConfig.cors(cors -> {})` (empty lambda) implicitly delegates to `WebConfig.addCorsMappings`. A future maintainer reading `SecurityConfig` alone can't see where CORS rules live, and adding any other `CorsConfigurationSource` bean elsewhere will silently override `WebConfig`.
+
+**How to apply:** Either (a) move CORS to a `CorsConfigurationSource` bean inside `SecurityConfig` and delete `WebConfig.addCorsMappings`, or (b) add a Javadoc on `SecurityConfig.cors(cors -> {})` pointing readers to `WebConfig`. Phase 2 (during JWT filter wiring) is a natural moment to revisit.
+
+### Phase 2 — split `requestMatchers` per resource for grep-ability
+**Why:** `SecurityConfig` currently lumps `GET /api/songs/**`, `GET /api/characters`, `GET /api/songs/*/comments` on one `requestMatchers` line. When Phase 4 adds `POST /api/songs/{id}/comments` (authenticated), reviewers must trace that the `GET, "/api/songs/*/comments"` line does NOT cover POST. Subtle but easy to misread.
+
+**How to apply:** Split into one resource per `.requestMatchers(...)` line in Phase 2 when the chain gets more complex anyway.
+
+### Phase 2 — migrate `disable()` to method references
+**Why:** Spring Security 6.1+ deprecates the lambda form `csrf -> csrf.disable()` in favor of `AbstractHttpConfigurer::disable` method references. Identical behavior, idiomatic for SS6.
+
+**How to apply:** Phase 2 SecurityConfig edit pass:
+```
+.csrf(AbstractHttpConfigurer::disable)
+.formLogin(AbstractHttpConfigurer::disable)
+.httpBasic(AbstractHttpConfigurer::disable)
+```
+
+### Phase 5 — richer `/api/health` payload (only if monitoring requires)
+**Why:** `Map.of("status", "UP")` is enough for `docker compose healthcheck`, but Prometheus / external probes typically expect `version`, `timestamp`, `db` status, etc.
+
+**How to apply:** If Phase 5 monitoring needs more, extend the `health()` response. Don't preempt — only add fields actually consumed.

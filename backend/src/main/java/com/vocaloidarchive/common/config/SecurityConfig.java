@@ -2,6 +2,7 @@ package com.vocaloidarchive.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,8 +29,8 @@ public class SecurityConfig {
         .httpBasic(basic -> basic.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/health", "/api/auth/**").permitAll()
-            .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/songs/**", "/api/characters", "/api/songs/*/comments").permitAll()
-            .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/playlists/*").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/songs/**", "/api/characters", "/api/songs/*/comments").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/playlists/*").permitAll()
             .anyRequest().authenticated()
         );
     return http.build();
