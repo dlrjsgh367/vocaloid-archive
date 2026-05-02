@@ -89,3 +89,35 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** Currently package-private `static final`. No subclass reads it. `private static final` would be more conventional. JUnit `@Container` works regardless of visibility.
 
 **How to apply:** One-character change (`static` → `private static`) when convenient.
+
+## From Task 8 review (Backend Dockerfile — commit `ffb66ed`)
+
+### Phase 5 — Spring Boot layered jar for image rebuild caching
+**Why:** Final image is 476 MB. `jlink` could shave 100-150 MB but adds module-analysis build complexity. Spring Boot's layered jar (`bootJar { layered { enabled = true } }` + extracting layers in Dockerfile) is a single-line change with much better rebuild caching. Try this first, before reaching for `jlink`.
+
+**How to apply:** Phase 5 ops pass — switch `backend/build.gradle` and adjust Dockerfile to extract layers separately.
+
+### Phase 5 — JVM flags on ENTRYPOINT
+**Why:** Phase 1 ENTRYPOINT is bare `["java", "-jar", "/app/app.jar"]`. OCI Free Tier has tight memory limits; `-XX:MaxRAMPercentage=75.0` is critical there.
+
+**How to apply:** Phase 5 — add `-XX:MaxRAMPercentage=75.0`, `-XX:+ExitOnOutOfMemoryError`. Pass `SPRING_PROFILES_ACTIVE=docker` via env var (already done in `docker-compose.yml`), NOT baked into the image.
+
+### Optional polish — make `gradlew` executable in git index
+**Why:** Currently the Dockerfile runs `chmod +x gradlew` because Windows hosts don't preserve the +x bit. The canonical fix stores the bit in git's index regardless of host filesystem.
+
+**How to apply:** `git update-index --chmod=+x gradlew && git commit -m "build: mark gradlew executable in git index"`. Then drop the `chmod +x` from the Dockerfile.
+
+### Optional polish — pin bootJar output filename
+**Why:** Dockerfile's `COPY --from=builder /workspace/build/libs/*.jar app.jar` uses a glob. Today Spring Boot 3.2 disables the `*-plain.jar` by default so only one jar exists, but if a future config enables it, the COPY fails confusingly.
+
+**How to apply:** Add `bootJar { archiveFileName = 'app.jar' }` to `backend/build.gradle`. Then tighten Dockerfile to `COPY --from=builder /workspace/build/libs/app.jar app.jar`.
+
+### Optional polish — Dockerfile inline comment
+**Why:** `RUN chmod +x gradlew && ./gradlew dependencies --no-daemon || true` swallows real failures with `|| true`. Without context, a future maintainer might "fix" this by removing `|| true` and break cache priming.
+
+**How to apply:** Add comment above that line: `# tolerate transient dependency-resolution warnings during cache prime; real failures resurface in bootJar`.
+
+### Optional polish — extend `.dockerignore`
+**Why:** Cheap insurance — adding `.git/` and `*.log` costs nothing and prevents footguns if someone runs `docker build .` from the repo root in the future.
+
+**How to apply:** Append `.git/` and `*.log` to `backend/.dockerignore` when convenient.
