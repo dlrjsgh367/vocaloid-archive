@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+  flyway:
+    enabled: true
+
+logging:
+  level:
+    com.vocaloidarchive: DEBUG
+    org.flywaydb: INFO
