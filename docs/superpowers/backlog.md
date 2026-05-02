@@ -197,3 +197,25 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** `localStorage.getItem('refreshToken')` runs once at store init. If tab A signs out, tab B keeps the stale token until manual refresh.
 
 **How to apply:** Add a `storage` event listener in `auth.js` to clear state when localStorage changes externally. Phase 6 polish unless flake surfaces earlier.
+
+## From Task 13 review (Frontend Dockerfile — commit `1e0ee5e`)
+
+### Phase 5 deployment — frontend multi-stage prod build
+**Why:** Phase 1 ships dev-mode container (Vite serving with hot reload, `node_modules/` baked in, ~280 MB). Production should be a multi-stage build: `vite build` → `nginx:alpine` serving `dist/`, ~30 MB.
+
+**How to apply:** Phase 5 OCI deployment — split Dockerfile into builder stage (`npm ci && npm run build`) and runtime stage (`nginx:alpine` with custom config that includes SPA fallback `try_files $uri /index.html`).
+
+### Phase 5 deployment — pin Docker base image digests
+**Why:** Both backend (`eclipse-temurin:17-jdk`/`-jre`) and frontend (`node:20-alpine`) use mutable tags. Reproducible builds require `@sha256:...` pins.
+
+**How to apply:** Phase 5 OCI deployment — pin both Dockerfiles to specific digests captured at deployment time. Set up a routine to refresh digests quarterly.
+
+### Phase 5 deployment — non-root USER in containers
+**Why:** Both containers currently run as root. `node:20-alpine` ships with a `node` user; backend can use `useradd appuser` in the runtime stage. Cheap defense-in-depth.
+
+**How to apply:** Add `USER node` to frontend Dockerfile (with `chown` on `/app` if needed) and a non-root user to backend runtime stage in Phase 5.
+
+### Phase 5 deployment — HEALTHCHECK directives
+**Why:** Backend has `/api/health`; frontend has Vite's `/__vite_ping`. Neither Dockerfile declares HEALTHCHECK. Compose orchestrates startup order, but plain `docker run` and reverse-proxy gates would benefit.
+
+**How to apply:** Add `HEALTHCHECK CMD curl -f http://localhost:8080/api/health || exit 1` to backend Dockerfile, similar for frontend `/__vite_ping`. Phase 5 only if monitoring/proxy needs them.
