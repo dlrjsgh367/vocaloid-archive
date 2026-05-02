@@ -8,6 +8,10 @@
 Thumbs.db
 .idea/
 .vscode/
+.project
+.classpath
+.factorypath
+.settings/
 *.iml
 *.swp
 
@@ -16,7 +20,7 @@ backend/build/
 backend/bin/
 backend/out/
 backend/.gradle/
-backend/!gradle/wrapper/gradle-wrapper.jar
+backend/.gitignore
 backend/generated/
 backend/HELP.md
 
