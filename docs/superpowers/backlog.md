@@ -170,3 +170,30 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** `<html lang="ko">` is hard-coded. Spec is Korean-first for v1; if i18n is added later, `document.documentElement.lang` should update reactively from a locale store.
 
 **How to apply:** Defer until i18n is on the roadmap.
+
+## From Task 12 review (Frontend router + Pinia + axios + view stubs — commit `10aad8e`)
+
+### Phase 2 — bootstrap access token from refresh during app init
+**Why:** `isAuthenticated` getter checks only `state.accessToken`. On app cold-start, a returning user has `refreshToken` in localStorage but no `accessToken`, so `requiresAuth` pages redirect to `/login` even though refresh would succeed.
+
+**How to apply:** Either (a) widen the getter to `!!state.accessToken || !!state.refreshToken` and let the request interceptor refresh on demand, or (b) call `authStore.refresh()` in `main.js` before `app.mount()` so the access token is populated before the first navigation. Option (b) is cleaner if startup latency is acceptable.
+
+### Phase 6 (or earlier if dev links go stale) — add 404 catch-all route
+**Why:** `/random/path` produces an empty `<RouterView />` and a Vue Router warning. Even a 3-line `NotFoundView.vue` would close it.
+
+**How to apply:** Add `{ path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/NotFoundView.vue') }` at the end of the routes array. Phase 6 polish or earlier if friction surfaces.
+
+### Phase 5 deployment — server fallback for SPA history mode
+**Why:** Router uses `createWebHistory()`, which requires the server to serve `index.html` for non-API paths. Vite dev handles this; production OCI deploy needs nginx `try_files` or equivalent.
+
+**How to apply:** When the OCI deployment plan is written, include the SPA fallback config (nginx `try_files $uri $uri/ /index.html;` or equivalent on the chosen server).
+
+### Phase 6 polish — per-route `<title>` updates
+**Why:** Browser tab always says "VocaloidArchive" regardless of route. Standard polish for SPA.
+
+**How to apply:** Either lightweight (`document.title = ...` in route `meta.title`-aware `afterEach`) or library (`@vueuse/head`/`unhead`). Phase 6 design pass.
+
+### Phase 6 polish — cross-tab logout sync
+**Why:** `localStorage.getItem('refreshToken')` runs once at store init. If tab A signs out, tab B keeps the stale token until manual refresh.
+
+**How to apply:** Add a `storage` event listener in `auth.js` to clear state when localStorage changes externally. Phase 6 polish unless flake surfaces earlier.

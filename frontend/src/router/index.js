@@ -16,6 +16,7 @@ const router = createRouter({
   routes,
 });
 
+// After login, LoginView should read route.query.return and redirect there.
 router.beforeEach((to) => {
   if (to.meta.requiresAuth) {
     const auth = useAuthStore();
