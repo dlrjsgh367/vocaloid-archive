@@ -67,3 +67,25 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** `Map.of("status", "UP")` is enough for `docker compose healthcheck`, but Prometheus / external probes typically expect `version`, `timestamp`, `db` status, etc.
 
 **How to apply:** If Phase 5 monitoring needs more, extend the `health()` response. Don't preempt — only add fields actually consumed.
+
+## From Task 7 review (JpaConfig + Testcontainers — commit `e44f5c6`)
+
+### Phase 2 — verify Flyway behavior with empty migration dir
+**Why:** `application-test.yml` has `spring.flyway.enabled: true` but `db/migration/` is empty until Task 9. Current Spring Boot 3.2.5 / Flyway tolerates this (logs "no migrations found"), but it's not contractual. Once V1 lands in Task 9, this becomes a non-issue automatically.
+
+**How to apply:** During Task 9 implementation, confirm Flyway-enabled context boot before AND after V1 is added — both should be green. No standalone fix needed if Task 9 verifies both states.
+
+### Phase 5 — Testcontainers reuse mode
+**Why:** `AbstractMysqlContainerTest` spawns a fresh `mysql:8.0` container per test class (~25s warm). Tasks 9 and 10 will extend it; future Phase 4-5 repository tests will too. CI time can balloon.
+
+**How to apply:** Add `.withReuse(true)` to the static container, document `testcontainers.reuse.enable=true` in `~/.testcontainers.properties` for local dev. Evaluate after Task 10 lands and Flyway state interaction across reused containers is observable.
+
+### Optional polish — drop or update `MySQL8Dialect`
+**Why:** `application-test.yml` (and `application.yml`) sets `hibernate.dialect: org.hibernate.dialect.MySQL8Dialect`. Hibernate 6.4 deprecates this in favor of `MySQLDialect` with auto-version detection. Currently emits a startup deprecation warning.
+
+**How to apply:** Either drop the dialect property entirely (Hibernate detects MySQL 8 from JDBC connection) or rename to `MySQLDialect`. Trivial; defer until a quiet maintenance pass.
+
+### Optional — `MYSQL` field visibility in `AbstractMysqlContainerTest`
+**Why:** Currently package-private `static final`. No subclass reads it. `private static final` would be more conventional. JUnit `@Container` works regardless of visibility.
+
+**How to apply:** One-character change (`static` → `private static`) when convenient.
