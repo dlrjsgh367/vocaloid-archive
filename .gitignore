@@ -20,7 +20,6 @@ backend/build/
 backend/bin/
 backend/out/
 backend/.gradle/
-backend/.gitignore
 backend/generated/
 backend/HELP.md
 
