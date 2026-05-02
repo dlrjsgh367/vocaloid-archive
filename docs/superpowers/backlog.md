@@ -121,3 +121,25 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** Cheap insurance — adding `.git/` and `*.log` costs nothing and prevents footguns if someone runs `docker build .` from the repo root in the future.
 
 **How to apply:** Append `.git/` and `*.log` to `backend/.dockerignore` when convenient.
+
+## From Task 9 review (Flyway V1 schema — commit `49f7c39`)
+
+### Phase 2 — decide user-deletion policy
+**Why:** `fk_songs_registered_by` is now `ON DELETE RESTRICT` (explicit). Means deleting a user FAILS if any of their songs exist. Fine until v1 needs a "delete account" flow.
+
+**How to apply:** When Phase 2 adds account deletion, decide: cascade-delete user's songs, transfer ownership to a "deleted user" placeholder account, or soft-delete the user. Update FK + add Vn migration if cascade is the answer.
+
+### Optional polish — V1 SQL header comment
+**Why:** Future contributors might be tempted to edit V1 to "fix" something, but Flyway tracks checksums; modifying applied migrations corrupts schema history.
+
+**How to apply:** Add at top of `V1__init_schema.sql`: `-- DO NOT EDIT after first apply. For schema changes, create a new V<n>__ migration.`
+
+### Optional polish — `ix_playlist_songs_order` naming
+**Why:** Other indexes follow `ix_<table>_<col>` pattern. This one is `ix_playlist_songs_order` instead of `ix_playlist_songs_playlist_id_order_index`. Cosmetic.
+
+**How to apply:** If renaming during a future maintenance pass, do it as Vn migration with `ALTER TABLE` rather than editing V1.
+
+### Optional — additional schema integrity test (low cost)
+**Why:** `FlywayMigrationTest` checks table existence + 2 column properties but doesn't exercise FK actions, unique constraints, or indexes. Phase 2's `ddl-auto: validate` covers column types but NOT FK/unique behavior.
+
+**How to apply:** Add one integration test that inserts a user + song, then attempts to delete the user — assert it fails with constraint violation. Costs ~10 lines, locks in the I-1 decision.

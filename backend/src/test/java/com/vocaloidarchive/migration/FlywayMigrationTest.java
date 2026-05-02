@@ -29,6 +29,11 @@ class FlywayMigrationTest extends AbstractMysqlContainerTest {
 
   @Test
   void givenSongsTable_whenColumnsInspected_thenMoodIsEnumStringAndPlayCountDefaults() {
+    String moodType = jdbc.queryForObject(
+        "SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS " +
+        "WHERE TABLE_NAME='songs' AND COLUMN_NAME='mood'", String.class);
+    assertThat(moodType).isEqualTo("varchar");
+
     Integer playCount = jdbc.queryForObject(
         "SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS " +
         "WHERE TABLE_NAME='songs' AND COLUMN_NAME='play_count' AND COLUMN_DEFAULT='0'",

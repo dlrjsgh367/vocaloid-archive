@@ -55,7 +55,7 @@ CREATE TABLE songs (
   PRIMARY KEY (id),
   KEY ix_songs_created_at (created_at),
   KEY ix_songs_play_count (play_count),
-  CONSTRAINT fk_songs_registered_by FOREIGN KEY (registered_by) REFERENCES users (id)
+  CONSTRAINT fk_songs_registered_by FOREIGN KEY (registered_by) REFERENCES users (id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE song_characters (
