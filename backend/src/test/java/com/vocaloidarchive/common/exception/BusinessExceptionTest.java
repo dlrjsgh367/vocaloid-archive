@@ -27,4 +27,12 @@ class BusinessExceptionTest {
     assertThatThrownBy(() -> { throw new BusinessException(ErrorCode.FORBIDDEN); })
         .isInstanceOf(RuntimeException.class);
   }
+
+  @Test
+  void givenOverrideMessage_whenConstructed_thenMessageIsOverride() {
+    BusinessException ex = new BusinessException(ErrorCode.SONG_NOT_FOUND, "songId=42 missing");
+
+    assertThat(ex.getMessage()).isEqualTo("songId=42 missing");
+    assertThat(ex.getErrorCode()).isEqualTo(ErrorCode.SONG_NOT_FOUND);
+  }
 }
