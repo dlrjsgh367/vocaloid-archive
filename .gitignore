@@ -1,0 +1,36 @@
+# --- Env / Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# --- Backend (Gradle / Java) ---
+backend/build/
+backend/bin/
+backend/out/
+backend/.gradle/
+backend/!gradle/wrapper/gradle-wrapper.jar
+backend/generated/
+backend/HELP.md
+
+# --- Frontend (Node / Vite) ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# --- Docker volumes (host-side mounts if any) ---
+db_data/
+
+# --- Logs ---
+*.log
+logs/
