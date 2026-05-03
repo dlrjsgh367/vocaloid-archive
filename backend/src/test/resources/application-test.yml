@@ -7,6 +7,12 @@ spring:
   flyway:
     enabled: true
 
+app:
+  jwt:
+    secret: dGVzdC1zZWNyZXQta2V5LTI1NmJpdC1sb25nLWVub3VnaC14
+    access-token-expiry-minutes: 30
+    refresh-token-expiry-days: 14
+
 logging:
   level:
     com.vocaloidarchive: DEBUG
