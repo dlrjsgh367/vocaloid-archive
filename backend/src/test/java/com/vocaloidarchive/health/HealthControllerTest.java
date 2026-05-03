@@ -2,6 +2,8 @@ package com.vocaloidarchive.health;
 
 import com.vocaloidarchive.common.config.SecurityConfig;
 import com.vocaloidarchive.common.config.WebConfig;
+import com.vocaloidarchive.common.security.JwtAccessDeniedHandler;
+import com.vocaloidarchive.common.security.JwtAuthenticationEntryPoint;
 import com.vocaloidarchive.common.security.JwtTokenProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ class HealthControllerTest {
 
   @Autowired private MockMvc mockMvc;
   @MockBean JwtTokenProvider jwtTokenProvider;
+  @MockBean JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  @MockBean JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
   @Test
   void givenAnonymous_whenGetHealth_thenReturnsOk() throws Exception {
