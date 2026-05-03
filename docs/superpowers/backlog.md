@@ -122,6 +122,13 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 
 **How to apply:** Append `.git/` and `*.log` to `backend/.dockerignore` when convenient.
 
+## From Phase 2 final verification (2026-05-04)
+
+### Phase 2 — fix default JWT_SECRET placeholder so bootRun succeeds without env var
+**Why:** `application.yml` defaults `app.jwt.secret` to `please-change-me-in-prod-with-256bit-random-secret-value`, which contains `-`. `JwtTokenProvider` calls `Decoders.BASE64.decode(secret)`, throwing `io.jsonwebtoken.io.DecodingException: Illegal base64 character: '-'` at startup. Final verification only succeeded after manually exporting a Base64-encoded `JWT_SECRET`. Discovered when smoke-testing `./gradlew bootRun --args='--spring.profiles.active=local'`.
+
+**How to apply:** Either (a) replace the default in `application.yml` with a valid Base64 string (e.g. `cGxlYXNlLWNoYW5nZS1tZS1pbi1wcm9k...`) so dev startup does not require env injection, or (b) make `JwtTokenProvider` tolerate raw secrets (decode if Base64, otherwise use raw bytes after length check). `.env.example` was updated to call out the Base64 requirement; this backlog item is for the YAML default itself.
+
 ## From Task 9 review (Flyway V1 schema — commit `49f7c39`)
 
 ### Phase 2 — decide user-deletion policy

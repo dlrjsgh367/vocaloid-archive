@@ -1,6 +1,6 @@
 # Phase 2: User + JWT Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Implement the User domain (signup/login/refresh/logout) with stateless JWT authentication, including JwtAuthenticationFilter wired into Spring Security, and apply all Phase 2 backlog items to GlobalExceptionHandler and SecurityConfig.
 
@@ -55,7 +55,7 @@
 - Create: `backend/src/main/java/com/vocaloidarchive/user/domain/User.java`
 - Create: `backend/src/main/java/com/vocaloidarchive/user/domain/RefreshToken.java`
 
-- [ ] **Step 1: Create `User` entity**
+- [x] **Step 1: Create `User` entity**
 
 ```java
 package com.vocaloidarchive.user.domain;
@@ -106,7 +106,7 @@ public class User {
 }
 ```
 
-- [ ] **Step 2: Create `RefreshToken` entity**
+- [x] **Step 2: Create `RefreshToken` entity**
 
 ```java
 package com.vocaloidarchive.user.domain;
@@ -155,7 +155,7 @@ public class RefreshToken {
 }
 ```
 
-- [ ] **Step 3: Verify compile**
+- [x] **Step 3: Verify compile**
 
 ```powershell
 cd backend; ./gradlew compileJava -q
@@ -163,7 +163,7 @@ cd backend; ./gradlew compileJava -q
 
 Expected: BUILD SUCCESSFUL (no errors)
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/user/domain/
@@ -178,7 +178,7 @@ git commit -m "feat(user): add User and RefreshToken JPA entities"
 - Create: `backend/src/main/java/com/vocaloidarchive/user/repository/UserRepository.java`
 - Create: `backend/src/main/java/com/vocaloidarchive/user/repository/RefreshTokenRepository.java`
 
-- [ ] **Step 1: Create `UserRepository`**
+- [x] **Step 1: Create `UserRepository`**
 
 ```java
 package com.vocaloidarchive.user.repository;
@@ -195,7 +195,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 }
 ```
 
-- [ ] **Step 2: Create `RefreshTokenRepository`**
+- [x] **Step 2: Create `RefreshTokenRepository`**
 
 ```java
 package com.vocaloidarchive.user.repository;
@@ -212,7 +212,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 }
 ```
 
-- [ ] **Step 3: Verify compile**
+- [x] **Step 3: Verify compile**
 
 ```powershell
 cd backend; ./gradlew compileJava -q
@@ -220,7 +220,7 @@ cd backend; ./gradlew compileJava -q
 
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/user/repository/
@@ -238,7 +238,7 @@ git commit -m "feat(user): add UserRepository and RefreshTokenRepository"
 - Create: `backend/src/main/java/com/vocaloidarchive/user/dto/response/UserResponse.java`
 - Create: `backend/src/main/java/com/vocaloidarchive/user/dto/response/TokenResponse.java`
 
-- [ ] **Step 1: Create `SignUpRequest`**
+- [x] **Step 1: Create `SignUpRequest`**
 
 ```java
 package com.vocaloidarchive.user.dto.request;
@@ -265,7 +265,7 @@ public record SignUpRequest(
 ) {}
 ```
 
-- [ ] **Step 2: Create `LoginRequest`**
+- [x] **Step 2: Create `LoginRequest`**
 
 ```java
 package com.vocaloidarchive.user.dto.request;
@@ -279,7 +279,7 @@ public record LoginRequest(
 ) {}
 ```
 
-- [ ] **Step 3: Create `RefreshRequest`**
+- [x] **Step 3: Create `RefreshRequest`**
 
 ```java
 package com.vocaloidarchive.user.dto.request;
@@ -291,7 +291,7 @@ public record RefreshRequest(
 ) {}
 ```
 
-- [ ] **Step 4: Create `UserResponse`**
+- [x] **Step 4: Create `UserResponse`**
 
 ```java
 package com.vocaloidarchive.user.dto.response;
@@ -318,7 +318,7 @@ public record UserResponse(
 }
 ```
 
-- [ ] **Step 5: Create `TokenResponse`**
+- [x] **Step 5: Create `TokenResponse`**
 
 ```java
 package com.vocaloidarchive.user.dto.response;
@@ -326,7 +326,7 @@ package com.vocaloidarchive.user.dto.response;
 public record TokenResponse(String accessToken, String refreshToken) {}
 ```
 
-- [ ] **Step 6: Verify compile**
+- [x] **Step 6: Verify compile**
 
 ```powershell
 cd backend; ./gradlew compileJava -q
@@ -334,7 +334,7 @@ cd backend; ./gradlew compileJava -q
 
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/user/dto/
@@ -351,7 +351,7 @@ git commit -m "feat(user): add auth DTOs (SignUpRequest, LoginRequest, RefreshRe
 - Modify: `backend/src/test/java/com/vocaloidarchive/common/response/ApiResponseTest.java`
 - Modify: `backend/src/test/java/com/vocaloidarchive/common/exception/GlobalExceptionHandlerTest.java`
 
-- [ ] **Step 1: Write failing tests for new ApiResponse.ErrorBody and GlobalExceptionHandler behavior**
+- [x] **Step 1: Write failing tests for new ApiResponse.ErrorBody and GlobalExceptionHandler behavior**
 
 Add to `ApiResponseTest.java` (insert before the closing `}`):
 
@@ -425,7 +425,7 @@ void givenBadCredentialsException_whenThrown_thenReturns401InvalidCredentials() 
 }
 ```
 
-- [ ] **Step 2: Run tests to confirm they fail**
+- [x] **Step 2: Run tests to confirm they fail**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.common.response.ApiResponseTest" --tests "com.vocaloidarchive.common.exception.GlobalExceptionHandlerTest" -q 2>&1 | tail -20
@@ -433,7 +433,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.common.response.ApiRespo
 
 Expected: FAILED (compilation errors or test failures — `errorWithDetails` doesn't exist yet)
 
-- [ ] **Step 3: Update `ApiResponse.java`**
+- [x] **Step 3: Update `ApiResponse.java`**
 
 Replace the entire file content:
 
@@ -473,7 +473,7 @@ public record ApiResponse<T>(
 }
 ```
 
-- [ ] **Step 4: Replace `GlobalExceptionHandler.java`**
+- [x] **Step 4: Replace `GlobalExceptionHandler.java`**
 
 ```java
 package com.vocaloidarchive.common.exception;
@@ -591,7 +591,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 }
 ```
 
-- [ ] **Step 5: Run tests to confirm they pass**
+- [x] **Step 5: Run tests to confirm they pass**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.common.response.ApiResponseTest" --tests "com.vocaloidarchive.common.exception.GlobalExceptionHandlerTest" -q 2>&1 | tail -20
@@ -599,7 +599,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.common.response.ApiRespo
 
 Expected: BUILD SUCCESSFUL, all tests pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/common/response/ApiResponse.java
@@ -617,7 +617,7 @@ git commit -m "feat(common): add ErrorBody.details field; refactor GlobalExcepti
 - Create: `backend/src/main/java/com/vocaloidarchive/common/security/CustomUserDetails.java`
 - Create: `backend/src/main/java/com/vocaloidarchive/common/security/CustomUserDetailsService.java`
 
-- [ ] **Step 1: Create `CustomUserDetails`**
+- [x] **Step 1: Create `CustomUserDetails`**
 
 Holds `userId` only — no DB lookup per request. The JWT filter creates this directly from the token's subject claim.
 
@@ -652,7 +652,7 @@ public class CustomUserDetails implements UserDetails {
 }
 ```
 
-- [ ] **Step 2: Create `CustomUserDetailsService`**
+- [x] **Step 2: Create `CustomUserDetailsService`**
 
 Required so Spring Boot auto-configures a `DaoAuthenticationProvider` without complaining about missing `UserDetailsService`. Loads user by email (the `username` parameter is email in this app).
 
@@ -683,7 +683,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 }
 ```
 
-- [ ] **Step 3: Verify compile**
+- [x] **Step 3: Verify compile**
 
 ```powershell
 cd backend; ./gradlew compileJava -q
@@ -691,7 +691,7 @@ cd backend; ./gradlew compileJava -q
 
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/common/security/CustomUserDetails.java
@@ -707,7 +707,7 @@ git commit -m "feat(security): add CustomUserDetails and CustomUserDetailsServic
 - Create: `backend/src/main/java/com/vocaloidarchive/common/security/JwtTokenProvider.java`
 - Create: `backend/src/test/java/com/vocaloidarchive/common/security/JwtTokenProviderTest.java`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```java
 package com.vocaloidarchive.common.security;
@@ -772,7 +772,7 @@ class JwtTokenProviderTest {
 }
 ```
 
-- [ ] **Step 2: Run tests to confirm they fail**
+- [x] **Step 2: Run tests to confirm they fail**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.common.security.JwtTokenProviderTest" -q 2>&1 | tail -10
@@ -780,7 +780,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.common.security.JwtToken
 
 Expected: FAILED (class not found)
 
-- [ ] **Step 3: Create `JwtTokenProvider`**
+- [x] **Step 3: Create `JwtTokenProvider`**
 
 ```java
 package com.vocaloidarchive.common.security;
@@ -845,7 +845,7 @@ public class JwtTokenProvider {
 }
 ```
 
-- [ ] **Step 4: Run tests to confirm they pass**
+- [x] **Step 4: Run tests to confirm they pass**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.common.security.JwtTokenProviderTest" -q 2>&1 | tail -10
@@ -853,7 +853,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.common.security.JwtToken
 
 Expected: BUILD SUCCESSFUL, 5 tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/common/security/JwtTokenProvider.java
@@ -868,7 +868,7 @@ git commit -m "feat(security): add JwtTokenProvider with JJWT 0.12.5"
 **Files:**
 - Create: `backend/src/main/java/com/vocaloidarchive/common/security/SecurityUtil.java`
 
-- [ ] **Step 1: Create `SecurityUtil`**
+- [x] **Step 1: Create `SecurityUtil`**
 
 ```java
 package com.vocaloidarchive.common.security;
@@ -893,7 +893,7 @@ public class SecurityUtil {
 }
 ```
 
-- [ ] **Step 2: Verify compile**
+- [x] **Step 2: Verify compile**
 
 ```powershell
 cd backend; ./gradlew compileJava -q
@@ -901,7 +901,7 @@ cd backend; ./gradlew compileJava -q
 
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/common/security/SecurityUtil.java
@@ -916,7 +916,7 @@ git commit -m "feat(security): add SecurityUtil.getCurrentUserId()"
 - Create: `backend/src/main/java/com/vocaloidarchive/user/service/UserService.java`
 - Create: `backend/src/test/java/com/vocaloidarchive/user/service/UserServiceTest.java`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```java
 package com.vocaloidarchive.user.service;
@@ -1038,7 +1038,7 @@ class UserServiceTest {
 }
 ```
 
-- [ ] **Step 2: Run tests to confirm they fail**
+- [x] **Step 2: Run tests to confirm they fail**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.UserServiceTest" -q 2>&1 | tail -10
@@ -1046,7 +1046,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.UserService
 
 Expected: FAILED (class not found)
 
-- [ ] **Step 3: Create `UserService`**
+- [x] **Step 3: Create `UserService`**
 
 ```java
 package com.vocaloidarchive.user.service;
@@ -1097,7 +1097,7 @@ public class UserService {
 }
 ```
 
-- [ ] **Step 4: Run tests to confirm they pass**
+- [x] **Step 4: Run tests to confirm they pass**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.UserServiceTest" -q 2>&1 | tail -10
@@ -1105,7 +1105,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.UserService
 
 Expected: BUILD SUCCESSFUL, 6 tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/user/service/UserService.java
@@ -1121,7 +1121,7 @@ git commit -m "feat(user): add UserService (signUp, authenticate) with BDD unit 
 - Create: `backend/src/main/java/com/vocaloidarchive/user/service/RefreshTokenService.java`
 - Create: `backend/src/test/java/com/vocaloidarchive/user/service/RefreshTokenServiceTest.java`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```java
 package com.vocaloidarchive.user.service;
@@ -1240,7 +1240,7 @@ class RefreshTokenServiceTest {
 }
 ```
 
-- [ ] **Step 2: Run tests to confirm they fail**
+- [x] **Step 2: Run tests to confirm they fail**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.RefreshTokenServiceTest" -q 2>&1 | tail -10
@@ -1248,7 +1248,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.RefreshToke
 
 Expected: FAILED (class not found)
 
-- [ ] **Step 3: Create `RefreshTokenService`**
+- [x] **Step 3: Create `RefreshTokenService`**
 
 ```java
 package com.vocaloidarchive.user.service;
@@ -1316,7 +1316,7 @@ public class RefreshTokenService {
 }
 ```
 
-- [ ] **Step 4: Run tests to confirm they pass**
+- [x] **Step 4: Run tests to confirm they pass**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.RefreshTokenServiceTest" -q 2>&1 | tail -10
@@ -1324,7 +1324,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.user.service.RefreshToke
 
 Expected: BUILD SUCCESSFUL, 4 tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/user/service/RefreshTokenService.java
@@ -1341,7 +1341,7 @@ git commit -m "feat(user): add RefreshTokenService (issueTokens, rotate, revoke)
 - Create: `backend/src/main/java/com/vocaloidarchive/common/security/JwtAuthenticationEntryPoint.java`
 - Create: `backend/src/main/java/com/vocaloidarchive/common/security/JwtAccessDeniedHandler.java`
 
-- [ ] **Step 1: Create `JwtAuthenticationFilter`**
+- [x] **Step 1: Create `JwtAuthenticationFilter`**
 
 ```java
 package com.vocaloidarchive.common.security;
@@ -1402,7 +1402,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 }
 ```
 
-- [ ] **Step 2: Create `JwtAuthenticationEntryPoint`**
+- [x] **Step 2: Create `JwtAuthenticationEntryPoint`**
 
 ```java
 package com.vocaloidarchive.common.security;
@@ -1444,7 +1444,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 }
 ```
 
-- [ ] **Step 3: Create `JwtAccessDeniedHandler`**
+- [x] **Step 3: Create `JwtAccessDeniedHandler`**
 
 ```java
 package com.vocaloidarchive.common.security;
@@ -1483,7 +1483,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 }
 ```
 
-- [ ] **Step 4: Verify compile**
+- [x] **Step 4: Verify compile**
 
 ```powershell
 cd backend; ./gradlew compileJava -q
@@ -1491,7 +1491,7 @@ cd backend; ./gradlew compileJava -q
 
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/common/security/JwtAuthenticationFilter.java
@@ -1507,7 +1507,7 @@ git commit -m "feat(security): add JwtAuthenticationFilter, JwtAuthenticationEnt
 **Files:**
 - Modify: `backend/src/main/java/com/vocaloidarchive/common/config/SecurityConfig.java`
 
-- [ ] **Step 1: Replace `SecurityConfig.java`**
+- [x] **Step 1: Replace `SecurityConfig.java`**
 
 ```java
 package com.vocaloidarchive.common.config;
@@ -1569,7 +1569,7 @@ public class SecurityConfig {
 }
 ```
 
-- [ ] **Step 2: Run full test suite to confirm no regressions**
+- [x] **Step 2: Run full test suite to confirm no regressions**
 
 ```powershell
 cd backend; ./gradlew test -q 2>&1 | tail -20
@@ -1577,7 +1577,7 @@ cd backend; ./gradlew test -q 2>&1 | tail -20
 
 Expected: BUILD SUCCESSFUL (existing HealthControllerTest may need `@Import(SecurityConfig.class)` — see Step 3 if it fails)
 
-- [ ] **Step 3: Fix HealthControllerTest if it fails**
+- [x] **Step 3: Fix HealthControllerTest if it fails**
 
 If `HealthControllerTest` fails because `SecurityConfig` now requires `JwtAuthenticationFilter` and friends, add mocks:
 
@@ -1592,7 +1592,7 @@ If `HealthControllerTest` fails because `SecurityConfig` now requires `JwtAuthen
 
 Re-run: `./gradlew test -q` — should pass.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/common/config/SecurityConfig.java
@@ -1608,7 +1608,7 @@ git commit -m "feat(security): wire JWT filter + entry points into SecurityConfi
 - Create: `backend/src/main/java/com/vocaloidarchive/user/controller/AuthController.java`
 - Create: `backend/src/test/java/com/vocaloidarchive/user/controller/AuthControllerTest.java`
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
 
 ```java
 package com.vocaloidarchive.user.controller;
@@ -1767,7 +1767,7 @@ class AuthControllerTest {
 }
 ```
 
-- [ ] **Step 2: Run tests to confirm they fail**
+- [x] **Step 2: Run tests to confirm they fail**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.user.controller.AuthControllerTest" -q 2>&1 | tail -10
@@ -1775,7 +1775,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.user.controller.AuthCont
 
 Expected: FAILED (class not found)
 
-- [ ] **Step 3: Create `AuthController`**
+- [x] **Step 3: Create `AuthController`**
 
 ```java
 package com.vocaloidarchive.user.controller;
@@ -1826,7 +1826,7 @@ public class AuthController {
 }
 ```
 
-- [ ] **Step 4: Run tests to confirm they pass**
+- [x] **Step 4: Run tests to confirm they pass**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.user.controller.AuthControllerTest" -q 2>&1 | tail -10
@@ -1834,7 +1834,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.user.controller.AuthCont
 
 Expected: BUILD SUCCESSFUL, 7 tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/src/main/java/com/vocaloidarchive/user/controller/AuthController.java
@@ -1850,7 +1850,7 @@ git commit -m "feat(user): add AuthController with @WebMvcTest covering signup/l
 - Create: `backend/src/test/java/com/vocaloidarchive/user/repository/UserRepositoryTest.java`
 - Create: `backend/src/test/java/com/vocaloidarchive/user/repository/RefreshTokenRepositoryTest.java`
 
-- [ ] **Step 1: Create `UserRepositoryTest`**
+- [x] **Step 1: Create `UserRepositoryTest`**
 
 ```java
 package com.vocaloidarchive.user.repository;
@@ -1911,7 +1911,7 @@ class UserRepositoryTest extends AbstractMysqlContainerTest {
 }
 ```
 
-- [ ] **Step 2: Create `RefreshTokenRepositoryTest`**
+- [x] **Step 2: Create `RefreshTokenRepositoryTest`**
 
 ```java
 package com.vocaloidarchive.user.repository;
@@ -1988,7 +1988,7 @@ class RefreshTokenRepositoryTest extends AbstractMysqlContainerTest {
 }
 ```
 
-- [ ] **Step 3: Run repository tests**
+- [x] **Step 3: Run repository tests**
 
 ```powershell
 cd backend; ./gradlew test --tests "com.vocaloidarchive.user.repository.*" -q 2>&1 | tail -20
@@ -1996,7 +1996,7 @@ cd backend; ./gradlew test --tests "com.vocaloidarchive.user.repository.*" -q 2>
 
 Expected: BUILD SUCCESSFUL, 8 tests pass.
 
-- [ ] **Step 4: Run the full test suite**
+- [x] **Step 4: Run the full test suite**
 
 ```powershell
 cd backend; ./gradlew test -q 2>&1 | tail -20
@@ -2004,7 +2004,7 @@ cd backend; ./gradlew test -q 2>&1 | tail -20
 
 Expected: BUILD SUCCESSFUL, all tests pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add backend/src/test/java/com/vocaloidarchive/user/repository/
@@ -2015,7 +2015,7 @@ git commit -m "test(user): add UserRepository and RefreshTokenRepository @DataJp
 
 ## Final Verification
 
-- [ ] **Run full build + tests**
+- [x] **Run full build + tests**
 
 ```powershell
 cd backend; ./gradlew clean build -q 2>&1 | tail -20
@@ -2023,7 +2023,7 @@ cd backend; ./gradlew clean build -q 2>&1 | tail -20
 
 Expected: BUILD SUCCESSFUL
 
-- [ ] **Smoke test: start application and call health endpoint**
+- [x] **Smoke test: start application and call health endpoint**
 
 ```powershell
 docker compose up db -d
@@ -2034,7 +2034,7 @@ curl http://localhost:8080/api/health
 
 Expected: `{"success":true,"data":{"status":"UP"},...}`
 
-- [ ] **Smoke test: signup → login → refresh → logout**
+- [x] **Smoke test: signup → login → refresh → logout**
 
 ```powershell
 # signup
@@ -2061,7 +2061,7 @@ curl -s -X POST http://localhost:8080/api/auth/logout `
 
 Expected: each call returns `{"success":true,...}`
 
-- [ ] **Final commit**
+- [x] **Final commit**
 
 ```bash
 git add .
