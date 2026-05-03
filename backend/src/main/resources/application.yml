@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: vocaloid-archive
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
+      hibernate.format_sql: true
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:please-change-me-in-prod-with-256bit-random-secret-value}
+    access-token-expiry-minutes: 30
+    refresh-token-expiry-days: 14
+  cors:
+    origins: ${APP_CORS_ORIGINS:http://localhost:5173}
+
+logging:
+  level:
+    com.vocaloidarchive: DEBUG

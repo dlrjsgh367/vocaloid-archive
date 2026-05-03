@@ -3,11 +3,18 @@
 .env.*
 !.env.example
 
+# --- Claude Code (per-user, per-machine) ---
+.claude/settings.local.json
+
 # --- OS / Editor ---
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/
+.project
+.classpath
+.factorypath
+.settings/
 *.iml
 *.swp
 
@@ -16,7 +23,6 @@ backend/build/
 backend/bin/
 backend/out/
 backend/.gradle/
-backend/!gradle/wrapper/gradle-wrapper.jar
 backend/generated/
 backend/HELP.md
 
