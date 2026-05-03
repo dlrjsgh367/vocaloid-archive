@@ -37,6 +37,9 @@ frontend/yarn-error.log*
 # --- Docker volumes (host-side mounts if any) ---
 db_data/
 
+# --- Git Worktrees ---
+.worktrees/
+
 # --- Logs ---
 *.log
 logs/
