@@ -44,6 +44,7 @@ public class SecurityConfig {
             .accessDeniedHandler(jwtAccessDeniedHandler))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/health").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/songs/**").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/characters").permitAll()
