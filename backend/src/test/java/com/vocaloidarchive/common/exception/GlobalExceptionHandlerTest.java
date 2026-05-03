@@ -65,7 +65,47 @@ class GlobalExceptionHandlerTest {
     ApiResponse<Void> boom() {
       throw new IllegalStateException("kaboom");
     }
+
+    @PostMapping("/validate-multi")
+    ApiResponse<String> validateMulti(@RequestBody @Valid MultiFieldRequest req) {
+      return ApiResponse.success("ok");
+    }
+
+    @GetMapping("/bad-credentials")
+    ApiResponse<Void> badCredentials() {
+      throw new org.springframework.security.authentication.BadCredentialsException("bad");
+    }
   }
 
   record DummyRequest(@NotBlank String value) {}
+
+  record MultiFieldRequest(@NotBlank String name, @jakarta.validation.constraints.Email String email) {}
+
+  @Test
+  void givenMalformedJson_whenPosted_thenReturns400WithApiResponse() throws Exception {
+    mockMvc.perform(post("/dummy/echo")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{invalid-json"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.success").value(false));
+  }
+
+  @Test
+  void givenMultipleValidationErrors_whenPosted_thenDetailsIsMap() throws Exception {
+    String body = objectMapper.writeValueAsString(new MultiFieldRequest("", "not-an-email"));
+    mockMvc.perform(post("/dummy/validate-multi")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error.code").value("VALIDATION_FAILED"))
+        .andExpect(jsonPath("$.error.details.name").exists())
+        .andExpect(jsonPath("$.error.details.email").exists());
+  }
+
+  @Test
+  void givenBadCredentialsException_whenThrown_thenReturns401InvalidCredentials() throws Exception {
+    mockMvc.perform(get("/dummy/bad-credentials"))
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error.code").value("INVALID_CREDENTIALS"));
+  }
 }

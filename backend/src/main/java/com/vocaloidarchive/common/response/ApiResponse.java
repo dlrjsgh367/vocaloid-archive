@@ -1,5 +1,9 @@
 package com.vocaloidarchive.common.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.Map;
+
 public record ApiResponse<T>(
     boolean success,
     T data,
@@ -16,9 +20,14 @@ public record ApiResponse<T>(
   }
 
   public static <T> ApiResponse<T> error(String code, String message) {
-    return new ApiResponse<>(false, null, null, new ErrorBody(code, message));
+    return new ApiResponse<>(false, null, null, new ErrorBody(code, message, null));
   }
 
-  public record ErrorBody(String code, String message) {
+  public static <T> ApiResponse<T> errorWithDetails(
+      String code, String message, Map<String, String> details) {
+    return new ApiResponse<>(false, null, null, new ErrorBody(code, message, details));
   }
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  public record ErrorBody(String code, String message, Map<String, String> details) {}
 }

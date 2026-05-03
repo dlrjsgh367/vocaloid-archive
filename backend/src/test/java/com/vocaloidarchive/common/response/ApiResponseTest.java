@@ -31,4 +31,19 @@ class ApiResponseTest {
     assertThat(json).contains("\"code\":\"USER_NOT_FOUND\"");
     assertThat(json).contains("\"message\":\"사용자를 찾을 수 없습니다\"");
   }
+
+  @Test
+  void errorWithDetails_includesDetailsMap() {
+    var details = java.util.Map.of("email", "올바른 이메일 형식이 아닙니다");
+    var response = ApiResponse.errorWithDetails("VALIDATION_FAILED", "입력값이 올바르지 않습니다", details);
+
+    assertThat(response.success()).isFalse();
+    assertThat(response.error().details()).containsEntry("email", "올바른 이메일 형식이 아닙니다");
+  }
+
+  @Test
+  void error_withoutDetails_detailsIsNull() {
+    var response = ApiResponse.error("SOME_CODE", "some message");
+    assertThat(response.error().details()).isNull();
+  }
 }
