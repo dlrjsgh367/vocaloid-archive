@@ -2,12 +2,14 @@ package com.vocaloidarchive.common.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vocaloidarchive.common.response.ApiResponse;
+import com.vocaloidarchive.common.security.JwtTokenProvider;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +25,7 @@ class GlobalExceptionHandlerTest {
 
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
+  @MockBean JwtTokenProvider jwtTokenProvider;
 
   @Test
   void givenBusinessException_whenThrown_thenReturnsMappedHttpStatusAndErrorBody() throws Exception {

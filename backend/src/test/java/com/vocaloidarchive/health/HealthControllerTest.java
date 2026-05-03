@@ -2,9 +2,11 @@ package com.vocaloidarchive.health;
 
 import com.vocaloidarchive.common.config.SecurityConfig;
 import com.vocaloidarchive.common.config.WebConfig;
+import com.vocaloidarchive.common.security.JwtTokenProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class HealthControllerTest {
 
   @Autowired private MockMvc mockMvc;
+  @MockBean JwtTokenProvider jwtTokenProvider;
 
   @Test
   void givenAnonymous_whenGetHealth_thenReturnsOk() throws Exception {
