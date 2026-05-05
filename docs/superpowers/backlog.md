@@ -226,3 +226,25 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** Backend has `/api/health`; frontend has Vite's `/__vite_ping`. Neither Dockerfile declares HEALTHCHECK. Compose orchestrates startup order, but plain `docker run` and reverse-proxy gates would benefit.
 
 **How to apply:** Add `HEALTHCHECK CMD curl -f http://localhost:8080/api/health || exit 1` to backend Dockerfile, similar for frontend `/__vite_ping`. Phase 5 only if monitoring/proxy needs them.
+
+## From Phase 3 final verification (2026-05-06)
+
+### Phase 4 — Like domain implementation
+**Why:** Phase 3 added `Like` entity mapping for `sort=popular` only. Service / repository / controller for the toggle endpoint (`POST /api/songs/{id}/like`) belong to Phase 4. No Flyway migration needed (table exists in V1).
+
+**How to apply:** Phase 4 plan creates `LikeService.toggle(songId)`, `LikeRepository`, `LikeController`. SongResponse `likeCount` is already wired through QueryDSL — Phase 4 only needs to add writes.
+
+### Phase 4 — Comment domain implementation
+**Why:** SongDetailResponse intentionally omits `comments` (Q2 decision). Phase 4 owns `GET/POST /api/songs/{id}/comments` and `DELETE /api/comments/{id}`. SongDetailResponse stays unchanged.
+
+**How to apply:** Phase 4 plan covers Comment entity, paginated GET, owner-only DELETE.
+
+### Phase 5+ — play_count throttle
+**Why:** GET `/api/songs/{id}` increments play_count atomically each request. Same client can spam to inflate counts.
+
+**How to apply:** When traffic justifies it, add Redis-backed throttle (per IP+song, e.g. 1 increment per 5 minutes). Wrap the increment in a separate service.
+
+### Phase 5+ — thumbnail quality fallback
+**Why:** YoutubeUtil hard-codes `hqdefault.jpg` (480×360). Higher-resolution `maxresdefault.jpg` exists for many but not all videos and would 404 silently.
+
+**How to apply:** Once design decisions land in Phase 6, decide whether to use `maxresdefault.jpg` with a 404 fallback chain (image element `onerror` or a server-side HEAD probe).
