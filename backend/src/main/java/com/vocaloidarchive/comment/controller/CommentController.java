@@ -7,6 +7,7 @@ import com.vocaloidarchive.common.response.ApiResponse;
 import com.vocaloidarchive.common.response.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,13 +19,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentController {
 
+  private static final int MAX_PAGE_SIZE = 50;
+
   private final CommentService commentService;
 
   @GetMapping("/api/songs/{id}/comments")
   public ResponseEntity<ApiResponse<PageResponse<CommentResponse>>> list(
       @PathVariable Long id,
       @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-    return ResponseEntity.ok(ApiResponse.success(commentService.list(id, pageable)));
+    Pageable capped = capPageSize(pageable);
+    return ResponseEntity.ok(ApiResponse.success(commentService.list(id, capped)));
   }
 
   @PostMapping("/api/songs/{id}/comments")
@@ -39,5 +43,11 @@ public class CommentController {
   public ResponseEntity<Void> delete(@PathVariable Long id) {
     commentService.delete(id);
     return ResponseEntity.noContent().build();
+  }
+
+  private Pageable capPageSize(Pageable in) {
+    int size = Math.min(Math.max(in.getPageSize(), 1), MAX_PAGE_SIZE);
+    if (size == in.getPageSize()) return in;
+    return PageRequest.of(in.getPageNumber(), size, in.getSort());
   }
 }

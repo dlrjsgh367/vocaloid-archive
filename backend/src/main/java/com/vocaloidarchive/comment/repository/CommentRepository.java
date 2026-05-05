@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
   @Query(
-      value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.song.id = :songId ORDER BY c.createdAt DESC",
+      value = "SELECT c FROM Comment c JOIN FETCH c.user WHERE c.song.id = :songId",
       countQuery = "SELECT count(c) FROM Comment c WHERE c.song.id = :songId"
   )
   Page<Comment> findWithUserBySongId(@Param("songId") Long songId, Pageable pageable);

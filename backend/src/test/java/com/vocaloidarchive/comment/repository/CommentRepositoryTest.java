@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,7 +55,8 @@ class CommentRepositoryTest extends AbstractMysqlContainerTest {
     Comment c2 = commentRepository.save(Comment.of(user2, song, "second"));
     em.flush();
 
-    Page<Comment> page = commentRepository.findWithUserBySongId(song.getId(), PageRequest.of(0, 20));
+    Page<Comment> page = commentRepository.findWithUserBySongId(song.getId(),
+        PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "createdAt")));
 
     assertThat(page.getTotalElements()).isEqualTo(2);
     assertThat(page.getContent().get(0).getId()).isEqualTo(c2.getId());
