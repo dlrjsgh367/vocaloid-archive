@@ -45,7 +45,7 @@ public class Song {
   private Integer bpm;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false, length = 20)
+  @Column(nullable = false, columnDefinition = "VARCHAR(20)")
   private Mood mood;
 
   @Column(name = "play_count", nullable = false)
