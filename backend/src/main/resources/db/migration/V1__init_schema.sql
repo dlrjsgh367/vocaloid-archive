@@ -35,8 +35,8 @@ CREATE TABLE characters (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE tags (
-  id    BIGINT                        NOT NULL AUTO_INCREMENT,
-  name  VARCHAR(50) COLLATE utf8mb4_bin NOT NULL,
+  id    BIGINT      NOT NULL AUTO_INCREMENT,
+  name  VARCHAR(50) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY uk_tags_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
