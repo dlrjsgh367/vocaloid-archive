@@ -28,4 +28,11 @@ public class Like {
 
   @Column(name = "liked_at", nullable = false, insertable = false, updatable = false)
   private LocalDateTime likedAt;
+
+  public static Like of(User user, Song song) {
+    Like like = new Like();
+    like.user = user;
+    like.song = song;
+    return like;
+  }
 }
