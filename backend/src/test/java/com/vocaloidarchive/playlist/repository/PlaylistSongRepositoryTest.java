@@ -45,6 +45,7 @@ class PlaylistSongRepositoryTest extends AbstractMysqlContainerTest {
     song1 = songRepository.save(Song.of(u, "Song 1", null, null, null, null, Mood.BRIGHT));
     song2 = songRepository.save(Song.of(u, "Song 2", null, null, null, null, Mood.CALM));
     em.flush();
+    em.clear();
   }
 
   @Test
