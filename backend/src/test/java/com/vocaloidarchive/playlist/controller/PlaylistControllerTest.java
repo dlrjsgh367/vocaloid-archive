@@ -207,6 +207,32 @@ class PlaylistControllerTest {
   }
 
   @Test
+  @WithMockUser
+  void addSong_validation_fail_nullSongId() throws Exception {
+    mockMvc.perform(post("/api/playlists/1/songs")
+            .with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"songId\":null}"))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error.code").value("VALIDATION_FAILED"));
+  }
+
+  @Test
+  @WithMockUser
+  void addSong_playlistNotFound() throws Exception {
+    PlaylistSongAddRequest req = new PlaylistSongAddRequest(5L);
+    willThrow(new BusinessException(ErrorCode.PLAYLIST_NOT_FOUND))
+        .given(playlistService).addSong(eq(99L), any());
+
+    mockMvc.perform(post("/api/playlists/99/songs")
+            .with(csrf())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(req)))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error.code").value("PLAYLIST_NOT_FOUND"));
+  }
+
+  @Test
   void addSong_anonymous_unauthorized() throws Exception {
     mockMvc.perform(post("/api/playlists/1/songs")
             .contentType(MediaType.APPLICATION_JSON)
