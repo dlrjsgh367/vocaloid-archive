@@ -19,7 +19,9 @@ server:
 
 app:
   jwt:
-    secret: ${JWT_SECRET:please-change-me-in-prod-with-256bit-random-secret-value}
+    # 기본값은 Base64 인코딩된 placeholder ("please-change-me-vocaloid-archive-256bit-development-default-only").
+    # 운영에서는 반드시 JWT_SECRET 환경변수로 256비트 이상 무작위 값을 주입할 것.
+    secret: ${JWT_SECRET:cGxlYXNlLWNoYW5nZS1tZS12b2NhbG9pZC1hcmNoaXZlLTI1NmJpdC1kZXZlbG9wbWVudC1kZWZhdWx0LW9ubHk=}
     access-token-expiry-minutes: 30
     refresh-token-expiry-days: 14
   cors:
