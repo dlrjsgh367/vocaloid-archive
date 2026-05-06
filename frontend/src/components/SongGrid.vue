@@ -47,7 +47,9 @@ defineEmits(['like', 'open']);
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  text-shadow: 2px 2px 0 var(--surface), 3px 3px 0 var(--pink-lt);
+  text-shadow:
+    2px 2px 0 var(--surface),
+    3px 3px 0 var(--pink-lt);
   white-space: nowrap;
   flex-shrink: 0;
 }

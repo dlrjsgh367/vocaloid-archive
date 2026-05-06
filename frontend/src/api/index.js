@@ -21,9 +21,7 @@ let isRefreshing = false;
 let waitQueue = [];
 
 function flushQueue(error, token = null) {
-  waitQueue.forEach(({ resolve, reject }) =>
-    error ? reject(error) : resolve(token)
-  );
+  waitQueue.forEach(({ resolve, reject }) => (error ? reject(error) : resolve(token)));
   waitQueue = [];
 }
 
@@ -62,7 +60,7 @@ api.interceptors.response.use(
     } finally {
       isRefreshing = false;
     }
-  }
+  },
 );
 
 export default api;

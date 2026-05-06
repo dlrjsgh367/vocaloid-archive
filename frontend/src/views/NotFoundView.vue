@@ -54,7 +54,9 @@ h1 {
   font-size: 36px;
   color: var(--text);
   margin: 18px 0 10px;
-  text-shadow: 2px 2px 0 var(--surface), 3px 3px 0 var(--pink-lt);
+  text-shadow:
+    2px 2px 0 var(--surface),
+    3px 3px 0 var(--pink-lt);
 }
 
 .gradient-word {
@@ -87,10 +89,12 @@ p {
   padding: 12px 28px;
   border-radius: 99px;
   text-decoration: none;
-  box-shadow: 0 6px 18px rgba(59,188,176,0.35);
+  box-shadow: 0 6px 18px rgba(59, 188, 176, 0.35);
   transition: transform 0.2s;
 }
-.btn-primary:hover { transform: translateY(-2px); }
+.btn-primary:hover {
+  transform: translateY(-2px);
+}
 
 .btn-secondary {
   font-size: 14px;

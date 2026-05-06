@@ -10,7 +10,7 @@
 
       <div class="card-header">
         <div class="eyebrow">♪ 환영합니다</div>
-        <h1>다시 돌아오신<br><span class="gradient-word">덕후님</span></h1>
+        <h1>다시 돌아오신<br /><span class="gradient-word">덕후님</span></h1>
         <p v-if="justRegistered" class="success-msg">✦ 가입 완료! 로그인해주세요.</p>
         <p v-else>로그인하고 보카로 아카이브를 즐겨보세요.</p>
       </div>
@@ -44,17 +44,46 @@
             @input="errors.password = ''"
           />
           <label for="password">비밀번호</label>
-          <button type="button" class="pw-toggle" @click="showPw = !showPw" aria-label="비밀번호 보기">
-            <svg v-if="!showPw" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg>
-            <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 3l18 18M10.5 10.5A3 3 0 0013.5 13.5M6.4 6.4C4 8 2 12 2 12s3.5 7 10 7a9.7 9.7 0 005.6-1.8M9.9 5.1A9.7 9.7 0 0112 5c6.5 0 10 7 10 7s-.8 1.6-2.2 3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <button
+            type="button"
+            class="pw-toggle"
+            @click="showPw = !showPw"
+            aria-label="비밀번호 보기"
+          >
+            <svg v-if="!showPw" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+            <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M3 3l18 18M10.5 10.5A3 3 0 0013.5 13.5M6.4 6.4C4 8 2 12 2 12s3.5 7 10 7a9.7 9.7 0 005.6-1.8M9.9 5.1A9.7 9.7 0 0112 5c6.5 0 10 7 10 7s-.8 1.6-2.2 3.2"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
           </button>
           <div class="field-hint">{{ errors.password }}</div>
         </div>
 
-        <button type="submit" class="btn-submit" :disabled="!form.email || !form.password || loading">
+        <button
+          type="submit"
+          class="btn-submit"
+          :disabled="!form.email || !form.password || loading"
+        >
           <span>{{ loading ? '로그인 중...' : '로그인' }}</span>
           <svg v-if="!loading" class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M5 12h14M13 6l6 6-6 6"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </button>
       </form>
@@ -73,8 +102,8 @@ import { useRouter, useRoute, RouterLink } from 'vue-router';
 import { useAuthStore } from '../../stores/auth.js';
 
 const router = useRouter();
-const route  = useRoute();
-const auth   = useAuthStore();
+const route = useRoute();
+const auth = useAuthStore();
 
 const form = reactive({ email: '', password: '' });
 const errors = reactive({ email: '', password: '' });
@@ -93,7 +122,8 @@ async function handleSubmit() {
     const returnTo = route.query.return;
     router.push(returnTo ? String(returnTo) : { name: 'home' });
   } catch (err) {
-    serverError.value = err.response?.data?.error?.message ?? '이메일 또는 비밀번호가 올바르지 않습니다.';
+    serverError.value =
+      err.response?.data?.error?.message ?? '이메일 또는 비밀번호가 올바르지 않습니다.';
   } finally {
     loading.value = false;
   }
@@ -124,11 +154,17 @@ async function handleSubmit() {
 .auth-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 4px;
-  background: repeating-linear-gradient(90deg,
-    var(--miku) 0 24px, var(--pink) 24px 48px,
-    var(--lav) 48px 72px, var(--yellow) 72px 96px);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--miku) 0 24px,
+    var(--pink) 24px 48px,
+    var(--lav) 48px 72px,
+    var(--yellow) 72px 96px
+  );
 }
 
 .logo {
@@ -143,10 +179,13 @@ async function handleSubmit() {
 }
 
 .logo-dot {
-  width: 12px; height: 12px;
+  width: 12px;
+  height: 12px;
   background: var(--pink);
   border-radius: 50%;
-  box-shadow: 0 0 0 3px var(--pink-lt), 0 0 10px var(--pink);
+  box-shadow:
+    0 0 0 3px var(--pink-lt),
+    0 0 10px var(--pink);
   animation: pulse-glow 2.4s ease-in-out infinite;
   color: var(--pink);
   flex-shrink: 0;
@@ -176,7 +215,9 @@ h1 {
   line-height: 1.2;
   color: var(--text);
   margin: 0 0 10px;
-  text-shadow: 2px 2px 0 var(--surface), 3px 3px 0 var(--pink-lt);
+  text-shadow:
+    2px 2px 0 var(--surface),
+    3px 3px 0 var(--pink-lt);
 }
 
 .gradient-word {
@@ -216,9 +257,15 @@ h1 {
   margin-bottom: 16px;
 }
 
-form { display: flex; flex-direction: column; gap: 16px; }
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-.field { position: relative; }
+.field {
+  position: relative;
+}
 
 .field input {
   width: 100%;
@@ -232,7 +279,10 @@ form { display: flex; flex-direction: column; gap: 16px; }
   font-weight: 600;
   color: var(--text);
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
 }
 
 .field input:focus {
@@ -243,12 +293,13 @@ form { display: flex; flex-direction: column; gap: 16px; }
 
 .field label {
   position: absolute;
-  top: 15px; left: 14px;
+  top: 15px;
+  left: 14px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text3);
   pointer-events: none;
-  transition: all 0.18s cubic-bezier(.2,.8,.2,1);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .field input:focus + label,
@@ -261,8 +312,13 @@ form { display: flex; flex-direction: column; gap: 16px; }
   text-transform: uppercase;
 }
 
-.field.error input { border-color: var(--coral); box-shadow: 0 0 0 4px var(--coral-lt); }
-.field.error label { color: #b91c1c; }
+.field.error input {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px var(--coral-lt);
+}
+.field.error label {
+  color: #b91c1c;
+}
 
 .field-hint {
   font-size: 11px;
@@ -275,7 +331,8 @@ form { display: flex; flex-direction: column; gap: 16px; }
 
 .pw-toggle {
   position: absolute;
-  top: 14px; right: 12px;
+  top: 14px;
+  right: 12px;
   background: none;
   border: none;
   color: var(--text3);
@@ -285,7 +342,10 @@ form { display: flex; flex-direction: column; gap: 16px; }
   display: grid;
   place-items: center;
 }
-.pw-toggle:hover { color: var(--text); background: var(--bg2); }
+.pw-toggle:hover {
+  color: var(--text);
+  background: var(--bg2);
+}
 
 .btn-submit {
   height: 52px;
@@ -303,7 +363,9 @@ form { display: flex; flex-direction: column; gap: 16px; }
   justify-content: center;
   gap: 8px;
   transition: all 0.2s;
-  box-shadow: 0 6px 18px rgba(59,188,176,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+  box-shadow:
+    0 6px 18px rgba(59, 188, 176, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: hidden;
   margin-top: 4px;
@@ -312,15 +374,33 @@ form { display: flex; flex-direction: column; gap: 16px; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 70%
+  );
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
 }
-.btn-submit:hover:not(:disabled) { transform: translateY(-2px); }
-.btn-submit .arrow { transition: transform 0.2s; }
-.btn-submit:hover:not(:disabled) .arrow { transform: translateX(3px); }
-.btn-submit:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; box-shadow: none; }
-.btn-submit:disabled::before { display: none; }
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.btn-submit .arrow {
+  transition: transform 0.2s;
+}
+.btn-submit:hover:not(:disabled) .arrow {
+  transform: translateX(3px);
+}
+.btn-submit:disabled {
+  background: var(--border);
+  color: var(--text3);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-submit:disabled::before {
+  display: none;
+}
 
 .card-footer {
   margin-top: 24px;
@@ -336,5 +416,8 @@ form { display: flex; flex-direction: column; gap: 16px; }
   border-bottom: 1.5px solid var(--miku);
   padding-bottom: 1px;
 }
-.card-footer a:hover { color: var(--lav-dk); border-color: var(--lav-dk); }
+.card-footer a:hover {
+  color: var(--lav-dk);
+  border-color: var(--lav-dk);
+}
 </style>

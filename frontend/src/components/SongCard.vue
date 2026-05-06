@@ -14,7 +14,8 @@
           :key="char.id"
           class="char-badge"
           :style="charBadgeStyle(char)"
-        >{{ char.name }}</span>
+          >{{ char.name }}</span
+        >
       </div>
 
       <div class="card-title">
@@ -49,10 +50,10 @@ const props = defineProps({
 defineEmits(['like']);
 
 const CHAR_COLORS = {
-  miku:  { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
-  luka:  { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  ren:   { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  rin:   { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
+  miku: { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
+  luka: { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
+  ren: { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
+  rin: { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
   kaito: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
   meiko: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
 };
@@ -65,7 +66,7 @@ const cardColors = computed(() => {
 });
 
 const cardVars = computed(() => ({
-  '--c':    cardColors.value.c,
+  '--c': cardColors.value.c,
   '--c-dk': cardColors.value.dk,
   '--c-lt': cardColors.value.lt,
 }));
@@ -110,7 +111,9 @@ function formatCount(n) {
   border: 1.5px solid var(--border);
   box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
   position: relative;
 }
 
@@ -135,7 +138,9 @@ function formatCount(n) {
     0 0 0 1.5px var(--c);
 }
 
-.song-card:hover::before { opacity: 0.7; }
+.song-card:hover::before {
+  opacity: 0.7;
+}
 
 .card-thumb {
   width: 100%;
@@ -153,11 +158,11 @@ function formatCount(n) {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 18% 22%, rgba(255,255,255,0.9) 0, transparent 2px),
-    radial-gradient(circle at 78% 30%, rgba(255,255,255,0.7) 0, transparent 2.5px),
-    radial-gradient(circle at 42% 70%, rgba(255,255,255,0.8) 0, transparent 2px),
-    radial-gradient(circle at 88% 80%, rgba(255,255,255,0.6) 0, transparent 1.5px),
-    radial-gradient(circle at 12% 85%, rgba(255,255,255,0.7) 0, transparent 2px);
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.9) 0, transparent 2px),
+    radial-gradient(circle at 78% 30%, rgba(255, 255, 255, 0.7) 0, transparent 2.5px),
+    radial-gradient(circle at 42% 70%, rgba(255, 255, 255, 0.8) 0, transparent 2px),
+    radial-gradient(circle at 88% 80%, rgba(255, 255, 255, 0.6) 0, transparent 1.5px),
+    radial-gradient(circle at 12% 85%, rgba(255, 255, 255, 0.7) 0, transparent 2px);
   pointer-events: none;
   opacity: 0.85;
 }
@@ -166,7 +171,12 @@ function formatCount(n) {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%);
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 70%
+  );
   background-size: 250% 100%;
   pointer-events: none;
   mix-blend-mode: overlay;
@@ -194,16 +204,19 @@ function formatCount(n) {
   user-select: none;
 }
 
-.card-thumb-inner.small { font-size: 72px; }
+.card-thumb-inner.small {
+  font-size: 72px;
+}
 
 .card-thumb-corner {
   position: absolute;
-  top: 10px; left: 12px;
+  top: 10px;
+  left: 12px;
   font-family: var(--font-jp);
   font-size: 10px;
   font-weight: 700;
-  color: rgba(255,255,255,0.85);
-  background: rgba(0,0,0,0.18);
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.18);
   padding: 3px 8px;
   border-radius: 99px;
   backdrop-filter: blur(4px);
@@ -213,12 +226,13 @@ function formatCount(n) {
 
 .card-thumb-corner-r {
   position: absolute;
-  top: 10px; right: 12px;
+  top: 10px;
+  right: 12px;
   font-size: 10px;
   font-weight: 800;
   color: white;
-  background: rgba(255,255,255,0.22);
-  border: 1px solid rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   padding: 3px 8px;
   border-radius: 99px;
   backdrop-filter: blur(6px);
@@ -227,20 +241,26 @@ function formatCount(n) {
 }
 
 .card-play {
-  width: 48px; height: 48px;
-  background: rgba(255,255,255,0.95);
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   color: var(--c-dk);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(255,255,255,1);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.18),
+    inset 0 0 0 2px rgba(255, 255, 255, 1);
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   padding-left: 3px;
 }
 
@@ -257,7 +277,9 @@ function formatCount(n) {
 .card-body::before {
   content: '';
   position: absolute;
-  top: -1px; left: 12%; right: 12%;
+  top: -1px;
+  left: 12%;
+  right: 12%;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--c), transparent);
   opacity: 0.6;
@@ -319,7 +341,10 @@ function formatCount(n) {
   white-space: nowrap;
 }
 
-.tag:hover { background: var(--lav); color: white; }
+.tag:hover {
+  background: var(--lav);
+  color: white;
+}
 
 .card-footer {
   display: flex;
@@ -357,8 +382,10 @@ function formatCount(n) {
   background: var(--pink);
   color: white;
   transform: scale(1.08) rotate(-3deg);
-  box-shadow: 0 4px 12px rgba(232,121,176,0.5);
+  box-shadow: 0 4px 12px rgba(232, 121, 176, 0.5);
 }
 
-.like-btn:active { transform: scale(0.95); }
+.like-btn:active {
+  transform: scale(0.95);
+}
 </style>

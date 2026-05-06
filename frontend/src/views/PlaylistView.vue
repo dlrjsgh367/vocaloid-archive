@@ -34,8 +34,7 @@
                 <span :class="['visibility', pl.isPublic ? 'public' : 'private']">
                   {{ pl.isPublic ? '공개' : '비공개' }}
                 </span>
-                · {{ pl.songCount }}곡
-                · {{ formatDate(pl.createdAt) }}
+                · {{ pl.songCount }}곡 · {{ formatDate(pl.createdAt) }}
               </div>
             </div>
             <button class="row-delete" @click.stop="onDeletePlaylist(pl)" title="삭제">✕</button>
@@ -45,9 +44,7 @@
 
       <!-- 우측: 상세 -->
       <section class="detail-pane">
-        <div v-if="!selectedId" class="detail-empty">
-          ← 목록에서 플레이리스트를 선택해주세요
-        </div>
+        <div v-if="!selectedId" class="detail-empty">← 목록에서 플레이리스트를 선택해주세요</div>
         <div v-else-if="detailLoading" class="loading-msg sm">♪ 불러오는 중...</div>
         <div v-else-if="detailError" class="error-banner">상세를 불러올 수 없어요.</div>
         <div v-else-if="detail" class="detail-card">
@@ -58,7 +55,8 @@
             </span>
           </div>
           <div class="detail-meta">
-            {{ detail.ownerUsername }} · {{ detail.songs.length }}곡 · {{ formatDate(detail.createdAt) }}
+            {{ detail.ownerUsername }} · {{ detail.songs.length }}곡 ·
+            {{ formatDate(detail.createdAt) }}
           </div>
 
           <ul v-if="detail.songs.length" class="song-list">
@@ -115,7 +113,11 @@
 
           <div class="modal-actions">
             <button type="button" class="btn-cancel" @click="closeCreateModal">취소</button>
-            <button type="submit" class="btn-primary" :disabled="creating || !createForm.title.trim()">
+            <button
+              type="submit"
+              class="btn-primary"
+              :disabled="creating || !createForm.title.trim()"
+            >
               {{ creating ? '만드는 중...' : '✦ 만들기' }}
             </button>
           </div>
@@ -129,8 +131,11 @@
 import { ref, reactive, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import {
-  fetchMyPlaylists, fetchPlaylist, createPlaylist,
-  deletePlaylist, removeSongFromPlaylist,
+  fetchMyPlaylists,
+  fetchPlaylist,
+  createPlaylist,
+  deletePlaylist,
+  removeSongFromPlaylist,
 } from '../api/playlists.js';
 
 const playlists = ref([]);
@@ -281,7 +286,9 @@ h1 {
   line-height: 1.1;
   color: var(--text);
   margin: 0;
-  text-shadow: 2px 2px 0 var(--surface), 3px 3px 0 var(--pink-lt);
+  text-shadow:
+    2px 2px 0 var(--surface),
+    3px 3px 0 var(--pink-lt);
 }
 .gradient-word {
   background: linear-gradient(90deg, var(--miku-dk), var(--lav-dk), var(--pink-dk), var(--miku-dk));
@@ -307,7 +314,7 @@ h1 {
 .btn-create:hover {
   background: var(--miku-lt);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59,188,176,0.3);
+  box-shadow: 0 4px 12px rgba(59, 188, 176, 0.3);
 }
 .btn-create.primary {
   background: linear-gradient(135deg, var(--miku-dk), var(--lav-dk));
@@ -325,7 +332,10 @@ h1 {
   font-size: 13px;
   font-weight: 700;
 }
-.error-banner.sm { font-size: 12px; padding: 10px 14px; }
+.error-banner.sm {
+  font-size: 12px;
+  padding: 10px 14px;
+}
 
 .loading-msg {
   font-family: var(--font-display);
@@ -335,7 +345,10 @@ h1 {
   padding: 60px 0;
   animation: float-y 2s ease-in-out infinite;
 }
-.loading-msg.sm { font-size: 16px; padding: 28px 0; }
+.loading-msg.sm {
+  font-size: 16px;
+  padding: 28px 0;
+}
 
 .empty-card {
   background: var(--surface);
@@ -368,7 +381,9 @@ h1 {
   gap: 20px;
 }
 @media (max-width: 800px) {
-  .layout { grid-template-columns: 1fr; }
+  .layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .list-pane {
@@ -383,11 +398,17 @@ h1 {
 .list-pane::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
-  background: repeating-linear-gradient(90deg,
-    var(--miku) 0 18px, var(--pink) 18px 36px,
-    var(--lav) 36px 54px, var(--yellow) 54px 72px);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--miku) 0 18px,
+    var(--pink) 18px 36px,
+    var(--lav) 36px 54px,
+    var(--yellow) 54px 72px
+  );
 }
 
 .playlist-list {
@@ -459,8 +480,13 @@ h1 {
   opacity: 0.5;
   transition: all 0.15s;
 }
-.playlist-row:hover .row-delete { opacity: 1; }
-.row-delete:hover { color: var(--coral); background: var(--coral-lt); }
+.playlist-row:hover .row-delete {
+  opacity: 1;
+}
+.row-delete:hover {
+  color: var(--coral);
+  background: var(--coral-lt);
+}
 
 .detail-pane {
   min-height: 200px;
@@ -487,7 +513,9 @@ h1 {
 .detail-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--miku) 0%, var(--lav) 50%, var(--pink) 100%);
 }
@@ -582,7 +610,10 @@ h1 {
   text-decoration: none;
   transition: all 0.2s;
 }
-.btn-go:hover { background: var(--lav); color: white; }
+.btn-go:hover {
+  background: var(--lav);
+  color: white;
+}
 .btn-remove {
   background: none;
   border: 1.5px solid var(--coral-lt);
@@ -638,11 +669,17 @@ h1 {
 .modal::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 4px;
-  background: repeating-linear-gradient(90deg,
-    var(--miku) 0 20px, var(--pink) 20px 40px,
-    var(--lav) 40px 60px, var(--yellow) 60px 80px);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--miku) 0 20px,
+    var(--pink) 20px 40px,
+    var(--lav) 40px 60px,
+    var(--yellow) 60px 80px
+  );
 }
 .modal-header {
   display: flex;
@@ -665,7 +702,10 @@ h1 {
   padding: 4px 8px;
   border-radius: 8px;
 }
-.modal-close:hover { color: var(--text); background: var(--bg2); }
+.modal-close:hover {
+  color: var(--text);
+  background: var(--bg2);
+}
 .modal-body {
   padding: 4px 24px 24px;
   display: flex;
@@ -673,7 +713,9 @@ h1 {
   gap: 14px;
 }
 
-.field { position: relative; }
+.field {
+  position: relative;
+}
 .field input {
   width: 100%;
   height: 52px;
@@ -686,7 +728,10 @@ h1 {
   font-weight: 600;
   color: var(--text);
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
 }
 .field input:focus {
   border-color: var(--miku);
@@ -695,12 +740,13 @@ h1 {
 }
 .field label {
   position: absolute;
-  top: 15px; left: 14px;
+  top: 15px;
+  left: 14px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text3);
   pointer-events: none;
-  transition: all 0.18s cubic-bezier(.2,.8,.2,1);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
@@ -711,7 +757,10 @@ h1 {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.field.error input { border-color: var(--coral); box-shadow: 0 0 0 4px var(--coral-lt); }
+.field.error input {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px var(--coral-lt);
+}
 .field-hint {
   font-size: 11px;
   font-weight: 700;
@@ -730,7 +779,11 @@ h1 {
   color: var(--text2);
   cursor: pointer;
 }
-.checkbox-row input { width: 16px; height: 16px; cursor: pointer; }
+.checkbox-row input {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
 
 .modal-actions {
   display: flex;
@@ -751,7 +804,10 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-cancel:hover { border-color: var(--text3); color: var(--text); }
+.btn-cancel:hover {
+  border-color: var(--text3);
+  color: var(--text);
+}
 .btn-primary {
   flex: 1;
   height: 44px;
@@ -765,7 +821,9 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-primary:hover:not(:disabled) { transform: translateY(-2px); }
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
 .btn-primary:disabled {
   background: var(--border);
   color: var(--text3);

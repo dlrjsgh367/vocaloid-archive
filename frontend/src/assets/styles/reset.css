@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background:
+    radial-gradient(circle at 12% 8%, var(--miku-lt) 0, transparent 30%),
+    radial-gradient(circle at 88% 14%, var(--pink-lt) 0, transparent 32%),
+    radial-gradient(circle at 50% 100%, var(--lav-lt) 0, transparent 40%), var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}

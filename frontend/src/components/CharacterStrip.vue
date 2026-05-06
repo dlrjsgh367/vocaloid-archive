@@ -35,7 +35,9 @@ defineEmits(['select']);
   padding: 8px 0 12px;
 }
 
-.char-strip::-webkit-scrollbar { height: 6px; }
+.char-strip::-webkit-scrollbar {
+  height: 6px;
+}
 .char-strip::-webkit-scrollbar-thumb {
   background: linear-gradient(90deg, var(--miku), var(--pink), var(--lav));
   border-radius: 99px;
@@ -67,7 +69,8 @@ defineEmits(['select']);
 .char-pill::after {
   content: '♡';
   position: absolute;
-  top: -4px; right: 12px;
+  top: -4px;
+  right: 12px;
   font-size: 11px;
   color: var(--c-dk);
   opacity: 0;
@@ -81,7 +84,8 @@ defineEmits(['select']);
 }
 
 .char-avatar {
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -92,7 +96,7 @@ defineEmits(['select']);
   flex-shrink: 0;
   font-family: var(--font-jp);
   box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,0.5),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.5),
     0 0 12px color-mix(in srgb, var(--c) 60%, transparent);
 }
 

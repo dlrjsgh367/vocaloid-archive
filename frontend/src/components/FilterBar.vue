@@ -7,7 +7,9 @@
       class="chip"
       :class="[mood.cls, { active: modelValue === mood.value }]"
       @click="$emit('update:modelValue', mood.value)"
-    >{{ mood.label }}</button>
+    >
+      {{ mood.label }}
+    </button>
 
     <div class="search-wrap">
       <span class="search-icon">♪</span>
@@ -30,12 +32,12 @@ defineProps({
 defineEmits(['update:modelValue', 'update:search']);
 
 const MOODS = [
-  { value: 'all',       label: '전체',   cls: '' },
-  { value: 'bright',    label: '밝음',   cls: 'yellow' },
-  { value: 'emotional', label: '감성',   cls: 'pink' },
-  { value: 'dark',      label: '다크',   cls: 'lav' },
-  { value: 'calm',      label: '잔잔함', cls: '' },
-  { value: 'energetic', label: '신남',   cls: '' },
+  { value: 'all', label: '전체', cls: '' },
+  { value: 'bright', label: '밝음', cls: 'yellow' },
+  { value: 'emotional', label: '감성', cls: 'pink' },
+  { value: 'dark', label: '다크', cls: 'lav' },
+  { value: 'calm', label: '잔잔함', cls: '' },
+  { value: 'energetic', label: '신남', cls: '' },
 ];
 </script>
 
@@ -54,12 +56,16 @@ const MOODS = [
 .filter-bar::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 2px;
-  background: repeating-linear-gradient(90deg,
+  background: repeating-linear-gradient(
+    90deg,
     transparent 0 8px,
     var(--pink) 8px 12px,
-    transparent 12px 20px);
+    transparent 12px 20px
+  );
   opacity: 0.4;
 }
 
@@ -104,7 +110,7 @@ const MOODS = [
   background: var(--miku-dk);
   color: white;
   border-color: var(--miku-dk);
-  box-shadow: 0 4px 12px rgba(59,188,176,0.4);
+  box-shadow: 0 4px 12px rgba(59, 188, 176, 0.4);
 }
 
 .chip.active::before {
@@ -115,17 +121,33 @@ const MOODS = [
   padding: 2px;
   background: linear-gradient(90deg, var(--miku), var(--pink), var(--lav), var(--miku));
   background-size: 300% 100%;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: shimmer 2.5s linear infinite;
   pointer-events: none;
 }
 
-.chip.pink.active   { background: var(--pink-dk); border-color: var(--pink-dk); box-shadow: 0 4px 12px rgba(232,121,176,0.45); }
-.chip.lav.active    { background: var(--lav-dk);  border-color: var(--lav-dk);  box-shadow: 0 4px 12px rgba(139,92,246,0.45); }
-.chip.yellow.active { background: var(--yellow-dk); border-color: var(--yellow-dk); box-shadow: 0 4px 12px rgba(245,158,11,0.4); }
+.chip.pink.active {
+  background: var(--pink-dk);
+  border-color: var(--pink-dk);
+  box-shadow: 0 4px 12px rgba(232, 121, 176, 0.45);
+}
+.chip.lav.active {
+  background: var(--lav-dk);
+  border-color: var(--lav-dk);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.45);
+}
+.chip.yellow.active {
+  background: var(--yellow-dk);
+  border-color: var(--yellow-dk);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
 
 .search-wrap {
   margin-left: auto;
@@ -146,7 +168,9 @@ const MOODS = [
   transition: all 0.2s;
 }
 
-.search-input::placeholder { color: var(--text3); }
+.search-input::placeholder {
+  color: var(--text3);
+}
 
 .search-input:focus {
   border-color: var(--pink);

@@ -12,29 +12,60 @@
       <form class="form" @submit.prevent="onSubmit" novalidate>
         <!-- 제목 -->
         <div class="field" :class="{ error: errors.title }">
-          <input id="title" v-model="form.title" type="text" placeholder=" " maxlength="200" @input="errors.title = ''" />
+          <input
+            id="title"
+            v-model="form.title"
+            type="text"
+            placeholder=" "
+            maxlength="200"
+            @input="errors.title = ''"
+          />
           <label for="title">곡 제목 *</label>
           <div class="field-hint">{{ errors.title }}</div>
         </div>
 
         <!-- YouTube URL -->
         <div class="field" :class="{ error: errors.youtubeUrl }">
-          <input id="ytUrl" v-model="form.youtubeUrl" type="url" placeholder=" " maxlength="500" @input="errors.youtubeUrl = ''" />
+          <input
+            id="ytUrl"
+            v-model="form.youtubeUrl"
+            type="url"
+            placeholder=" "
+            maxlength="500"
+            @input="errors.youtubeUrl = ''"
+          />
           <label for="ytUrl">YouTube URL</label>
           <div class="field-hint">{{ errors.youtubeUrl || 'youtube.com 또는 youtu.be' }}</div>
         </div>
 
         <!-- Niconico URL -->
         <div class="field" :class="{ error: errors.niconicoUrl }">
-          <input id="ncUrl" v-model="form.niconicoUrl" type="url" placeholder=" " maxlength="500" @input="errors.niconicoUrl = ''" />
+          <input
+            id="ncUrl"
+            v-model="form.niconicoUrl"
+            type="url"
+            placeholder=" "
+            maxlength="500"
+            @input="errors.niconicoUrl = ''"
+          />
           <label for="ncUrl">Niconico URL</label>
-          <div class="field-hint">{{ errors.niconicoUrl || 'nicovideo.jp 또는 nico.ms (선택)' }}</div>
+          <div class="field-hint">
+            {{ errors.niconicoUrl || 'nicovideo.jp 또는 nico.ms (선택)' }}
+          </div>
         </div>
 
         <!-- BPM -->
         <div class="field-row">
           <div class="field" :class="{ error: errors.bpm }">
-            <input id="bpm" v-model.number="form.bpm" type="number" min="40" max="300" placeholder=" " @input="errors.bpm = ''" />
+            <input
+              id="bpm"
+              v-model.number="form.bpm"
+              type="number"
+              min="40"
+              max="300"
+              placeholder=" "
+              @input="errors.bpm = ''"
+            />
             <label for="bpm">BPM</label>
             <div class="field-hint">{{ errors.bpm || '40 ~ 300' }}</div>
           </div>
@@ -50,15 +81,22 @@
               type="button"
               class="chip"
               :class="{ active: form.mood === m.value }"
-              @click="form.mood = m.value; errors.mood = ''"
-            >{{ m.label }}</button>
+              @click="
+                form.mood = m.value;
+                errors.mood = '';
+              "
+            >
+              {{ m.label }}
+            </button>
           </div>
           <div v-if="errors.mood" class="block-hint error">{{ errors.mood }}</div>
         </div>
 
         <!-- Characters -->
         <div class="block">
-          <div class="block-title">캐릭터 * <span class="block-sub">(1개 이상, 최대 10개)</span></div>
+          <div class="block-title">
+            캐릭터 * <span class="block-sub">(1개 이상, 최대 10개)</span>
+          </div>
           <div v-if="charactersLoading" class="loading-msg sm">♪ 불러오는 중...</div>
           <div v-else class="chip-row">
             <button
@@ -69,14 +107,18 @@
               :class="{ active: form.characterIds.includes(char.id) }"
               :style="charChipStyle(char, form.characterIds.includes(char.id))"
               @click="toggleCharacter(char.id)"
-            >{{ char.name }}</button>
+            >
+              {{ char.name }}
+            </button>
           </div>
           <div v-if="errors.characterIds" class="block-hint error">{{ errors.characterIds }}</div>
         </div>
 
         <!-- Tags -->
         <div class="block">
-          <div class="block-title">태그 <span class="block-sub">(쉼표 또는 Enter로 추가, 최대 10개)</span></div>
+          <div class="block-title">
+            태그 <span class="block-sub">(쉼표 또는 Enter로 추가, 최대 10개)</span>
+          </div>
           <div class="tag-input-wrap">
             <span v-for="tag in form.tagNames" :key="tag" class="tag-chip">
               #{{ tag }}
@@ -115,20 +157,20 @@ import { createSong } from '../api/songs.js';
 const router = useRouter();
 
 const MOODS = [
-  { value: 'BRIGHT',    label: '밝음' },
+  { value: 'BRIGHT', label: '밝음' },
   { value: 'EMOTIONAL', label: '감성' },
-  { value: 'DARK',      label: '다크' },
+  { value: 'DARK', label: '다크' },
   { value: 'ENERGETIC', label: '신남' },
-  { value: 'CALM',      label: '잔잔함' },
+  { value: 'CALM', label: '잔잔함' },
 ];
 
 const CHAR_COLORS = {
-  '하츠네 미쿠':   { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
+  '하츠네 미쿠': { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
   '메구리네 루카': { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  '카가미네 렌':   { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카가미네 린':   { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카이토':       { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
-  '메이코':       { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
+  '카가미네 렌': { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
+  '카가미네 린': { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
+  카이토: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
+  메이코: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
 };
 
 const form = reactive({
@@ -142,8 +184,13 @@ const form = reactive({
 });
 
 const errors = reactive({
-  title: '', youtubeUrl: '', niconicoUrl: '', bpm: '',
-  mood: '', characterIds: '', tagNames: '',
+  title: '',
+  youtubeUrl: '',
+  niconicoUrl: '',
+  bpm: '',
+  mood: '',
+  characterIds: '',
+  tagNames: '',
 });
 
 const tagDraft = ref('');
@@ -207,14 +254,25 @@ function validate() {
   errors.title = errors.youtubeUrl = errors.niconicoUrl = errors.bpm = '';
   errors.mood = errors.characterIds = errors.tagNames = '';
 
-  if (!form.title.trim()) { errors.title = '제목을 입력해주세요.'; ok = false; }
-  else if (form.title.length > 200) { errors.title = '제목은 200자 이하여야 해요.'; ok = false; }
+  if (!form.title.trim()) {
+    errors.title = '제목을 입력해주세요.';
+    ok = false;
+  } else if (form.title.length > 200) {
+    errors.title = '제목은 200자 이하여야 해요.';
+    ok = false;
+  }
 
-  if (form.youtubeUrl && !/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be).*/i.test(form.youtubeUrl)) {
+  if (
+    form.youtubeUrl &&
+    !/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be).*/i.test(form.youtubeUrl)
+  ) {
     errors.youtubeUrl = 'youtube.com 또는 youtu.be URL이어야 해요.';
     ok = false;
   }
-  if (form.niconicoUrl && !/^(https?:\/\/)?(www\.)?(nicovideo\.jp|nico\.ms).*/i.test(form.niconicoUrl)) {
+  if (
+    form.niconicoUrl &&
+    !/^(https?:\/\/)?(www\.)?(nicovideo\.jp|nico\.ms).*/i.test(form.niconicoUrl)
+  ) {
     errors.niconicoUrl = 'nicovideo.jp 또는 nico.ms URL이어야 해요.';
     ok = false;
   }
@@ -222,9 +280,18 @@ function validate() {
     errors.bpm = 'BPM은 40 ~ 300이어야 해요.';
     ok = false;
   }
-  if (!form.mood) { errors.mood = '분위기를 선택해주세요.'; ok = false; }
-  if (form.characterIds.length === 0) { errors.characterIds = '캐릭터를 1개 이상 선택해주세요.'; ok = false; }
-  if (form.characterIds.length > 10) { errors.characterIds = '캐릭터는 최대 10개까지 가능해요.'; ok = false; }
+  if (!form.mood) {
+    errors.mood = '분위기를 선택해주세요.';
+    ok = false;
+  }
+  if (form.characterIds.length === 0) {
+    errors.characterIds = '캐릭터를 1개 이상 선택해주세요.';
+    ok = false;
+  }
+  if (form.characterIds.length > 10) {
+    errors.characterIds = '캐릭터는 최대 10개까지 가능해요.';
+    ok = false;
+  }
 
   return ok;
 }
@@ -286,14 +353,22 @@ async function onSubmit() {
 .create-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 4px;
-  background: repeating-linear-gradient(90deg,
-    var(--miku) 0 24px, var(--pink) 24px 48px,
-    var(--lav) 48px 72px, var(--yellow) 72px 96px);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--miku) 0 24px,
+    var(--pink) 24px 48px,
+    var(--lav) 48px 72px,
+    var(--yellow) 72px 96px
+  );
 }
 
-.card-header { margin-bottom: 28px; }
+.card-header {
+  margin-bottom: 28px;
+}
 .eyebrow {
   font-family: var(--font-jp);
   font-size: 11px;
@@ -309,7 +384,9 @@ h1 {
   line-height: 1.2;
   color: var(--text);
   margin: 0 0 10px;
-  text-shadow: 2px 2px 0 var(--surface), 3px 3px 0 var(--pink-lt);
+  text-shadow:
+    2px 2px 0 var(--surface),
+    3px 3px 0 var(--pink-lt);
 }
 .gradient-word {
   background: linear-gradient(90deg, var(--miku-dk), var(--lav-dk), var(--pink-dk), var(--miku-dk));
@@ -336,9 +413,15 @@ h1 {
   margin-bottom: 16px;
 }
 
-.form { display: flex; flex-direction: column; gap: 18px; }
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 
-.field { position: relative; }
+.field {
+  position: relative;
+}
 .field input {
   width: 100%;
   height: 52px;
@@ -351,7 +434,10 @@ h1 {
   font-weight: 600;
   color: var(--text);
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    background 0.15s;
 }
 .field input:focus {
   border-color: var(--miku);
@@ -360,12 +446,13 @@ h1 {
 }
 .field label {
   position: absolute;
-  top: 15px; left: 14px;
+  top: 15px;
+  left: 14px;
   font-size: 14px;
   font-weight: 600;
   color: var(--text3);
   pointer-events: none;
-  transition: all 0.18s cubic-bezier(.2,.8,.2,1);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .field input:focus + label,
 .field input:not(:placeholder-shown) + label {
@@ -376,8 +463,13 @@ h1 {
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
-.field.error input { border-color: var(--coral); box-shadow: 0 0 0 4px var(--coral-lt); }
-.field.error label { color: #b91c1c; }
+.field.error input {
+  border-color: var(--coral);
+  box-shadow: 0 0 0 4px var(--coral-lt);
+}
+.field.error label {
+  color: #b91c1c;
+}
 .field-hint {
   font-size: 11px;
   font-weight: 700;
@@ -386,10 +478,17 @@ h1 {
   padding-left: 2px;
   min-height: 15px;
 }
-.field.error .field-hint { color: #b91c1c; }
+.field.error .field-hint {
+  color: #b91c1c;
+}
 
-.field-row { display: flex; gap: 14px; }
-.field-row .field { flex: 1; }
+.field-row {
+  display: flex;
+  gap: 14px;
+}
+.field-row .field {
+  flex: 1;
+}
 
 .block {
   display: flex;
@@ -414,7 +513,9 @@ h1 {
   font-size: 11px;
   font-weight: 700;
 }
-.block-hint.error { color: #b91c1c; }
+.block-hint.error {
+  color: #b91c1c;
+}
 
 .chip-row {
   display: flex;
@@ -432,7 +533,10 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
-.chip:hover { border-color: var(--miku); color: var(--miku-dk); }
+.chip:hover {
+  border-color: var(--miku);
+  color: var(--miku-dk);
+}
 .chip.active {
   background: linear-gradient(135deg, var(--miku-dk), var(--lav-dk));
   border-color: transparent;
@@ -449,7 +553,9 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
-.char-chip:hover { transform: translateY(-1px); }
+.char-chip:hover {
+  transform: translateY(-1px);
+}
 
 .tag-input-wrap {
   display: flex;
@@ -487,7 +593,9 @@ h1 {
   line-height: 1;
   padding: 0;
 }
-.tag-remove:hover { color: var(--coral); }
+.tag-remove:hover {
+  color: var(--coral);
+}
 .tag-input {
   flex: 1;
   min-width: 120px;
@@ -519,7 +627,10 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-cancel:hover { border-color: var(--text3); color: var(--text); }
+.btn-cancel:hover {
+  border-color: var(--text3);
+  color: var(--text);
+}
 .btn-submit {
   flex: 1;
   height: 52px;
@@ -532,7 +643,9 @@ h1 {
   font-weight: 800;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 6px 18px rgba(59,188,176,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+  box-shadow:
+    0 6px 18px rgba(59, 188, 176, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: hidden;
 }
@@ -540,13 +653,27 @@ h1 {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 70%
+  );
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
 }
-.btn-submit:hover:not(:disabled) { transform: translateY(-2px); }
-.btn-submit:disabled { background: var(--border); color: var(--text3); cursor: not-allowed; box-shadow: none; }
-.btn-submit:disabled::before { display: none; }
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.btn-submit:disabled {
+  background: var(--border);
+  color: var(--text3);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.btn-submit:disabled::before {
+  display: none;
+}
 
 .loading-msg {
   font-family: var(--font-display);
@@ -554,5 +681,7 @@ h1 {
   color: var(--text3);
   padding: 8px 0;
 }
-.loading-msg.sm { padding: 4px 0; }
+.loading-msg.sm {
+  padding: 4px 0;
+}
 </style>

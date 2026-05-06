@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Gochi+Hand&family=Zen+Maru+Gothic:wght@500;700;900&display=swap');
+
+:root {
+  --bg: #fdf8ff;
+  --bg2: #f5eeff;
+  --surface: #ffffff;
+  --surface2: #faf6ff;
+
+  --miku: #7ddfd4;
+  --miku-lt: #c8f5f0;
+  --miku-dk: #3bbcb0;
+
+  --pink: #f9a8d4;
+  --pink-lt: #fde8f3;
+  --pink-dk: #e879b0;
+
+  --lav: #c4b5fd;
+  --lav-lt: #ede9fe;
+  --lav-dk: #8b5cf6;
+
+  --yellow: #fde68a;
+  --yellow-lt: #fffbeb;
+  --yellow-dk: #f59e0b;
+
+  --coral: #fca5a5;
+  --coral-lt: #fee2e2;
+
+  --text: #2d1b4e;
+  --text2: #6b4f8a;
+  --text3: #a890c0;
+  --border: #ede0fa;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --font-display: 'Gochi Hand', cursive;
+  --font-body: 'Nunito', sans-serif;
+  --font-jp: 'Zen Maru Gothic', 'Gochi Hand', sans-serif;
+
+  --shadow-sm: 0 2px 8px rgba(139, 92, 246, 0.08);
+  --shadow-md: 0 4px 20px rgba(139, 92, 246, 0.12);
+  --shadow-lg: 0 8px 32px rgba(139, 92, 246, 0.16);
+
+  --holo: linear-gradient(
+    115deg,
+    #c8f5f0 0%,
+    #fde8f3 18%,
+    #ede9fe 36%,
+    #fffbeb 54%,
+    #fde8f3 72%,
+    #c8f5f0 90%,
+    #ede9fe 100%
+  );
+  --glitter: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.6) 0 2px,
+    transparent 2px 6px,
+    rgba(196, 181, 253, 0.4) 6px 8px,
+    transparent 8px 14px
+  );
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+}
+@keyframes sparkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.4) rotate(180deg);
+    opacity: 0.4;
+  }
+}
+@keyframes holo-shift {
+  0% {
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    background-position: 200% 50%;
+    filter: hue-rotate(20deg);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  50% {
+    box-shadow: 0 0 16px 4px currentColor;
+  }
+}
+@keyframes drift {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(var(--dx, 40px), var(--dy, -60px)) rotate(360deg);
+  }
+}
+@keyframes blink-cursor {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}

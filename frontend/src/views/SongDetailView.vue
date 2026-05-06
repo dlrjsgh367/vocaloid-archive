@@ -14,7 +14,14 @@
             :src="youtubeEmbedUrl"
             title="YouTube player"
             frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+            "
             allowfullscreen
           />
         </div>
@@ -70,9 +77,7 @@
             <button class="btn-like" :class="{ liked }" @click="onLike">
               ♥ {{ liked ? '좋아요 취소' : '좋아요' }}
             </button>
-            <button class="btn-playlist" @click="openPlaylistModal">
-              ✦ 플레이리스트에 담기
-            </button>
+            <button class="btn-playlist" @click="openPlaylistModal">✦ 플레이리스트에 담기</button>
           </div>
 
           <div v-if="song.tags?.length" class="tag-row">
@@ -92,7 +97,11 @@
           <div class="section-title-jp">COMMENTS / コメント</div>
         </div>
 
-        <form v-if="authStore.isAuthenticated" class="comment-form" @submit.prevent="onSubmitComment">
+        <form
+          v-if="authStore.isAuthenticated"
+          class="comment-form"
+          @submit.prevent="onSubmitComment"
+        >
           <textarea
             v-model="commentDraft"
             placeholder="이 곡에 한 줄 남겨주세요... (최대 500자)"
@@ -101,13 +110,18 @@
           />
           <div class="form-footer">
             <span class="char-count">{{ commentDraft.length }}/500</span>
-            <button type="submit" class="btn-submit-sm" :disabled="!commentDraft.trim() || commentSubmitting">
+            <button
+              type="submit"
+              class="btn-submit-sm"
+              :disabled="!commentDraft.trim() || commentSubmitting"
+            >
               {{ commentSubmitting ? '등록 중...' : '댓글 남기기 ✦' }}
             </button>
           </div>
         </form>
         <div v-else class="login-prompt">
-          댓글을 남기려면 <RouterLink :to="loginReturnTo" class="link">로그인</RouterLink>이 필요해요.
+          댓글을 남기려면 <RouterLink :to="loginReturnTo" class="link">로그인</RouterLink>이
+          필요해요.
         </div>
 
         <div v-if="commentsError" class="error-banner">댓글을 불러오지 못했습니다.</div>
@@ -122,7 +136,9 @@
                 class="comment-delete"
                 @click="onDeleteComment(c.id)"
                 title="삭제 (본인 댓글만)"
-              >✕</button>
+              >
+                ✕
+              </button>
             </div>
             <div class="comment-body">{{ c.content }}</div>
           </li>
@@ -130,9 +146,16 @@
         <div v-else class="empty-msg">아직 댓글이 없어요. 첫 댓글을 남겨보세요 ♪</div>
 
         <div v-if="commentTotalPages > 1" class="pagination">
-          <button :disabled="commentPage === 0" @click="changeCommentPage(commentPage - 1)">‹ 이전</button>
+          <button :disabled="commentPage === 0" @click="changeCommentPage(commentPage - 1)">
+            ‹ 이전
+          </button>
           <span class="page-indicator">{{ commentPage + 1 }} / {{ commentTotalPages }}</span>
-          <button :disabled="commentPage >= commentTotalPages - 1" @click="changeCommentPage(commentPage + 1)">다음 ›</button>
+          <button
+            :disabled="commentPage >= commentTotalPages - 1"
+            @click="changeCommentPage(commentPage + 1)"
+          >
+            다음 ›
+          </button>
         </div>
       </section>
     </div>
@@ -147,7 +170,8 @@
         <div class="modal-body">
           <div v-if="playlistsLoading" class="loading-msg sm">♪ 불러오는 중...</div>
           <div v-else-if="playlists.length === 0" class="empty-msg">
-            아직 플레이리스트가 없어요. <RouterLink to="/playlists" class="link">만들러 가기</RouterLink>
+            아직 플레이리스트가 없어요.
+            <RouterLink to="/playlists" class="link">만들러 가기</RouterLink>
           </div>
           <ul v-else class="playlist-pick-list">
             <li v-for="pl in playlists" :key="pl.id" class="playlist-pick">
@@ -161,7 +185,9 @@
                 class="btn-add"
                 :disabled="addingTo === pl.id"
                 @click="onAddToPlaylist(pl.id)"
-              >{{ addingTo === pl.id ? '...' : '+ 담기' }}</button>
+              >
+                {{ addingTo === pl.id ? '...' : '+ 담기' }}
+              </button>
             </li>
           </ul>
           <div v-if="playlistFeedback" class="playlist-feedback">{{ playlistFeedback }}</div>
@@ -185,16 +211,20 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const MOOD_LABELS = {
-  BRIGHT: '밝음', DARK: '다크', EMOTIONAL: '감성', ENERGETIC: '신남', CALM: '잔잔함',
+  BRIGHT: '밝음',
+  DARK: '다크',
+  EMOTIONAL: '감성',
+  ENERGETIC: '신남',
+  CALM: '잔잔함',
 };
 
 const CHAR_COLORS = {
-  '하츠네 미쿠':   { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
+  '하츠네 미쿠': { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
   '메구리네 루카': { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  '카가미네 렌':   { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카가미네 린':   { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카이토':       { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
-  '메이코':       { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
+  '카가미네 렌': { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
+  '카가미네 린': { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
+  카이토: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
+  메이코: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
 };
 
 const songId = computed(() => Number(route.params.id));
@@ -224,7 +254,8 @@ const isOwner = computed(() => {
 });
 
 const loginReturnTo = computed(() => ({
-  name: 'login', query: { return: route.fullPath },
+  name: 'login',
+  query: { return: route.fullPath },
 }));
 
 const youtubeEmbedUrl = computed(() => {
@@ -405,19 +436,26 @@ onMounted(() => {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
   grid-template-areas:
-    "player meta"
-    "comments comments";
+    'player meta'
+    'comments comments';
   gap: 28px;
 }
 
-.player-section { grid-area: player; }
-.meta-section   { grid-area: meta; }
-.comments-section { grid-area: comments; margin-top: 16px; }
+.player-section {
+  grid-area: player;
+}
+.meta-section {
+  grid-area: meta;
+}
+.comments-section {
+  grid-area: comments;
+  margin-top: 16px;
+}
 
 @media (max-width: 900px) {
   .detail-grid {
     grid-template-columns: 1fr;
-    grid-template-areas: "player" "meta" "comments";
+    grid-template-areas: 'player' 'meta' 'comments';
   }
 }
 
@@ -434,7 +472,8 @@ onMounted(() => {
 .player iframe {
   position: absolute;
   inset: 0;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
 }
 .player-empty {
   width: 100%;
@@ -486,11 +525,17 @@ onMounted(() => {
 .meta-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
-  background: repeating-linear-gradient(90deg,
-    var(--miku) 0 18px, var(--pink) 18px 36px,
-    var(--lav) 36px 54px, var(--yellow) 54px 72px);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--miku) 0 18px,
+    var(--pink) 18px 36px,
+    var(--lav) 36px 54px,
+    var(--yellow) 54px 72px
+  );
 }
 
 .meta-eyebrow {
@@ -509,7 +554,9 @@ onMounted(() => {
   color: var(--text);
   line-height: 1.3;
   margin: 0 0 16px;
-  text-shadow: 1px 1px 0 var(--surface), 2px 2px 0 var(--pink-lt);
+  text-shadow:
+    1px 1px 0 var(--surface),
+    2px 2px 0 var(--pink-lt);
 }
 
 .char-row {
@@ -580,7 +627,8 @@ onMounted(() => {
   gap: 8px;
   margin-bottom: 14px;
 }
-.btn-like, .btn-playlist {
+.btn-like,
+.btn-playlist {
   flex: 1;
   font-size: 13px;
   font-weight: 800;
@@ -595,14 +643,25 @@ onMounted(() => {
   background: var(--pink-lt);
   border-color: var(--pink);
 }
-.btn-like:hover { background: var(--pink); color: white; transform: scale(1.03) rotate(-2deg); }
-.btn-like.liked { background: var(--pink); color: white; }
+.btn-like:hover {
+  background: var(--pink);
+  color: white;
+  transform: scale(1.03) rotate(-2deg);
+}
+.btn-like.liked {
+  background: var(--pink);
+  color: white;
+}
 .btn-playlist {
   color: var(--lav-dk);
   background: var(--lav-lt);
   border-color: var(--lav);
 }
-.btn-playlist:hover { background: var(--lav); color: white; transform: translateY(-2px); }
+.btn-playlist:hover {
+  background: var(--lav);
+  color: white;
+  transform: translateY(-2px);
+}
 
 .tag-row {
   display: flex;
@@ -635,7 +694,10 @@ onMounted(() => {
   cursor: pointer;
   transition: all 0.2s;
 }
-.btn-danger:hover { background: var(--coral); color: white; }
+.btn-danger:hover {
+  background: var(--coral);
+  color: white;
+}
 
 /* ── 댓글 ── */
 .section-header {
@@ -652,7 +714,9 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  text-shadow: 2px 2px 0 var(--surface), 3px 3px 0 var(--pink-lt);
+  text-shadow:
+    2px 2px 0 var(--surface),
+    3px 3px 0 var(--pink-lt);
 }
 .section-title::before {
   content: '✦';
@@ -691,7 +755,10 @@ onMounted(() => {
   color: var(--text);
   resize: vertical;
   outline: none;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s;
 }
 .comment-form textarea:focus {
   border-color: var(--miku);
@@ -720,7 +787,9 @@ onMounted(() => {
   cursor: pointer;
   transition: transform 0.2s;
 }
-.btn-submit-sm:hover:not(:disabled) { transform: translateY(-2px); }
+.btn-submit-sm:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
 .btn-submit-sm:disabled {
   background: var(--border);
   color: var(--text3);
@@ -842,7 +911,10 @@ onMounted(() => {
   padding: 60px 0;
   animation: float-y 2s ease-in-out infinite;
 }
-.loading-msg.sm { font-size: 16px; padding: 28px 0; }
+.loading-msg.sm {
+  font-size: 16px;
+  padding: 28px 0;
+}
 
 .error-banner {
   background: var(--coral-lt);
@@ -885,11 +957,17 @@ onMounted(() => {
 .modal::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 4px;
-  background: repeating-linear-gradient(90deg,
-    var(--miku) 0 20px, var(--pink) 20px 40px,
-    var(--lav) 40px 60px, var(--yellow) 60px 80px);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--miku) 0 20px,
+    var(--pink) 20px 40px,
+    var(--lav) 40px 60px,
+    var(--yellow) 60px 80px
+  );
 }
 .modal-header {
   display: flex;
@@ -912,8 +990,13 @@ onMounted(() => {
   padding: 4px 8px;
   border-radius: 8px;
 }
-.modal-close:hover { color: var(--text); background: var(--bg2); }
-.modal-body { padding: 4px 24px 24px; }
+.modal-close:hover {
+  color: var(--text);
+  background: var(--bg2);
+}
+.modal-body {
+  padding: 4px 24px 24px;
+}
 
 .playlist-pick-list {
   list-style: none;

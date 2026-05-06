@@ -13,13 +13,7 @@
 
       <div v-if="songError" class="error-msg">곡 목록을 불러오지 못했습니다.</div>
       <div v-else-if="songLoading" class="loading-msg">♪ 불러오는 중...</div>
-      <SongGrid
-        v-else
-        :songs="songItems"
-        :total="songTotal"
-        @like="onLike"
-        @open="onOpen"
-      />
+      <SongGrid v-else :songs="songItems" :total="songTotal" @like="onLike" @open="onOpen" />
     </div>
   </div>
 </template>
@@ -40,7 +34,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const selectedMood = ref('all');
-const searchQuery  = ref('');
+const searchQuery = ref('');
 
 // ── 통계 (추후 /api/stats 엔드포인트 생기면 교체) ──
 const stats = { songCount: 0, userCount: 0, tagCount: 0 };
@@ -67,7 +61,7 @@ const characterItems = computed(() =>
     color: c.colorHex ?? '#7DDFD4',
     colorDk: c.colorHex ?? '#3BBCB0',
     songCount: 0,
-  }))
+  })),
 );
 
 // ── 곡 목록 ──
@@ -116,8 +110,8 @@ const CHAR_COLOR_KEY_MAP = {
   '메구리네 루카': 'luka',
   '카가미네 렌': 'ren',
   '카가미네 린': 'rin',
-  '카이토': 'kaito',
-  '메이코': 'meiko',
+  카이토: 'kaito',
+  메이코: 'meiko',
 };
 
 const songItems = computed(() =>
@@ -136,7 +130,7 @@ const songItems = computed(() =>
     likeCount: s.likeCount,
     duration: null,
     thumbnailUrl: s.thumbnailUrl,
-  }))
+  })),
 );
 
 function onCharSelect(charId) {
@@ -184,7 +178,9 @@ function onOpen(songId) {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  text-shadow: 2px 2px 0 var(--surface), 3px 3px 0 var(--pink-lt);
+  text-shadow:
+    2px 2px 0 var(--surface),
+    3px 3px 0 var(--pink-lt);
   white-space: nowrap;
 }
 

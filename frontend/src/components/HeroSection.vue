@@ -5,13 +5,15 @@
     <div class="hero-text">
       <div class="hero-badge">보컬로이드 팬들의 비밀기지</div>
       <h1>
-        좋아하는<br>
-        <ruby><span class="gradient-word">ボカロ</span><rt>보 카 로</rt></ruby>를<br>
+        좋아하는<br />
+        <ruby><span class="gradient-word">ボカロ</span><rt>보 카 로</rt></ruby
+        >를<br />
         모두와 나눠요<span class="blink">_</span>
       </h1>
       <p>
-        미쿠, 루카, 렌… 좋아하는 캐릭터의 곡을 직접 등록하고<br>
-        <span class="kw">태그</span>와 <span class="kw">분위기</span>로 탐색하는 <strong>덕후들의 아카이브</strong>
+        미쿠, 루카, 렌… 좋아하는 캐릭터의 곡을 직접 등록하고<br />
+        <span class="kw">태그</span>와 <span class="kw">분위기</span>로 탐색하는
+        <strong>덕후들의 아카이브</strong>
       </p>
       <div class="hero-actions">
         <RouterLink to="/search" class="btn-primary">♪ 탐색 시작하기</RouterLink>
@@ -21,21 +23,21 @@
 
     <div class="hero-stats">
       <div class="stat-card">
-        <div class="stat-icon" style="background:var(--miku-lt);color:var(--miku-dk)">♪</div>
+        <div class="stat-icon" style="background: var(--miku-lt); color: var(--miku-dk)">♪</div>
         <div>
           <div class="stat-num">{{ formatCount(stats.songCount) }}</div>
           <div class="stat-label">등록된 곡 / songs</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon" style="background:var(--pink-lt);color:var(--pink-dk)">♡</div>
+        <div class="stat-icon" style="background: var(--pink-lt); color: var(--pink-dk)">♡</div>
         <div>
           <div class="stat-num">{{ formatCount(stats.userCount) }}</div>
           <div class="stat-label">활동 유저 / fans</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon" style="background:var(--lav-lt);color:var(--lav-dk)">✦</div>
+        <div class="stat-icon" style="background: var(--lav-lt); color: var(--lav-dk)">✦</div>
         <div>
           <div class="stat-num">{{ formatCount(stats.tagCount) }}</div>
           <div class="stat-label">태그 / tags</div>
@@ -59,9 +61,14 @@ defineProps({
 const particlesEl = ref(null);
 
 const GLYPHS = [
-  { c: '♪', cls: 'note' }, { c: '♫', cls: 'note' }, { c: '✦', cls: 'star' },
-  { c: '✧', cls: 'star' }, { c: '★', cls: 'star' }, { c: '♡', cls: 'heart' },
-  { c: '♬', cls: 'note' }, { c: '✦', cls: 'star' },
+  { c: '♪', cls: 'note' },
+  { c: '♫', cls: 'note' },
+  { c: '✦', cls: 'star' },
+  { c: '✧', cls: 'star' },
+  { c: '★', cls: 'star' },
+  { c: '♡', cls: 'heart' },
+  { c: '♬', cls: 'note' },
+  { c: '✦', cls: 'star' },
 ];
 
 onMounted(() => {
@@ -73,13 +80,13 @@ onMounted(() => {
     el.className = 'particle ' + g.cls;
     el.textContent = g.c;
     el.style.left = Math.random() * 100 + '%';
-    el.style.top  = Math.random() * 100 + '%';
+    el.style.top = Math.random() * 100 + '%';
     el.style.setProperty('--dx', (Math.random() - 0.5) * 80 + 'px');
-    el.style.setProperty('--dy', (-40 - Math.random() * 80) + 'px');
+    el.style.setProperty('--dy', -40 - Math.random() * 80 + 'px');
     const dur = 6 + Math.random() * 8;
     const delay = -Math.random() * dur;
     el.style.animation = `drift ${dur}s linear ${delay}s infinite, float-y ${3 + Math.random() * 3}s ease-in-out ${delay}s infinite`;
-    el.style.fontSize = (12 + Math.random() * 14) + 'px';
+    el.style.fontSize = 12 + Math.random() * 14 + 'px';
     root.appendChild(el);
   }
 });
@@ -105,9 +112,11 @@ function formatCount(n) {
 .hero::before {
   content: '';
   position: absolute;
-  width: 380px; height: 380px;
+  width: 380px;
+  height: 380px;
   background: radial-gradient(circle, var(--miku) 0%, transparent 70%);
-  top: -120px; right: 60px;
+  top: -120px;
+  right: 60px;
   border-radius: 50%;
   opacity: 0.35;
   animation: float-y 6s ease-in-out infinite;
@@ -116,9 +125,11 @@ function formatCount(n) {
 .hero::after {
   content: '';
   position: absolute;
-  width: 280px; height: 280px;
+  width: 280px;
+  height: 280px;
   background: radial-gradient(circle, var(--pink) 0%, transparent 70%);
-  bottom: -80px; left: -40px;
+  bottom: -80px;
+  left: -40px;
   border-radius: 50%;
   opacity: 0.3;
   animation: float-y 7s ease-in-out infinite reverse;
@@ -142,7 +153,7 @@ function formatCount(n) {
 :deep(.particle.note) {
   color: var(--lav-dk);
   opacity: 0.55;
-  text-shadow: 0 0 10px rgba(196,181,253,0.6);
+  text-shadow: 0 0 10px rgba(196, 181, 253, 0.6);
 }
 
 :deep(.particle.star) {
@@ -179,9 +190,11 @@ function formatCount(n) {
     linear-gradient(90deg, var(--miku), var(--pink), var(--lav), var(--miku));
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  background-size: 100% 100%, 300% 100%;
+  background-size:
+    100% 100%,
+    300% 100%;
   animation: shimmer 4s linear infinite;
-  box-shadow: 0 4px 14px rgba(125,223,212,0.3);
+  box-shadow: 0 4px 14px rgba(125, 223, 212, 0.3);
 }
 
 .hero-badge::before {
@@ -214,7 +227,9 @@ h1 {
   animation: shimmer 4s linear infinite;
 }
 
-ruby { font-size: inherit; }
+ruby {
+  font-size: inherit;
+}
 ruby rt {
   font-family: var(--font-jp);
   font-size: 0.32em;
@@ -240,7 +255,10 @@ p {
   padding: 0 2px;
 }
 
-.blink { animation: blink-cursor 1s steps(2) infinite; color: var(--pink-dk); }
+.blink {
+  animation: blink-cursor 1s steps(2) infinite;
+  color: var(--pink-dk);
+}
 
 .hero-actions {
   display: flex;
@@ -259,7 +277,9 @@ p {
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 6px 18px rgba(59,188,176,0.45), inset 0 1px 0 rgba(255,255,255,0.4);
+  box-shadow:
+    0 6px 18px rgba(59, 188, 176, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: hidden;
   text-decoration: none;
@@ -271,12 +291,19 @@ p {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.5) 50%, transparent 65%);
+  background: linear-gradient(
+    120deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 65%
+  );
   background-size: 200% 100%;
   animation: shimmer 2.6s linear infinite;
 }
 
-.btn-primary:hover { transform: translateY(-3px) scale(1.02); }
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.02);
+}
 
 .btn-secondary {
   font-family: var(--font-body);
@@ -324,13 +351,18 @@ p {
   transition: transform 0.2s;
 }
 
-.stat-card:hover { transform: translateY(-3px) rotate(-1deg); }
-.stat-card:nth-child(2):hover { transform: translateY(-3px) rotate(1deg); }
+.stat-card:hover {
+  transform: translateY(-3px) rotate(-1deg);
+}
+.stat-card:nth-child(2):hover {
+  transform: translateY(-3px) rotate(1deg);
+}
 
 .stat-card::before {
   content: '✦';
   position: absolute;
-  top: -8px; right: 14px;
+  top: -8px;
+  right: 14px;
   font-size: 14px;
   color: var(--pink-dk);
   background: var(--surface);
@@ -339,14 +371,15 @@ p {
 }
 
 .stat-icon {
-  width: 44px; height: 44px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
   flex-shrink: 0;
-  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.6);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6);
 }
 
 .stat-num {

@@ -37,10 +37,12 @@ const authStore = useAuthStore();
 
 <style scoped>
 .app-header {
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0.92) 0%,
-    rgba(253,232,243,0.85) 50%,
-    rgba(255,255,255,0.92) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(253, 232, 243, 0.85) 50%,
+    rgba(255, 255, 255, 0.92) 100%
+  );
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1.5px solid var(--border);
@@ -58,13 +60,17 @@ const authStore = useAuthStore();
 .app-header::after {
   content: '';
   position: absolute;
-  left: 0; right: 0; bottom: -4px;
+  left: 0;
+  right: 0;
+  bottom: -4px;
   height: 4px;
-  background: repeating-linear-gradient(90deg,
+  background: repeating-linear-gradient(
+    90deg,
     var(--miku) 0 24px,
     var(--pink) 24px 48px,
     var(--lav) 48px 72px,
-    var(--yellow) 72px 96px);
+    var(--yellow) 72px 96px
+  );
   opacity: 0.7;
 }
 
@@ -76,7 +82,9 @@ const authStore = useAuthStore();
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  text-shadow: 1px 1px 0 var(--miku-lt), 2px 2px 0 rgba(196,181,253,0.4);
+  text-shadow:
+    1px 1px 0 var(--miku-lt),
+    2px 2px 0 rgba(196, 181, 253, 0.4);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
@@ -159,7 +167,9 @@ nav {
   padding: 9px 22px;
   cursor: pointer;
   transition: all 0.18s;
-  box-shadow: 0 4px 14px rgba(59,188,176,0.35), inset 0 1px 0 rgba(255,255,255,0.4);
+  box-shadow:
+    0 4px 14px rgba(59, 188, 176, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
   position: relative;
   overflow: hidden;
   text-decoration: none;
@@ -172,7 +182,12 @@ nav {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%);
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 70%
+  );
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
 }

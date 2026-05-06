@@ -9,7 +9,9 @@
             class="char-pill"
             :class="{ active: !selectedCharacterId }"
             @click="setCharacter(null)"
-          >전체 캐릭터</button>
+          >
+            전체 캐릭터
+          </button>
           <button
             v-for="char in characters"
             :key="char.id"
@@ -17,7 +19,9 @@
             :class="{ active: selectedCharacterId === char.id }"
             :style="charPillStyle(char, selectedCharacterId === char.id)"
             @click="setCharacter(char.id)"
-          >{{ char.name }}</button>
+          >
+            {{ char.name }}
+          </button>
         </div>
 
         <div class="sort-wrap">
@@ -32,7 +36,8 @@
 
       <div class="result-meta">
         <span v-if="!loading && !error">
-          총 <strong>{{ total }}</strong>곡
+          총 <strong>{{ total }}</strong
+          >곡
           <span v-if="hasFilters" class="filter-summary">· {{ filterSummary }}</span>
         </span>
       </div>
@@ -75,25 +80,29 @@ const MOOD_MAP = {
   energetic: 'ENERGETIC',
   calm: 'CALM',
 };
-const MOOD_REVERSE = Object.fromEntries(
-  Object.entries(MOOD_MAP).filter(([, v]) => v).map(([k, v]) => [v, k])
-);
 const MOOD_LABELS = {
-  bright: '밝음', dark: '다크', emotional: '감성', energetic: '신남', calm: '잔잔함',
+  bright: '밝음',
+  dark: '다크',
+  emotional: '감성',
+  energetic: '신남',
+  calm: '잔잔함',
 };
 
 const CHAR_COLORS = {
-  '하츠네 미쿠':   { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
+  '하츠네 미쿠': { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
   '메구리네 루카': { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  '카가미네 렌':   { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카가미네 린':   { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카이토':       { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
-  '메이코':       { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
+  '카가미네 렌': { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
+  '카가미네 린': { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
+  카이토: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
+  메이코: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
 };
 const CHAR_COLOR_KEY_MAP = {
-  '하츠네 미쿠': 'miku', '메구리네 루카': 'luka',
-  '카가미네 렌': 'ren', '카가미네 린': 'rin',
-  '카이토': 'kaito', '메이코': 'meiko',
+  '하츠네 미쿠': 'miku',
+  '메구리네 루카': 'luka',
+  '카가미네 렌': 'ren',
+  '카가미네 린': 'rin',
+  카이토: 'kaito',
+  메이코: 'meiko',
 };
 
 const PAGE_SIZE = 20;
@@ -192,19 +201,28 @@ watch(page, () => {
 });
 
 // 브라우저 back/forward 시 쿼리 변화 → 상태 동기화
-watch(() => route.query, () => {
-  if (route.name !== 'search') return;
-  const before = JSON.stringify({
-    mood: selectedMood.value, kw: searchQuery.value,
-    char: selectedCharacterId.value, sort: selectedSort.value, page: page.value,
-  });
-  applyFromQuery();
-  const after = JSON.stringify({
-    mood: selectedMood.value, kw: searchQuery.value,
-    char: selectedCharacterId.value, sort: selectedSort.value, page: page.value,
-  });
-  if (before !== after) loadSongs();
-});
+watch(
+  () => route.query,
+  () => {
+    if (route.name !== 'search') return;
+    const before = JSON.stringify({
+      mood: selectedMood.value,
+      kw: searchQuery.value,
+      char: selectedCharacterId.value,
+      sort: selectedSort.value,
+      page: page.value,
+    });
+    applyFromQuery();
+    const after = JSON.stringify({
+      mood: selectedMood.value,
+      kw: searchQuery.value,
+      char: selectedCharacterId.value,
+      sort: selectedSort.value,
+      page: page.value,
+    });
+    if (before !== after) loadSongs();
+  },
+);
 
 onMounted(async () => {
   applyFromQuery();
@@ -232,14 +250,15 @@ const songItems = computed(() =>
     likeCount: s.likeCount,
     duration: null,
     thumbnailUrl: s.thumbnailUrl,
-  }))
+  })),
 );
 
-const hasFilters = computed(() =>
-  selectedMood.value !== 'all'
-  || searchQuery.value.trim()
-  || selectedCharacterId.value
-  || selectedSort.value !== 'LATEST'
+const hasFilters = computed(
+  () =>
+    selectedMood.value !== 'all' ||
+    searchQuery.value.trim() ||
+    selectedCharacterId.value ||
+    selectedSort.value !== 'LATEST',
 );
 
 const filterSummary = computed(() => {
@@ -312,7 +331,9 @@ function onOpen(songId) {
   cursor: pointer;
   transition: all 0.2s;
 }
-.char-pill:hover { transform: translateY(-1px); }
+.char-pill:hover {
+  transform: translateY(-1px);
+}
 .char-pill.active {
   background: var(--miku-dk);
   color: white;

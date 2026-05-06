@@ -59,5 +59,17 @@ export const useAuthStore = defineStore('auth', {
       this.refreshToken = refreshToken;
       localStorage.setItem('refreshToken', refreshToken);
     },
+
+    // 다른 탭에서 로그아웃하면 storage 이벤트가 발화 — 현재 탭도 즉시 클리어.
+    bindCrossTabSync() {
+      window.addEventListener('storage', (e) => {
+        if (e.key !== 'refreshToken') return;
+        if (e.newValue === null && this.accessToken) {
+          this.accessToken = null;
+          this.refreshToken = null;
+          this.user = null;
+        }
+      });
+    },
   },
 });
