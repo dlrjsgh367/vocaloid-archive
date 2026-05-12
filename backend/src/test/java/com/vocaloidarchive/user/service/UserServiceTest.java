@@ -2,10 +2,10 @@ package com.vocaloidarchive.user.service;
 
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
-import com.vocaloidarchive.user.domain.User;
 import com.vocaloidarchive.user.dto.request.SignUpRequest;
 import com.vocaloidarchive.user.dto.response.UserResponse;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-  @Mock UserRepository userRepository;
+  @Mock UserJpaRepository userRepository;
   @Mock PasswordEncoder passwordEncoder;
   @InjectMocks UserService userService;
 
@@ -36,8 +36,8 @@ class UserServiceTest {
     given(userRepository.existsByUsername("testuser")).willReturn(false);
     given(userRepository.existsByEmail("test@example.com")).willReturn(false);
     given(passwordEncoder.encode("password1")).willReturn("hashed");
-    User saved = User.of("testuser", "test@example.com", "hashed");
-    given(userRepository.save(any(User.class))).willReturn(saved);
+    UserEntity saved = UserEntity.of("testuser", "test@example.com", "hashed");
+    given(userRepository.save(any(UserEntity.class))).willReturn(saved);
 
     // when
     UserResponse response = userService.signUp(request);
@@ -45,7 +45,7 @@ class UserServiceTest {
     // then
     assertThat(response.username()).isEqualTo("testuser");
     assertThat(response.email()).isEqualTo("test@example.com");
-    verify(userRepository).save(any(User.class));
+    verify(userRepository).save(any(UserEntity.class));
   }
 
   @Test
@@ -78,12 +78,12 @@ class UserServiceTest {
   @Test
   void givenValidCredentials_whenAuthenticate_thenReturnsUser() {
     // given
-    User user = User.of("user", "user@example.com", "hashed");
+    UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
     given(userRepository.findByEmail("user@example.com")).willReturn(Optional.of(user));
     given(passwordEncoder.matches("password1", "hashed")).willReturn(true);
 
     // when
-    User result = userService.authenticate("user@example.com", "password1");
+    UserEntity result = userService.authenticate("user@example.com", "password1");
 
     // then
     assertThat(result.getEmail()).isEqualTo("user@example.com");
@@ -104,7 +104,7 @@ class UserServiceTest {
   @Test
   void givenWrongPassword_whenAuthenticate_thenThrowsInvalidCredentials() {
     // given
-    User user = User.of("user", "user@example.com", "hashed");
+    UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
     given(userRepository.findByEmail("user@example.com")).willReturn(Optional.of(user));
     given(passwordEncoder.matches("wrong", "hashed")).willReturn(false);
 

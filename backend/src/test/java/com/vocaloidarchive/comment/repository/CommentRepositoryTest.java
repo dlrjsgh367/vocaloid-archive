@@ -6,8 +6,8 @@ import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,19 +28,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommentRepositoryTest extends AbstractMysqlContainerTest {
 
   @Autowired CommentRepository commentRepository;
-  @Autowired UserRepository userRepository;
+  @Autowired UserJpaRepository userRepository;
   @Autowired SongRepository songRepository;
   @Autowired TestEntityManager em;
 
-  private User user1;
-  private User user2;
+  private UserEntity user1;
+  private UserEntity user2;
   private Song song;
 
   @BeforeEach
   void setUp() {
     commentRepository.deleteAll();
-    user1 = userRepository.save(User.of("alice", "alice@a.com", "hash"));
-    user2 = userRepository.save(User.of("bob", "bob@b.com", "hash"));
+    user1 = userRepository.save(UserEntity.of("alice", "alice@a.com", "hash"));
+    user2 = userRepository.save(UserEntity.of("bob", "bob@b.com", "hash"));
     song = songRepository.save(Song.of(user1, "Song Title", null, null, null, null, Mood.BRIGHT));
   }
 

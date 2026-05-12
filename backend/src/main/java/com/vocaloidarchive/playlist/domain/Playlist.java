@@ -1,6 +1,6 @@
 package com.vocaloidarchive.playlist.domain;
 
-import com.vocaloidarchive.user.domain.User;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class Playlist {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  private UserEntity user;
 
   @Column(nullable = false, length = 200)
   private String title;
@@ -34,7 +34,7 @@ public class Playlist {
   @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
 
-  public static Playlist of(User user, String title, boolean isPublic) {
+  public static Playlist of(UserEntity user, String title, boolean isPublic) {
     Playlist p = new Playlist();
     p.user = user;
     p.title = title;

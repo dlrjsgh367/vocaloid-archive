@@ -3,10 +3,10 @@ package com.vocaloidarchive.user.service;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.security.JwtTokenProvider;
-import com.vocaloidarchive.user.domain.RefreshToken;
-import com.vocaloidarchive.user.domain.User;
 import com.vocaloidarchive.user.dto.response.TokenResponse;
-import com.vocaloidarchive.user.repository.RefreshTokenRepository;
+import com.vocaloidarchive.user.infra.persistence.RefreshTokenEntity;
+import com.vocaloidarchive.user.infra.persistence.RefreshTokenJpaRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,15 +22,15 @@ import java.util.HexFormat;
 @Transactional(readOnly = true)
 public class RefreshTokenService {
 
-  private final RefreshTokenRepository refreshTokenRepository;
+  private final RefreshTokenJpaRepository refreshTokenRepository;
   private final JwtTokenProvider jwtTokenProvider;
 
   @Transactional
-  public TokenResponse issueTokens(User user) {
+  public TokenResponse issueTokens(UserEntity user) {
     String rawRefreshToken = jwtTokenProvider.generateRawRefreshToken();
     String tokenHash = hash(rawRefreshToken);
     LocalDateTime expiresAt = jwtTokenProvider.refreshTokenExpiry();
-    refreshTokenRepository.save(RefreshToken.of(user, tokenHash, expiresAt));
+    refreshTokenRepository.save(RefreshTokenEntity.of(user, tokenHash, expiresAt));
     String accessToken = jwtTokenProvider.generateAccessToken(user.getId());
     return new TokenResponse(accessToken, rawRefreshToken);
   }
@@ -38,10 +38,10 @@ public class RefreshTokenService {
   @Transactional
   public TokenResponse rotate(String rawRefreshToken) {
     String tokenHash = hash(rawRefreshToken);
-    RefreshToken existing = refreshTokenRepository
+    RefreshTokenEntity existing = refreshTokenRepository
         .findByTokenHashAndExpiresAtAfter(tokenHash, LocalDateTime.now())
         .orElseThrow(() -> new BusinessException(ErrorCode.INVALID_TOKEN));
-    User user = existing.getUser();
+    UserEntity user = existing.getUser();
     refreshTokenRepository.delete(existing);
     return issueTokens(user);
   }

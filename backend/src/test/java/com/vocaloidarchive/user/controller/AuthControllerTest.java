@@ -9,12 +9,12 @@ import com.vocaloidarchive.common.security.JwtAccessDeniedHandler;
 import com.vocaloidarchive.common.security.JwtAuthenticationEntryPoint;
 import com.vocaloidarchive.common.security.JwtAuthenticationFilter;
 import com.vocaloidarchive.common.security.JwtTokenProvider;
-import com.vocaloidarchive.user.domain.User;
 import com.vocaloidarchive.user.dto.request.LoginRequest;
 import com.vocaloidarchive.user.dto.request.RefreshRequest;
 import com.vocaloidarchive.user.dto.request.SignUpRequest;
 import com.vocaloidarchive.user.dto.response.TokenResponse;
 import com.vocaloidarchive.user.dto.response.UserResponse;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.service.RefreshTokenService;
 import com.vocaloidarchive.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,10 +90,10 @@ class AuthControllerTest {
   @Test
   void givenValidLoginRequest_whenLogin_thenReturns200WithTokens() throws Exception {
     LoginRequest req = new LoginRequest("test@example.com", "password1");
-    User user = User.of("user", "test@example.com", "hash");
+    UserEntity user = UserEntity.of("user", "test@example.com", "hash");
     TokenResponse tokens = new TokenResponse("access.token", "raw-refresh");
     given(userService.authenticate("test@example.com", "password1")).willReturn(user);
-    given(refreshTokenService.issueTokens(any(User.class))).willReturn(tokens);
+    given(refreshTokenService.issueTokens(any(UserEntity.class))).willReturn(tokens);
 
     mockMvc.perform(post("/api/auth/login")
             .contentType(MediaType.APPLICATION_JSON)

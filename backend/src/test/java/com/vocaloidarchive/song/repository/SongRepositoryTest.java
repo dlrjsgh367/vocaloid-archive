@@ -8,8 +8,8 @@ import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.tag.domain.Tag;
 import com.vocaloidarchive.tag.repository.TagRepository;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SongRepositoryTest extends AbstractMysqlContainerTest {
 
   @Autowired SongRepository songRepository;
-  @Autowired UserRepository userRepository;
+  @Autowired UserJpaRepository userRepository;
   @Autowired CharacterRepository characterRepository;
   @Autowired TagRepository tagRepository;
   @PersistenceContext EntityManager em;
@@ -37,7 +37,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("incrementPlayCount: 영향 row=1, DB에서 +1 반영")
   void incrementPlayCount_increments() {
-    User u = userRepository.save(User.of("alice", "alice@a.com", "hash"));
+    UserEntity u = userRepository.save(UserEntity.of("alice", "alice@a.com", "hash"));
     Song s = songRepository.save(Song.of(u, "Title", null, null, null, null, Mood.BRIGHT));
     em.flush();
 
@@ -59,7 +59,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("findDetailWithCharacters: LAZY 초기화 없이 character 컬렉션 접근")
   void findDetailWithCharacters_fetchJoin() {
-    User u = userRepository.save(User.of("bob", "bob@a.com", "hash"));
+    UserEntity u = userRepository.save(UserEntity.of("bob", "bob@a.com", "hash"));
     Character c = characterRepository.save(Character.of("미쿠", "#39C5BB", null));
     Song s = Song.of(u, "Title", null, null, null, null, Mood.CALM);
     s.addCharacter(c);
@@ -77,7 +77,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("findDetailWithTags: tags 컬렉션 fetch join")
   void findDetailWithTags_fetchJoin() {
-    User u = userRepository.save(User.of("carol", "c@a.com", "hash"));
+    UserEntity u = userRepository.save(UserEntity.of("carol", "c@a.com", "hash"));
     Tag t = tagRepository.save(Tag.of("pop"));
     Song s = Song.of(u, "Title", null, null, null, null, Mood.DARK);
     s.addTag(t);
@@ -95,7 +95,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("Song 삭제 시 song_characters / song_tags CASCADE")
   void delete_cascades_join_tables() {
-    User u = userRepository.save(User.of("dave", "d@a.com", "hash"));
+    UserEntity u = userRepository.save(UserEntity.of("dave", "d@a.com", "hash"));
     Character c = characterRepository.save(Character.of("렌", "#FFC56C", null));
     Tag t = tagRepository.save(Tag.of("rock"));
     Song s = Song.of(u, "Title", null, null, null, null, Mood.ENERGETIC);

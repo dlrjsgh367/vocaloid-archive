@@ -13,8 +13,8 @@ import com.vocaloidarchive.playlist.repository.PlaylistRepository;
 import com.vocaloidarchive.playlist.repository.PlaylistSongRepository;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +29,7 @@ public class PlaylistService {
   private final PlaylistRepository playlistRepository;
   private final PlaylistSongRepository playlistSongRepository;
   private final SongRepository songRepository;
-  private final UserRepository userRepository;
+  private final UserJpaRepository userRepository;
   private final SecurityUtil securityUtil;
 
   public List<PlaylistResponse> getMyPlaylists() {
@@ -60,7 +60,7 @@ public class PlaylistService {
   @Transactional
   public PlaylistResponse create(PlaylistCreateRequest req) {
     Long userId = securityUtil.getCurrentUserId();
-    User user = userRepository.getReferenceById(userId);
+    UserEntity user = userRepository.getReferenceById(userId);
     Playlist saved = playlistRepository.save(Playlist.of(user, req.title(), req.isPublic()));
     return PlaylistResponse.from(saved, 0);
   }

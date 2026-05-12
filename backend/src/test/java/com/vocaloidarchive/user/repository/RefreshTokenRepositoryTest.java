@@ -2,8 +2,10 @@ package com.vocaloidarchive.user.repository;
 
 import com.vocaloidarchive.common.config.AuditingConfig;
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
-import com.vocaloidarchive.user.domain.RefreshToken;
-import com.vocaloidarchive.user.domain.User;
+import com.vocaloidarchive.user.infra.persistence.RefreshTokenEntity;
+import com.vocaloidarchive.user.infra.persistence.RefreshTokenJpaRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +23,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(AuditingConfig.class)
 class RefreshTokenRepositoryTest extends AbstractMysqlContainerTest {
 
-  @Autowired UserRepository userRepository;
-  @Autowired RefreshTokenRepository refreshTokenRepository;
+  @Autowired UserJpaRepository userRepository;
+  @Autowired RefreshTokenJpaRepository refreshTokenRepository;
 
-  private User user;
+  private UserEntity user;
 
   @BeforeEach
   void setUp() {
     refreshTokenRepository.deleteAll();
     userRepository.deleteAll();
-    user = userRepository.save(User.of("rtuser", "rt@test.com", "hash"));
+    user = userRepository.save(UserEntity.of("rtuser", "rt@test.com", "hash"));
   }
 
   @Test
   void givenNonExpiredToken_whenFindByHashAndNotExpired_thenReturnsToken() {
     LocalDateTime future = LocalDateTime.now().plusDays(14);
-    refreshTokenRepository.save(RefreshToken.of(user, "hash-abc", future));
+    refreshTokenRepository.save(RefreshTokenEntity.of(user, "hash-abc", future));
 
-    Optional<RefreshToken> result = refreshTokenRepository
+    Optional<RefreshTokenEntity> result = refreshTokenRepository
         .findByTokenHashAndExpiresAtAfter("hash-abc", LocalDateTime.now());
 
     assertThat(result).isPresent();
@@ -48,9 +50,9 @@ class RefreshTokenRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   void givenExpiredToken_whenFindByHashAndNotExpired_thenReturnsEmpty() {
     LocalDateTime past = LocalDateTime.now().minusDays(1);
-    refreshTokenRepository.save(RefreshToken.of(user, "hash-expired", past));
+    refreshTokenRepository.save(RefreshTokenEntity.of(user, "hash-expired", past));
 
-    Optional<RefreshToken> result = refreshTokenRepository
+    Optional<RefreshTokenEntity> result = refreshTokenRepository
         .findByTokenHashAndExpiresAtAfter("hash-expired", LocalDateTime.now());
 
     assertThat(result).isEmpty();
@@ -59,7 +61,7 @@ class RefreshTokenRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   void givenExistingToken_whenDeleteByHash_thenTokenIsRemoved() {
     refreshTokenRepository.save(
-        RefreshToken.of(user, "hash-del", LocalDateTime.now().plusDays(1)));
+        RefreshTokenEntity.of(user, "hash-del", LocalDateTime.now().plusDays(1)));
 
     refreshTokenRepository.deleteByTokenHash("hash-del");
 

@@ -14,8 +14,8 @@ import com.vocaloidarchive.song.repository.SongQueryRepository;
 import com.vocaloidarchive.song.repository.SongRepository;
 import com.vocaloidarchive.tag.domain.Tag;
 import com.vocaloidarchive.tag.service.TagService;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class SongServiceTest {
   @Mock SongRepository songRepository;
   @Mock SongQueryRepository songQueryRepository;
   @Mock CharacterRepository characterRepository;
-  @Mock UserRepository userRepository;
+  @Mock UserJpaRepository userRepository;
   @Mock TagService tagService;
   @Mock SecurityUtil securityUtil;
   @InjectMocks SongService songService;
@@ -48,7 +48,7 @@ class SongServiceTest {
   void givenValidRequest_whenCreate_thenSavesSongWithCharactersAndTags() {
     // given
     Long userId = 1L;
-    User user = User.of("user", "user@example.com", "hashed");
+    UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
     Character character = Character.of("Miku", "#39C5BB", null);
     Tag tag = Tag.of("pop");
 
@@ -90,7 +90,7 @@ class SongServiceTest {
   void givenMissingCharacter_whenCreate_thenThrowsCharacterNotFound() {
     // given
     Long userId = 1L;
-    User user = User.of("user", "user@example.com", "hashed");
+    UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
 
     SongCreateRequest req = new SongCreateRequest(
         "Test Song",
@@ -116,7 +116,7 @@ class SongServiceTest {
   void givenNonYoutubeUrl_whenCreate_thenThumbnailUrlIsNull() {
     // given
     Long userId = 1L;
-    User user = User.of("user", "user@example.com", "hashed");
+    UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
     Character character = Character.of("Miku", "#39C5BB", null);
 
     SongCreateRequest req = new SongCreateRequest(
@@ -148,7 +148,7 @@ class SongServiceTest {
   void givenNullYoutubeUrl_whenCreate_thenThumbnailUrlIsNull() {
     // given
     Long userId = 1L;
-    User user = User.of("user", "user@example.com", "hashed");
+    UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
     Character character = Character.of("Miku", "#39C5BB", null);
 
     SongCreateRequest req = new SongCreateRequest(
@@ -182,7 +182,7 @@ class SongServiceTest {
     Long id = 5L;
     given(songRepository.incrementPlayCount(id)).willReturn(1);
     Song song = Song.of(
-        User.of("a", "a@a.com", "h"), "T", null, null, null, null, Mood.BRIGHT);
+        UserEntity.of("a", "a@a.com", "h"), "T", null, null, null, null, Mood.BRIGHT);
     given(songRepository.findDetailWithCharacters(id)).willReturn(java.util.Optional.of(song));
     given(songRepository.findDetailWithTags(id)).willReturn(java.util.Optional.of(song));
     given(songQueryRepository.likeCountFor(id)).willReturn(3L);
@@ -209,7 +209,7 @@ class SongServiceTest {
   @DisplayName("delete: 본인 → repo.delete 호출")
   void delete_owner() {
     given(securityUtil.getCurrentUserId()).willReturn(1L);
-    User owner = User.of("a", "a@a.com", "h");
+    UserEntity owner = UserEntity.of("a", "a@a.com", "h");
     org.springframework.test.util.ReflectionTestUtils.setField(owner, "id", 1L);
     Song song = Song.of(owner, "T", null, null, null, null, Mood.CALM);
     given(songRepository.findById(5L)).willReturn(java.util.Optional.of(song));
@@ -223,7 +223,7 @@ class SongServiceTest {
   @DisplayName("delete: 타인 → FORBIDDEN")
   void delete_forbidden() {
     given(securityUtil.getCurrentUserId()).willReturn(2L);
-    User owner = User.of("a", "a@a.com", "h");
+    UserEntity owner = UserEntity.of("a", "a@a.com", "h");
     org.springframework.test.util.ReflectionTestUtils.setField(owner, "id", 1L);
     Song song = Song.of(owner, "T", null, null, null, null, Mood.CALM);
     given(songRepository.findById(5L)).willReturn(java.util.Optional.of(song));

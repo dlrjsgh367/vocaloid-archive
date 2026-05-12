@@ -3,10 +3,10 @@ package com.vocaloidarchive.user.service;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.security.JwtTokenProvider;
-import com.vocaloidarchive.user.domain.RefreshToken;
-import com.vocaloidarchive.user.domain.User;
 import com.vocaloidarchive.user.dto.response.TokenResponse;
-import com.vocaloidarchive.user.repository.RefreshTokenRepository;
+import com.vocaloidarchive.user.infra.persistence.RefreshTokenEntity;
+import com.vocaloidarchive.user.infra.persistence.RefreshTokenJpaRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,11 +31,11 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class RefreshTokenServiceTest {
 
-  @Mock RefreshTokenRepository refreshTokenRepository;
+  @Mock RefreshTokenJpaRepository refreshTokenRepository;
   @Mock JwtTokenProvider jwtTokenProvider;
   @InjectMocks RefreshTokenService refreshTokenService;
 
-  private final User user = User.of("user", "user@test.com", "hash");
+  private final UserEntity user = UserEntity.of("user", "user@test.com", "hash");
 
   @Test
   void givenUser_whenIssueTokens_thenSavesHashAndReturnsTokens() {
@@ -50,7 +50,7 @@ class RefreshTokenServiceTest {
     // then
     assertThat(result.accessToken()).isEqualTo("access.token");
     assertThat(result.refreshToken()).isEqualTo("raw-refresh");
-    verify(refreshTokenRepository).save(any(RefreshToken.class));
+    verify(refreshTokenRepository).save(any(RefreshTokenEntity.class));
   }
 
   @Test
@@ -58,7 +58,7 @@ class RefreshTokenServiceTest {
     // given
     String rawToken = "old-raw-token";
     String hash = sha256(rawToken);
-    RefreshToken existing = RefreshToken.of(user, hash, LocalDateTime.now().plusDays(14));
+    RefreshTokenEntity existing = RefreshTokenEntity.of(user, hash, LocalDateTime.now().plusDays(14));
     given(refreshTokenRepository.findByTokenHashAndExpiresAtAfter(eq(hash), any()))
         .willReturn(Optional.of(existing));
     given(jwtTokenProvider.generateRawRefreshToken()).willReturn("new-raw");
@@ -70,7 +70,7 @@ class RefreshTokenServiceTest {
 
     // then
     verify(refreshTokenRepository).delete(existing);
-    verify(refreshTokenRepository).save(any(RefreshToken.class));
+    verify(refreshTokenRepository).save(any(RefreshTokenEntity.class));
     assertThat(result.refreshToken()).isEqualTo("new-raw");
     assertThat(result.accessToken()).isEqualTo("new.access");
   }

@@ -1,6 +1,6 @@
 package com.vocaloidarchive.user.dto.response;
 
-import com.vocaloidarchive.user.domain.User;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +11,7 @@ public record UserResponse(
     String profileImageUrl,
     LocalDateTime createdAt
 ) {
-  public static UserResponse from(User user) {
+  public static UserResponse from(UserEntity user) {
     return new UserResponse(
         user.getId(),
         user.getUsername(),

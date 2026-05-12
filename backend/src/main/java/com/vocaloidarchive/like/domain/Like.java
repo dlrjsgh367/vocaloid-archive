@@ -1,7 +1,7 @@
 package com.vocaloidarchive.like.domain;
 
 import com.vocaloidarchive.song.domain.Song;
-import com.vocaloidarchive.user.domain.User;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class Like {
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  private UserEntity user;
 
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
@@ -29,7 +29,7 @@ public class Like {
   @Column(name = "liked_at", nullable = false, insertable = false, updatable = false)
   private LocalDateTime likedAt;
 
-  public static Like of(User user, Song song) {
+  public static Like of(UserEntity user, Song song) {
     Like like = new Like();
     like.user = user;
     like.song = song;

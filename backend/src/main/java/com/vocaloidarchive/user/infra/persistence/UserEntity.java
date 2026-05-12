@@ -1,4 +1,4 @@
-package com.vocaloidarchive.user.domain;
+package com.vocaloidarchive.user.infra.persistence;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class UserEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,8 +36,8 @@ public class User {
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
-  public static User of(String username, String email, String passwordHash) {
-    User user = new User();
+  public static UserEntity of(String username, String email, String passwordHash) {
+    UserEntity user = new UserEntity();
     user.username = username;
     user.email = email;
     user.passwordHash = passwordHash;

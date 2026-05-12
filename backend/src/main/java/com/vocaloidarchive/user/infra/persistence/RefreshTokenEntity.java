@@ -1,4 +1,4 @@
-package com.vocaloidarchive.user.domain;
+package com.vocaloidarchive.user.infra.persistence;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken {
+public class RefreshTokenEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class RefreshToken {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+  private UserEntity user;
 
   @Column(name = "token_hash", nullable = false, length = 255)
   private String tokenHash;
@@ -34,8 +34,8 @@ public class RefreshToken {
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
-  public static RefreshToken of(User user, String tokenHash, LocalDateTime expiresAt) {
-    RefreshToken rt = new RefreshToken();
+  public static RefreshTokenEntity of(UserEntity user, String tokenHash, LocalDateTime expiresAt) {
+    RefreshTokenEntity rt = new RefreshTokenEntity();
     rt.user = user;
     rt.tokenHash = tokenHash;
     rt.expiresAt = expiresAt;

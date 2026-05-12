@@ -2,7 +2,8 @@ package com.vocaloidarchive.user.repository;
 
 import com.vocaloidarchive.common.config.AuditingConfig;
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
-import com.vocaloidarchive.user.domain.User;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(AuditingConfig.class)
 class UserRepositoryTest extends AbstractMysqlContainerTest {
 
-  @Autowired UserRepository userRepository;
+  @Autowired UserJpaRepository userRepository;
 
   @BeforeEach
   void setUp() {
@@ -28,9 +29,9 @@ class UserRepositoryTest extends AbstractMysqlContainerTest {
 
   @Test
   void givenSavedUser_whenFindByEmail_thenReturnsUser() {
-    userRepository.save(User.of("user1", "user1@test.com", "hash"));
+    userRepository.save(UserEntity.of("user1", "user1@test.com", "hash"));
 
-    Optional<User> result = userRepository.findByEmail("user1@test.com");
+    Optional<UserEntity> result = userRepository.findByEmail("user1@test.com");
 
     assertThat(result).isPresent();
     assertThat(result.get().getUsername()).isEqualTo("user1");
@@ -43,7 +44,7 @@ class UserRepositoryTest extends AbstractMysqlContainerTest {
 
   @Test
   void givenExistingUsername_whenExistsByUsername_thenReturnsTrue() {
-    userRepository.save(User.of("taken", "taken@test.com", "hash"));
+    userRepository.save(UserEntity.of("taken", "taken@test.com", "hash"));
 
     assertThat(userRepository.existsByUsername("taken")).isTrue();
     assertThat(userRepository.existsByUsername("free")).isFalse();
@@ -51,7 +52,7 @@ class UserRepositoryTest extends AbstractMysqlContainerTest {
 
   @Test
   void givenExistingEmail_whenExistsByEmail_thenReturnsTrue() {
-    userRepository.save(User.of("user2", "used@test.com", "hash"));
+    userRepository.save(UserEntity.of("user2", "used@test.com", "hash"));
 
     assertThat(userRepository.existsByEmail("used@test.com")).isTrue();
     assertThat(userRepository.existsByEmail("free@test.com")).isFalse();

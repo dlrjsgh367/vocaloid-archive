@@ -11,8 +11,8 @@ import com.vocaloidarchive.common.security.SecurityUtil;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,21 +34,21 @@ class CommentServiceTest {
 
   @Mock CommentRepository commentRepository;
   @Mock SongRepository songRepository;
-  @Mock UserRepository userRepository;
+  @Mock UserJpaRepository userRepository;
   @Mock SecurityUtil securityUtil;
   @InjectMocks CommentService commentService;
 
-  private User makeUser(String name) {
-    return User.of(name, name + "@a.com", "hash");
+  private UserEntity makeUser(String name) {
+    return UserEntity.of(name, name + "@a.com", "hash");
   }
 
-  private Song makeSong(User owner) {
+  private Song makeSong(UserEntity owner) {
     return Song.of(owner, "Title", null, null, null, null, Mood.BRIGHT);
   }
 
   @Test
   void givenSongExists_whenList_thenReturnsPageResponse() {
-    User user = makeUser("alice");
+    UserEntity user = makeUser("alice");
     Song song = makeSong(user);
     Comment comment = Comment.of(user, song, "hello");
     PageRequest pageable = PageRequest.of(0, 20);
@@ -74,7 +74,7 @@ class CommentServiceTest {
   @Test
   void givenValidRequest_whenCreate_thenSavesComment() {
     Long userId = 1L, songId = 10L;
-    User user = makeUser("alice");
+    UserEntity user = makeUser("alice");
     Song song = makeSong(user);
     Comment comment = Comment.of(user, song, "great song");
     CommentCreateRequest req = new CommentCreateRequest("great song");
