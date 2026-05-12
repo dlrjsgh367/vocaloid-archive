@@ -1,36 +1,29 @@
 package com.vocaloidarchive.playlist.domain;
 
-import com.vocaloidarchive.song.domain.Song;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Entity
-@Table(name = "playlist_songs")
-@IdClass(PlaylistSongId.class)
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PlaylistSong {
+  private final Long playlistId;
+  private final Long songId;
+  private final int orderIndex;
 
-  @Id
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "playlist_id", nullable = false)
-  private Playlist playlist;
+  private PlaylistSong(Long playlistId, Long songId, int orderIndex) {
+    this.playlistId = playlistId;
+    this.songId = songId;
+    this.orderIndex = orderIndex;
+  }
 
-  @Id
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "song_id", nullable = false)
-  private Song song;
+  public static PlaylistSong of(Long playlistId, Long songId, int orderIndex) {
+    return new PlaylistSong(playlistId, songId, orderIndex);
+  }
 
-  @Column(name = "order_index", nullable = false)
-  private int orderIndex;
+  public Long getPlaylistId() {
+    return playlistId;
+  }
 
-  public static PlaylistSong of(Playlist playlist, Song song, int orderIndex) {
-    PlaylistSong ps = new PlaylistSong();
-    ps.playlist = playlist;
-    ps.song = song;
-    ps.orderIndex = orderIndex;
-    return ps;
+  public Long getSongId() {
+    return songId;
+  }
+
+  public int getOrderIndex() {
+    return orderIndex;
   }
 }

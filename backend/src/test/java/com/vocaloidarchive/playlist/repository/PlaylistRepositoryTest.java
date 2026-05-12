@@ -2,7 +2,8 @@ package com.vocaloidarchive.playlist.repository;
 
 import com.vocaloidarchive.common.config.AuditingConfig;
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
-import com.vocaloidarchive.playlist.domain.Playlist;
+import com.vocaloidarchive.playlist.infra.persistence.PlaylistEntity;
+import com.vocaloidarchive.playlist.infra.persistence.PlaylistJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -23,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(AuditingConfig.class)
 class PlaylistRepositoryTest extends AbstractMysqlContainerTest {
 
-  @Autowired PlaylistRepository playlistRepository;
+  @Autowired PlaylistJpaRepository playlistRepository;
   @Autowired UserJpaRepository userRepository;
   @PersistenceContext EntityManager em;
 
@@ -32,13 +33,13 @@ class PlaylistRepositoryTest extends AbstractMysqlContainerTest {
   void findAllByUserId_returnsOwnerPlaylistsOnly() {
     UserEntity alice = userRepository.save(UserEntity.of("alice", "alice@a.com", "hash"));
     UserEntity bob   = userRepository.save(UserEntity.of("bob",   "bob@a.com",   "hash"));
-    playlistRepository.save(Playlist.of(alice, "A-1", true));
-    playlistRepository.save(Playlist.of(alice, "A-2", false));
-    playlistRepository.save(Playlist.of(bob,   "B-1", true));
+    playlistRepository.save(PlaylistEntity.of(alice, "A-1", true));
+    playlistRepository.save(PlaylistEntity.of(alice, "A-2", false));
+    playlistRepository.save(PlaylistEntity.of(bob,   "B-1", true));
     em.flush();
     em.clear();
 
-    List<Playlist> result = playlistRepository.findAllByUserId(alice.getId());
+    List<PlaylistEntity> result = playlistRepository.findAllByUserId(alice.getId());
 
     assertThat(result).hasSize(2);
     assertThat(result).allMatch(p -> p.getUser().getUsername().equals("alice"));
@@ -48,11 +49,11 @@ class PlaylistRepositoryTest extends AbstractMysqlContainerTest {
   @DisplayName("findById: 저장한 playlist 조회")
   void findById_returnsSavedPlaylist() {
     UserEntity u = userRepository.save(UserEntity.of("carol", "carol@a.com", "hash"));
-    Playlist saved = playlistRepository.save(Playlist.of(u, "My List", false));
+    PlaylistEntity saved = playlistRepository.save(PlaylistEntity.of(u, "My List", false));
     em.flush();
     em.clear();
 
-    Playlist found = playlistRepository.findById(saved.getId()).orElseThrow();
+    PlaylistEntity found = playlistRepository.findById(saved.getId()).orElseThrow();
 
     assertThat(found.getTitle()).isEqualTo("My List");
     assertThat(found.isPublic()).isFalse();

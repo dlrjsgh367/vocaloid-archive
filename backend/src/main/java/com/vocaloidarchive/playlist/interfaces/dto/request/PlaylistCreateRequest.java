@@ -1,4 +1,4 @@
-package com.vocaloidarchive.playlist.dto.request;
+package com.vocaloidarchive.playlist.interfaces.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

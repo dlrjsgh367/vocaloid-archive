@@ -1,44 +1,51 @@
 package com.vocaloidarchive.playlist.domain;
 
-import com.vocaloidarchive.user.infra.persistence.UserEntity;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "playlists")
-@EntityListeners(AuditingEntityListener.class)
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Playlist {
+  private final Long id;
+  private final Long userId;
+  private final String title;
+  private final boolean isPublic;
+  private final LocalDateTime createdAt;
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Playlist(Long id, Long userId, String title, boolean isPublic, LocalDateTime createdAt) {
+    this.id = id;
+    this.userId = userId;
+    this.title = title;
+    this.isPublic = isPublic;
+    this.createdAt = createdAt;
+  }
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
+  public static Playlist newPlaylist(Long userId, String title, boolean isPublic) {
+    return new Playlist(null, userId, title, isPublic, null);
+  }
 
-  @Column(nullable = false, length = 200)
-  private String title;
+  public static Playlist reconstitute(Long id, Long userId, String title, boolean isPublic, LocalDateTime createdAt) {
+    return new Playlist(id, userId, title, isPublic, createdAt);
+  }
 
-  @Column(name = "is_public", nullable = false)
-  private boolean isPublic;
+  public boolean isOwnedBy(Long candidateUserId) {
+    return userId != null && userId.equals(candidateUserId);
+  }
 
-  @CreatedDate
-  @Column(name = "created_at", updatable = false)
-  private LocalDateTime createdAt;
+  public Long getId() {
+    return id;
+  }
 
-  public static Playlist of(UserEntity user, String title, boolean isPublic) {
-    Playlist p = new Playlist();
-    p.user = user;
-    p.title = title;
-    p.isPublic = isPublic;
-    return p;
+  public Long getUserId() {
+    return userId;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public boolean isPublic() {
+    return isPublic;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
   }
 }
