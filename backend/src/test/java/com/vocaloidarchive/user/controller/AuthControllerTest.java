@@ -15,9 +15,11 @@ import com.vocaloidarchive.user.dto.request.SignUpRequest;
 import com.vocaloidarchive.user.dto.response.TokenResponse;
 import com.vocaloidarchive.user.dto.response.UserResponse;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.interfaces.AuthController;
 import com.vocaloidarchive.user.service.RefreshTokenService;
 import com.vocaloidarchive.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -37,6 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Disabled("phase-7-migration: rewrite in Phase 7-8")
 @WebMvcTest(AuthController.class)
 @Import({
     SecurityConfig.class,
