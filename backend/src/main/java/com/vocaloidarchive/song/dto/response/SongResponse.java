@@ -1,6 +1,6 @@
 package com.vocaloidarchive.song.dto.response;
 
-import com.vocaloidarchive.character.dto.response.CharacterResponse;
+import com.vocaloidarchive.character.interfaces.dto.response.CharacterResponse;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 
