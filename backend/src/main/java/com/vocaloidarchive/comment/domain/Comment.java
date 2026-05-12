@@ -1,47 +1,48 @@
 package com.vocaloidarchive.comment.domain;
 
-import com.vocaloidarchive.song.domain.Song;
-import com.vocaloidarchive.user.infra.persistence.UserEntity;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "comments")
-@EntityListeners(AuditingEntityListener.class)
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
+  private final Long id;
+  private final Long userId;
+  private final Long songId;
+  private final String content;
+  private final LocalDateTime createdAt;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Comment(Long id, Long userId, Long songId, String content, LocalDateTime createdAt) {
+    this.id = id;
+    this.userId = userId;
+    this.songId = songId;
+    this.content = content;
+    this.createdAt = createdAt;
+  }
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
+  public static Comment newComment(Long userId, Long songId, String content) {
+    return new Comment(null, userId, songId, content, null);
+  }
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "song_id", nullable = false)
-  private Song song;
+  public static Comment reconstitute(
+      Long id, Long userId, Long songId, String content, LocalDateTime createdAt) {
+    return new Comment(id, userId, songId, content, createdAt);
+  }
 
-  @Column(nullable = false, length = 500)
-  private String content;
+  public Long getId() {
+    return id;
+  }
 
-  @CreatedDate
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
+  public Long getUserId() {
+    return userId;
+  }
 
-  public static Comment of(UserEntity user, Song song, String content) {
-    Comment c = new Comment();
-    c.user = user;
-    c.song = song;
-    c.content = content;
-    return c;
+  public Long getSongId() {
+    return songId;
+  }
+
+  public String getContent() {
+    return content;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
   }
 }

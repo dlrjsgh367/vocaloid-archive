@@ -1,4 +1,4 @@
-package com.vocaloidarchive.comment.dto.request;
+package com.vocaloidarchive.comment.interfaces.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
