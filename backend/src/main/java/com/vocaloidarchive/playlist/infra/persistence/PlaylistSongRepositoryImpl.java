@@ -1,8 +1,8 @@
 package com.vocaloidarchive.playlist.infra.persistence;
 
 import com.vocaloidarchive.playlist.application.port.PlaylistSongRepository;
-import com.vocaloidarchive.song.domain.Song;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 public class PlaylistSongRepositoryImpl implements PlaylistSongRepository {
   private final PlaylistSongJpaRepository jpa;
   private final PlaylistJpaRepository playlistJpa;
-  private final SongRepository songJpa;
+  private final SongJpaRepository songJpa;
 
   @Override
   public void add(Long playlistId, Long songId, int orderIndex) {
     PlaylistEntity playlistRef = playlistJpa.getReferenceById(playlistId);
-    Song songRef = songJpa.getReferenceById(songId);
+    SongEntity songRef = songJpa.getReferenceById(songId);
     jpa.save(PlaylistSongEntity.of(playlistRef, songRef, orderIndex));
   }
 

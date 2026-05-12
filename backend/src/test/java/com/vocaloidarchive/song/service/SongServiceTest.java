@@ -6,12 +6,12 @@ import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.security.SecurityUtil;
 import com.vocaloidarchive.song.domain.Mood;
-import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.dto.request.SongCreateRequest;
 import com.vocaloidarchive.song.dto.response.SongDetailResponse;
 import com.vocaloidarchive.song.dto.response.SongResponse;
-import com.vocaloidarchive.song.repository.SongQueryRepository;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
+import com.vocaloidarchive.song.infra.persistence.SongQueryRepositoryImpl;
 import com.vocaloidarchive.tag.application.FindOrCreateTagsUseCase;
 import com.vocaloidarchive.tag.application.dto.result.TagResult;
 import com.vocaloidarchive.tag.infra.persistence.TagEntity;
@@ -38,8 +38,8 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class SongServiceTest {
 
-  @Mock SongRepository songRepository;
-  @Mock SongQueryRepository songQueryRepository;
+  @Mock SongJpaRepository songRepository;
+  @Mock SongQueryRepositoryImpl songQueryRepository;
   @Mock CharacterJpaRepository characterRepository;
   @Mock UserJpaRepository userRepository;
   @Mock FindOrCreateTagsUseCase findOrCreateTagsUseCase;
@@ -70,15 +70,15 @@ class SongServiceTest {
     TagResult tagResult = new TagResult(1L, "pop");
     given(findOrCreateTagsUseCase.invoke(List.of("pop"))).willReturn(List.of(tagResult));
     given(tagJpaRepository.getReferenceById(1L)).willReturn(tag);
-    given(songRepository.save(any(Song.class))).willAnswer(inv -> inv.getArgument(0));
+    given(songRepository.save(any(SongEntity.class))).willAnswer(inv -> inv.getArgument(0));
 
     // when
     SongResponse response = songService.create(req);
 
     // then
-    ArgumentCaptor<Song> captor = ArgumentCaptor.forClass(Song.class);
+    ArgumentCaptor<SongEntity> captor = ArgumentCaptor.forClass(SongEntity.class);
     verify(songRepository).save(captor.capture());
-    Song saved = captor.getValue();
+    SongEntity saved = captor.getValue();
 
     assertThat(saved.getTitle()).isEqualTo("Test Song");
     assertThat(saved.getThumbnailUrl()).isEqualTo(
@@ -137,13 +137,13 @@ class SongServiceTest {
     given(userRepository.getReferenceById(userId)).willReturn(user);
     given(characterRepository.findAllById(List.of(1L))).willReturn(List.of(character));
     given(findOrCreateTagsUseCase.invoke(null)).willReturn(List.of());
-    given(songRepository.save(any(Song.class))).willAnswer(inv -> inv.getArgument(0));
+    given(songRepository.save(any(SongEntity.class))).willAnswer(inv -> inv.getArgument(0));
 
     // when
     SongResponse response = songService.create(req);
 
     // then
-    ArgumentCaptor<Song> captor = ArgumentCaptor.forClass(Song.class);
+    ArgumentCaptor<SongEntity> captor = ArgumentCaptor.forClass(SongEntity.class);
     verify(songRepository).save(captor.capture());
     assertThat(captor.getValue().getThumbnailUrl()).isNull();
     assertThat(response.thumbnailUrl()).isNull();
@@ -169,13 +169,13 @@ class SongServiceTest {
     given(userRepository.getReferenceById(userId)).willReturn(user);
     given(characterRepository.findAllById(List.of(1L))).willReturn(List.of(character));
     given(findOrCreateTagsUseCase.invoke(null)).willReturn(List.of());
-    given(songRepository.save(any(Song.class))).willAnswer(inv -> inv.getArgument(0));
+    given(songRepository.save(any(SongEntity.class))).willAnswer(inv -> inv.getArgument(0));
 
     // when
     SongResponse response = songService.create(req);
 
     // then
-    ArgumentCaptor<Song> captor = ArgumentCaptor.forClass(Song.class);
+    ArgumentCaptor<SongEntity> captor = ArgumentCaptor.forClass(SongEntity.class);
     verify(songRepository).save(captor.capture());
     assertThat(captor.getValue().getThumbnailUrl()).isNull();
     assertThat(response.thumbnailUrl()).isNull();
@@ -186,7 +186,7 @@ class SongServiceTest {
   void findDetail_happy() {
     Long id = 5L;
     given(songRepository.incrementPlayCount(id)).willReturn(1);
-    Song song = Song.of(
+    SongEntity song = SongEntity.of(
         UserEntity.of("a", "a@a.com", "h"), "T", null, null, null, null, Mood.BRIGHT);
     given(songRepository.findDetailWithCharacters(id)).willReturn(java.util.Optional.of(song));
     given(songRepository.findDetailWithTags(id)).willReturn(java.util.Optional.of(song));
@@ -216,7 +216,7 @@ class SongServiceTest {
     given(securityUtil.getCurrentUserId()).willReturn(1L);
     UserEntity owner = UserEntity.of("a", "a@a.com", "h");
     org.springframework.test.util.ReflectionTestUtils.setField(owner, "id", 1L);
-    Song song = Song.of(owner, "T", null, null, null, null, Mood.CALM);
+    SongEntity song = SongEntity.of(owner, "T", null, null, null, null, Mood.CALM);
     given(songRepository.findById(5L)).willReturn(java.util.Optional.of(song));
 
     songService.delete(5L);
@@ -230,7 +230,7 @@ class SongServiceTest {
     given(securityUtil.getCurrentUserId()).willReturn(2L);
     UserEntity owner = UserEntity.of("a", "a@a.com", "h");
     org.springframework.test.util.ReflectionTestUtils.setField(owner, "id", 1L);
-    Song song = Song.of(owner, "T", null, null, null, null, Mood.CALM);
+    SongEntity song = SongEntity.of(owner, "T", null, null, null, null, Mood.CALM);
     given(songRepository.findById(5L)).willReturn(java.util.Optional.of(song));
 
     assertThatThrownBy(() -> songService.delete(5L))

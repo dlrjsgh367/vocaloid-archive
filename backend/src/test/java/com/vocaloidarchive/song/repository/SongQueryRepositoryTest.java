@@ -6,9 +6,11 @@ import com.vocaloidarchive.support.AbstractMysqlContainerTest;
 import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
 import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import com.vocaloidarchive.song.domain.Mood;
-import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.dto.request.SongSearchRequest;
 import com.vocaloidarchive.song.dto.request.SongSort;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
+import com.vocaloidarchive.song.infra.persistence.SongQueryRepositoryImpl;
 import com.vocaloidarchive.tag.infra.persistence.TagEntity;
 import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
@@ -32,11 +34,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({SongQueryRepository.class, JpaConfig.class, AuditingConfig.class})
+@Import({SongQueryRepositoryImpl.class, JpaConfig.class, AuditingConfig.class})
 class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
 
-  @Autowired SongQueryRepository songQueryRepository;
-  @Autowired SongRepository songRepository;
+  @Autowired SongQueryRepositoryImpl songQueryRepository;
+  @Autowired SongJpaRepository songRepository;
   @Autowired UserJpaRepository userRepository;
   @Autowired CharacterJpaRepository characterRepository;
   @Autowired TagJpaRepository tagRepository;
@@ -44,7 +46,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
 
   CharacterEntity miku, len, kaito;
   TagEntity pop, rock, anime;
-  Song s1, s2, s3, s4;
+  SongEntity s1, s2, s3, s4;
 
   @BeforeEach
   void setUp() {
@@ -67,8 +69,8 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
     em.clear();
   }
 
-  private Song newSong(UserEntity u, String title, Mood mood, CharacterEntity c, TagEntity t) {
-    Song s = Song.of(u, title, null, null, null, null, mood);
+  private SongEntity newSong(UserEntity u, String title, Mood mood, CharacterEntity c, TagEntity t) {
+    SongEntity s = SongEntity.of(u, title, null, null, null, null, mood);
     s.addCharacter(c);
     s.addTag(t);
     return songRepository.save(s);
@@ -81,69 +83,69 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("필터 없음 + sort=latest → 4곡 createdAt desc, id desc")
   void noFilter() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, null, null, null, SongSort.LATEST), PageRequest.of(0, 20));
     assertThat(page.getTotalElements()).isEqualTo(4);
-    assertThat(page.getContent()).extracting(Song::getId)
+    assertThat(page.getContent()).extracting(SongEntity::getId)
         .containsExactly(s4.getId(), s3.getId(), s2.getId(), s1.getId());
   }
 
   @Test
   @DisplayName("keyword=title 일부 → title 매치")
   void keyword_title() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req("Bright", null, null, null, SongSort.LATEST), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId).containsExactly(s1.getId());
+    assertThat(page.getContent()).extracting(SongEntity::getId).containsExactly(s1.getId());
   }
 
   @Test
   @DisplayName("keyword=character.name 일부 → 매핑된 곡만")
   void keyword_character() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req("KAITO", null, null, null, SongSort.LATEST), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId).containsExactly(s3.getId());
+    assertThat(page.getContent()).extracting(SongEntity::getId).containsExactly(s3.getId());
   }
 
   @Test
   @DisplayName("keyword=tag.name 일부 → 매핑된 곡만")
   void keyword_tag() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req("anime", null, null, null, SongSort.LATEST), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId).containsExactly(s3.getId());
+    assertThat(page.getContent()).extracting(SongEntity::getId).containsExactly(s3.getId());
   }
 
   @Test
   @DisplayName("mood=BRIGHT")
   void mood() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, Mood.BRIGHT, null, null, SongSort.LATEST), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId).containsExactly(s1.getId());
+    assertThat(page.getContent()).extracting(SongEntity::getId).containsExactly(s1.getId());
   }
 
   @Test
   @DisplayName("characterId 필터")
   void characterId() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, null, miku.getId(), null, SongSort.LATEST), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId)
+    assertThat(page.getContent()).extracting(SongEntity::getId)
         .containsExactlyInAnyOrder(s1.getId(), s4.getId());
   }
 
   @Test
   @DisplayName("tagId 필터")
   void tagId() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, null, null, rock.getId(), SongSort.LATEST), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId)
+    assertThat(page.getContent()).extracting(SongEntity::getId)
         .containsExactlyInAnyOrder(s2.getId(), s4.getId());
   }
 
   @Test
   @DisplayName("mood + characterId 동시 (AND)")
   void mood_and_characterId() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, Mood.ENERGETIC, miku.getId(), null, SongSort.LATEST), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId).containsExactly(s4.getId());
+    assertThat(page.getContent()).extracting(SongEntity::getId).containsExactly(s4.getId());
   }
 
   @Test
@@ -154,18 +156,18 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
     songRepository.incrementPlayCount(s3.getId());
     em.flush(); em.clear();
 
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, null, null, null, SongSort.PLAYED), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId)
+    assertThat(page.getContent()).extracting(SongEntity::getId)
         .containsExactly(s2.getId(), s3.getId(), s4.getId(), s1.getId());
   }
 
   @Test
   @DisplayName("sort=popular (likes 0) → 동률 → tiebreaker createdAt desc")
   void sort_popular_zero_likes() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, null, null, null, SongSort.POPULAR), PageRequest.of(0, 20));
-    assertThat(page.getContent()).extracting(Song::getId)
+    assertThat(page.getContent()).extracting(SongEntity::getId)
         .containsExactly(s4.getId(), s3.getId(), s2.getId(), s1.getId());
   }
 
@@ -178,7 +180,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
         .executeUpdate();
     em.flush(); em.clear();
 
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, null, null, null, SongSort.POPULAR), PageRequest.of(0, 20));
     assertThat(page.getContent().get(0).getId()).isEqualTo(s2.getId());
   }
@@ -186,7 +188,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("페이지 size=2 → totalElements=4, totalPages=2")
   void pagination() {
-    Page<Song> page = songQueryRepository.search(
+    Page<SongEntity> page = songQueryRepository.search(
         req(null, null, null, null, SongSort.LATEST), PageRequest.of(0, 2));
     assertThat(page.getTotalElements()).isEqualTo(4);
     assertThat(page.getTotalPages()).isEqualTo(2);

@@ -1,4 +1,4 @@
-package com.vocaloidarchive.song.domain;
+package com.vocaloidarchive.song.infra.persistence;
 
 import java.io.Serializable;
 import java.util.Objects;

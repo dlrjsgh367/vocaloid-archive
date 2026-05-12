@@ -1,6 +1,7 @@
-package com.vocaloidarchive.song.domain;
+package com.vocaloidarchive.song.infra.persistence;
 
 import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
+import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.tag.infra.persistence.TagEntity;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
@@ -20,7 +21,7 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Song {
+public class SongEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,16 +58,16 @@ public class Song {
 
   @BatchSize(size = 20)
   @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<SongCharacter> characters = new ArrayList<>();
+  private List<SongCharacterEntity> characters = new ArrayList<>();
 
   @BatchSize(size = 20)
   @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<SongTag> tags = new ArrayList<>();
+  private List<SongTagEntity> tags = new ArrayList<>();
 
-  public static Song of(
+  public static SongEntity of(
       UserEntity registeredBy, String title, String youtubeUrl, String niconicoUrl,
       String thumbnailUrl, Integer bpm, Mood mood) {
-    Song s = new Song();
+    SongEntity s = new SongEntity();
     s.registeredBy = registeredBy;
     s.title = title;
     s.youtubeUrl = youtubeUrl;
@@ -79,10 +80,10 @@ public class Song {
   }
 
   public void addCharacter(CharacterEntity character) {
-    characters.add(SongCharacter.of(this, character));
+    characters.add(SongCharacterEntity.of(this, character));
   }
 
   public void addTag(TagEntity tag) {
-    tags.add(SongTag.of(this, tag));
+    tags.add(SongTagEntity.of(this, tag));
   }
 }

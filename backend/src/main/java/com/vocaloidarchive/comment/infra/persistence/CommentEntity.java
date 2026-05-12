@@ -1,6 +1,6 @@
 package com.vocaloidarchive.comment.infra.persistence;
 
-import com.vocaloidarchive.song.domain.Song;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,7 +28,7 @@ public class CommentEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "song_id", nullable = false)
-  private Song song;
+  private SongEntity song;
 
   @Column(nullable = false, length = 500)
   private String content;
@@ -37,7 +37,7 @@ public class CommentEntity {
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
-  public static CommentEntity of(UserEntity user, Song song, String content) {
+  public static CommentEntity of(UserEntity user, SongEntity song, String content) {
     CommentEntity c = new CommentEntity();
     c.user = user;
     c.song = song;

@@ -5,7 +5,7 @@ import com.vocaloidarchive.comment.application.port.CommentQueryRepository;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.response.PageResponse;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ListCommentsUseCase {
   private final CommentQueryRepository commentQueryRepository;
-  private final SongRepository songRepository;
+  private final SongJpaRepository songRepository;
 
   @Transactional(readOnly = true)
   public PageResponse<CommentResult> invoke(Long songId, Pageable pageable) {

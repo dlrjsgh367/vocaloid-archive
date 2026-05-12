@@ -1,4 +1,4 @@
-package com.vocaloidarchive.song.repository;
+package com.vocaloidarchive.song.infra.persistence;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Expression;
@@ -9,10 +9,6 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.vocaloidarchive.character.infra.persistence.QCharacterEntity;
 import com.vocaloidarchive.like.infra.persistence.QLikeEntity;
-import com.vocaloidarchive.song.domain.QSong;
-import com.vocaloidarchive.song.domain.QSongCharacter;
-import com.vocaloidarchive.song.domain.QSongTag;
-import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.dto.request.SongSearchRequest;
 import com.vocaloidarchive.song.dto.request.SongSort;
 import com.vocaloidarchive.tag.infra.persistence.QTagEntity;
@@ -26,22 +22,22 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class SongQueryRepository {
+public class SongQueryRepositoryImpl {
 
-  private static final QSong S = QSong.song;
-  private static final QSongCharacter SC = QSongCharacter.songCharacter;
-  private static final QSongTag ST = QSongTag.songTag;
+  private static final QSongEntity S = QSongEntity.songEntity;
+  private static final QSongCharacterEntity SC = QSongCharacterEntity.songCharacterEntity;
+  private static final QSongTagEntity ST = QSongTagEntity.songTagEntity;
   private static final QCharacterEntity C = QCharacterEntity.characterEntity;
   private static final QTagEntity T = QTagEntity.tagEntity;
   private static final QLikeEntity L = QLikeEntity.likeEntity;
 
   private final JPAQueryFactory queryFactory;
 
-  public SongQueryRepository(JPAQueryFactory queryFactory) {
+  public SongQueryRepositoryImpl(JPAQueryFactory queryFactory) {
     this.queryFactory = queryFactory;
   }
 
-  public Page<Song> search(SongSearchRequest req, Pageable pageable) {
+  public Page<SongEntity> search(SongSearchRequest req, Pageable pageable) {
     BooleanBuilder where = new BooleanBuilder();
 
     if (req.keyword() != null && !req.keyword().isBlank()) {
@@ -73,7 +69,7 @@ public class SongQueryRepository {
 
     OrderSpecifier<?>[] order = orderFor(req.sortOrDefault(), likeCountExpr);
 
-    List<Song> rows = queryFactory.selectFrom(S).distinct()
+    List<SongEntity> rows = queryFactory.selectFrom(S).distinct()
         .where(where)
         .orderBy(order)
         .offset(pageable.getOffset())

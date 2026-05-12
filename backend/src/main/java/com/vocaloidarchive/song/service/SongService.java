@@ -7,13 +7,13 @@ import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.response.PageResponse;
 import com.vocaloidarchive.common.security.SecurityUtil;
 import com.vocaloidarchive.common.util.YoutubeUtil;
-import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.dto.request.SongCreateRequest;
 import com.vocaloidarchive.song.dto.request.SongSearchRequest;
 import com.vocaloidarchive.song.dto.response.SongDetailResponse;
 import com.vocaloidarchive.song.dto.response.SongResponse;
-import com.vocaloidarchive.song.repository.SongQueryRepository;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
+import com.vocaloidarchive.song.infra.persistence.SongQueryRepositoryImpl;
 import com.vocaloidarchive.tag.application.FindOrCreateTagsUseCase;
 import com.vocaloidarchive.tag.application.dto.result.TagResult;
 import com.vocaloidarchive.tag.infra.persistence.TagEntity;
@@ -35,8 +35,8 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class SongService {
 
-  private final SongRepository songRepository;
-  private final SongQueryRepository songQueryRepository;
+  private final SongJpaRepository songRepository;
+  private final SongQueryRepositoryImpl songQueryRepository;
   private final CharacterJpaRepository characterRepository;
   private final UserJpaRepository userRepository;
   private final FindOrCreateTagsUseCase findOrCreateTagsUseCase;
@@ -59,20 +59,20 @@ public class SongService {
         .toList();
     String thumbnailUrl = YoutubeUtil.extractThumbnailUrl(req.youtubeUrl());
 
-    Song song = Song.of(
+    SongEntity song = SongEntity.of(
         registeredBy, req.title(), req.youtubeUrl(), req.niconicoUrl(),
         thumbnailUrl, req.bpm(), req.mood());
     characters.forEach(song::addCharacter);
     tags.forEach(song::addTag);
 
-    Song saved = songRepository.save(song);
+    SongEntity saved = songRepository.save(song);
     return SongResponse.from(saved, 0L);
   }
 
   public PageResponse<SongResponse> search(SongSearchRequest req, Pageable pageable) {
-    Page<Song> page = songQueryRepository.search(req, pageable);
+    Page<SongEntity> page = songQueryRepository.search(req, pageable);
     Map<Long, Long> likeCounts = songQueryRepository.likeCountsFor(
-        page.getContent().stream().map(Song::getId).toList());
+        page.getContent().stream().map(SongEntity::getId).toList());
     List<SongResponse> content = page.getContent().stream()
         .map(s -> SongResponse.from(s, likeCounts.getOrDefault(s.getId(), 0L)))
         .toList();
@@ -85,7 +85,7 @@ public class SongService {
     if (affected == 0) {
       throw new BusinessException(ErrorCode.SONG_NOT_FOUND);
     }
-    Song song = songRepository.findDetailWithCharacters(id)
+    SongEntity song = songRepository.findDetailWithCharacters(id)
         .orElseThrow(() -> new BusinessException(ErrorCode.SONG_NOT_FOUND));
     songRepository.findDetailWithTags(id);
     long likeCount = songQueryRepository.likeCountFor(id);
@@ -95,7 +95,7 @@ public class SongService {
   @Transactional
   public void delete(Long id) {
     Long currentUserId = securityUtil.getCurrentUserId();
-    Song song = songRepository.findById(id)
+    SongEntity song = songRepository.findById(id)
         .orElseThrow(() -> new BusinessException(ErrorCode.SONG_NOT_FOUND));
     if (!song.getRegisteredBy().getId().equals(currentUserId)) {
       throw new BusinessException(ErrorCode.FORBIDDEN);

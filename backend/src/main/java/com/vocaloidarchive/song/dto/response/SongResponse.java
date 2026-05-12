@@ -2,7 +2,7 @@ package com.vocaloidarchive.song.dto.response;
 
 import com.vocaloidarchive.character.interfaces.dto.response.CharacterResponse;
 import com.vocaloidarchive.song.domain.Mood;
-import com.vocaloidarchive.song.domain.Song;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +19,7 @@ public record SongResponse(
     List<String> tags,
     LocalDateTime createdAt
 ) {
-  public static SongResponse from(Song s, long likeCount) {
+  public static SongResponse from(SongEntity s, long likeCount) {
     return new SongResponse(
         s.getId(),
         s.getTitle(),

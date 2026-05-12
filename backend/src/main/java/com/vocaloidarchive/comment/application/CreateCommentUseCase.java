@@ -6,7 +6,7 @@ import com.vocaloidarchive.comment.application.port.CommentRepository;
 import com.vocaloidarchive.comment.domain.Comment;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
 import com.vocaloidarchive.user.application.port.UserRepository;
 import com.vocaloidarchive.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateCommentUseCase {
   private final CommentRepository commentRepository;
-  private final SongRepository songRepository;
+  private final SongJpaRepository songRepository;
   private final UserRepository userRepository;
 
   @Transactional

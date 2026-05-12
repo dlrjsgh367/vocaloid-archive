@@ -5,7 +5,8 @@ import com.vocaloidarchive.support.AbstractMysqlContainerTest;
 import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
 import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import com.vocaloidarchive.song.domain.Mood;
-import com.vocaloidarchive.song.domain.Song;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
 import com.vocaloidarchive.tag.infra.persistence.TagEntity;
 import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
@@ -28,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(AuditingConfig.class)
 class SongRepositoryTest extends AbstractMysqlContainerTest {
 
-  @Autowired SongRepository songRepository;
+  @Autowired SongJpaRepository songRepository;
   @Autowired UserJpaRepository userRepository;
   @Autowired CharacterJpaRepository characterRepository;
   @Autowired TagJpaRepository tagRepository;
@@ -38,13 +39,13 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @DisplayName("incrementPlayCount: 영향 row=1, DB에서 +1 반영")
   void incrementPlayCount_increments() {
     UserEntity u = userRepository.save(UserEntity.of("alice", "alice@a.com", "hash"));
-    Song s = songRepository.save(Song.of(u, "Title", null, null, null, null, Mood.BRIGHT));
+    SongEntity s = songRepository.save(SongEntity.of(u, "Title", null, null, null, null, Mood.BRIGHT));
     em.flush();
 
     int affected = songRepository.incrementPlayCount(s.getId());
 
     em.clear();
-    Song reloaded = songRepository.findById(s.getId()).orElseThrow();
+    SongEntity reloaded = songRepository.findById(s.getId()).orElseThrow();
     assertThat(affected).isEqualTo(1);
     assertThat(reloaded.getPlayCount()).isEqualTo(1);
   }
@@ -61,13 +62,13 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   void findDetailWithCharacters_fetchJoin() {
     UserEntity u = userRepository.save(UserEntity.of("bob", "bob@a.com", "hash"));
     CharacterEntity c = characterRepository.save(CharacterEntity.of("미쿠", "#39C5BB", null));
-    Song s = Song.of(u, "Title", null, null, null, null, Mood.CALM);
+    SongEntity s = SongEntity.of(u, "Title", null, null, null, null, Mood.CALM);
     s.addCharacter(c);
     songRepository.save(s);
     em.flush();
     em.clear();
 
-    Optional<Song> result = songRepository.findDetailWithCharacters(s.getId());
+    Optional<SongEntity> result = songRepository.findDetailWithCharacters(s.getId());
 
     assertThat(result).isPresent();
     assertThat(result.get().getCharacters()).hasSize(1);
@@ -79,13 +80,13 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   void findDetailWithTags_fetchJoin() {
     UserEntity u = userRepository.save(UserEntity.of("carol", "c@a.com", "hash"));
     TagEntity t = tagRepository.save(TagEntity.of("pop"));
-    Song s = Song.of(u, "Title", null, null, null, null, Mood.DARK);
+    SongEntity s = SongEntity.of(u, "Title", null, null, null, null, Mood.DARK);
     s.addTag(t);
     songRepository.save(s);
     em.flush();
     em.clear();
 
-    Optional<Song> result = songRepository.findDetailWithTags(s.getId());
+    Optional<SongEntity> result = songRepository.findDetailWithTags(s.getId());
 
     assertThat(result).isPresent();
     assertThat(result.get().getTags()).hasSize(1);
@@ -98,7 +99,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
     UserEntity u = userRepository.save(UserEntity.of("dave", "d@a.com", "hash"));
     CharacterEntity c = characterRepository.save(CharacterEntity.of("렌", "#FFC56C", null));
     TagEntity t = tagRepository.save(TagEntity.of("rock"));
-    Song s = Song.of(u, "Title", null, null, null, null, Mood.ENERGETIC);
+    SongEntity s = SongEntity.of(u, "Title", null, null, null, null, Mood.ENERGETIC);
     s.addCharacter(c);
     s.addTag(t);
     songRepository.save(s);

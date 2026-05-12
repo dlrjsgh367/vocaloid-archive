@@ -4,8 +4,8 @@ import com.vocaloidarchive.comment.infra.persistence.CommentEntity;
 import com.vocaloidarchive.comment.infra.persistence.CommentJpaRepository;
 import com.vocaloidarchive.common.config.AuditingConfig;
 import com.vocaloidarchive.song.domain.Mood;
-import com.vocaloidarchive.song.domain.Song;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
@@ -30,19 +30,19 @@ class CommentRepositoryTest extends AbstractMysqlContainerTest {
 
   @Autowired CommentJpaRepository commentRepository;
   @Autowired UserJpaRepository userRepository;
-  @Autowired SongRepository songRepository;
+  @Autowired SongJpaRepository songRepository;
   @Autowired TestEntityManager em;
 
   private UserEntity user1;
   private UserEntity user2;
-  private Song song;
+  private SongEntity song;
 
   @BeforeEach
   void setUp() {
     commentRepository.deleteAll();
     user1 = userRepository.save(UserEntity.of("alice", "alice@a.com", "hash"));
     user2 = userRepository.save(UserEntity.of("bob", "bob@b.com", "hash"));
-    song = songRepository.save(Song.of(user1, "Song Title", null, null, null, null, Mood.BRIGHT));
+    song = songRepository.save(SongEntity.of(user1, "Song Title", null, null, null, null, Mood.BRIGHT));
   }
 
   @Test

@@ -1,6 +1,6 @@
 package com.vocaloidarchive.playlist.infra.persistence;
 
-import com.vocaloidarchive.song.domain.Song;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,12 +21,12 @@ public class PlaylistSongEntity {
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "song_id", nullable = false)
-  private Song song;
+  private SongEntity song;
 
   @Column(name = "order_index", nullable = false)
   private int orderIndex;
 
-  public static PlaylistSongEntity of(PlaylistEntity playlist, Song song, int orderIndex) {
+  public static PlaylistSongEntity of(PlaylistEntity playlist, SongEntity song, int orderIndex) {
     PlaylistSongEntity ps = new PlaylistSongEntity();
     ps.playlist = playlist;
     ps.song = song;
