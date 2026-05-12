@@ -1,38 +1,28 @@
 package com.vocaloidarchive.like.domain;
 
-import com.vocaloidarchive.song.domain.Song;
-import com.vocaloidarchive.user.infra.persistence.UserEntity;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "likes")
-@IdClass(LikeId.class)
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Like {
 
-  @Id
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private UserEntity user;
+  private final Long userId;
+  private final Long songId;
+  private final LocalDateTime likedAt;
 
-  @Id
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "song_id", nullable = false)
-  private Song song;
-
-  @Column(name = "liked_at", nullable = false, insertable = false, updatable = false)
-  private LocalDateTime likedAt;
-
-  public static Like of(UserEntity user, Song song) {
-    Like like = new Like();
-    like.user = user;
-    like.song = song;
-    return like;
+  private Like(Long userId, Long songId, LocalDateTime likedAt) {
+    this.userId = userId;
+    this.songId = songId;
+    this.likedAt = likedAt;
   }
+
+  public static Like newLike(Long userId, Long songId) {
+    return new Like(userId, songId, null);
+  }
+
+  public static Like reconstitute(Long userId, Long songId, LocalDateTime likedAt) {
+    return new Like(userId, songId, likedAt);
+  }
+
+  public Long getUserId() { return userId; }
+  public Long getSongId() { return songId; }
+  public LocalDateTime getLikedAt() { return likedAt; }
 }
