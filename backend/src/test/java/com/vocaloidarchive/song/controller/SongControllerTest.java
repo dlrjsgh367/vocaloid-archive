@@ -1,7 +1,7 @@
 package com.vocaloidarchive.song.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vocaloidarchive.character.dto.response.CharacterResponse;
+import com.vocaloidarchive.character.interfaces.dto.response.CharacterResponse;
 import com.vocaloidarchive.common.config.SecurityConfig;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;

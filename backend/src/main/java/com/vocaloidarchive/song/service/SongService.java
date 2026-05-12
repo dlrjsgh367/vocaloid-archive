@@ -1,7 +1,7 @@
 package com.vocaloidarchive.song.service;
 
-import com.vocaloidarchive.character.domain.Character;
-import com.vocaloidarchive.character.repository.CharacterRepository;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
+import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.response.PageResponse;
@@ -35,7 +35,7 @@ public class SongService {
 
   private final SongRepository songRepository;
   private final SongQueryRepository songQueryRepository;
-  private final CharacterRepository characterRepository;
+  private final CharacterJpaRepository characterRepository;
   private final UserJpaRepository userRepository;
   private final TagService tagService;
   private final SecurityUtil securityUtil;
@@ -45,7 +45,7 @@ public class SongService {
     Long currentUserId = securityUtil.getCurrentUserId();
     UserEntity registeredBy = userRepository.getReferenceById(currentUserId);
 
-    List<Character> characters = characterRepository.findAllById(req.characterIds());
+    List<CharacterEntity> characters = characterRepository.findAllById(req.characterIds());
     if (characters.size() != req.characterIds().size()) {
       throw new BusinessException(ErrorCode.CHARACTER_NOT_FOUND);
     }

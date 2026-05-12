@@ -1,4 +1,4 @@
-package com.vocaloidarchive.character.domain;
+package com.vocaloidarchive.character.infra.persistence;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "characters")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Character {
+public class CharacterEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +24,8 @@ public class Character {
   @Column(name = "image_url", length = 500)
   private String imageUrl;
 
-  public static Character of(String name, String colorHex, String imageUrl) {
-    Character c = new Character();
+  public static CharacterEntity of(String name, String colorHex, String imageUrl) {
+    CharacterEntity c = new CharacterEntity();
     c.name = name;
     c.colorHex = colorHex;
     c.imageUrl = imageUrl;
