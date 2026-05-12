@@ -6,7 +6,7 @@ import com.vocaloidarchive.playlist.application.dto.command.AddSongToPlaylistCom
 import com.vocaloidarchive.playlist.application.port.PlaylistRepository;
 import com.vocaloidarchive.playlist.application.port.PlaylistSongRepository;
 import com.vocaloidarchive.playlist.domain.Playlist;
-import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
+import com.vocaloidarchive.song.application.port.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AddSongToPlaylistUseCase {
   private final PlaylistRepository playlistRepo;
   private final PlaylistSongRepository songRepo;
-  private final SongJpaRepository songJpa;
+  private final SongRepository songJpa;
 
   @Transactional
   public void invoke(AddSongToPlaylistCommand cmd) {

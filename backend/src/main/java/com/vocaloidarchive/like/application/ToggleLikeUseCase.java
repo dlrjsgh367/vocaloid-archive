@@ -7,7 +7,7 @@ import com.vocaloidarchive.like.application.dto.result.ToggleLikeResult;
 import com.vocaloidarchive.like.application.port.LikeQueryRepository;
 import com.vocaloidarchive.like.application.port.LikeRepository;
 import com.vocaloidarchive.like.domain.Like;
-import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
+import com.vocaloidarchive.song.application.port.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ public class ToggleLikeUseCase {
 
   private final LikeRepository likeRepository;
   private final LikeQueryRepository likeQueryRepository;
-  private final SongJpaRepository songRepository;
+  private final SongRepository songRepository;
   private final SecurityUtil securityUtil;
 
   @Transactional

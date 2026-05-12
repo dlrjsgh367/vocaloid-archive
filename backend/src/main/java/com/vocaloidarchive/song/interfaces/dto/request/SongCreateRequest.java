@@ -1,8 +1,13 @@
-package com.vocaloidarchive.song.dto.request;
+package com.vocaloidarchive.song.interfaces.dto.request;
 
 import com.vocaloidarchive.song.domain.Mood;
-import jakarta.validation.constraints.*;
-
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record SongCreateRequest(
