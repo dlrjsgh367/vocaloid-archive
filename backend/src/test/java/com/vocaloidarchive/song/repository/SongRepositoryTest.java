@@ -6,8 +6,8 @@ import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
 import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
-import com.vocaloidarchive.tag.domain.Tag;
-import com.vocaloidarchive.tag.repository.TagRepository;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
+import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -31,7 +31,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @Autowired SongRepository songRepository;
   @Autowired UserJpaRepository userRepository;
   @Autowired CharacterJpaRepository characterRepository;
-  @Autowired TagRepository tagRepository;
+  @Autowired TagJpaRepository tagRepository;
   @PersistenceContext EntityManager em;
 
   @Test
@@ -78,7 +78,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @DisplayName("findDetailWithTags: tags 컬렉션 fetch join")
   void findDetailWithTags_fetchJoin() {
     UserEntity u = userRepository.save(UserEntity.of("carol", "c@a.com", "hash"));
-    Tag t = tagRepository.save(Tag.of("pop"));
+    TagEntity t = tagRepository.save(TagEntity.of("pop"));
     Song s = Song.of(u, "Title", null, null, null, null, Mood.DARK);
     s.addTag(t);
     songRepository.save(s);
@@ -97,7 +97,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   void delete_cascades_join_tables() {
     UserEntity u = userRepository.save(UserEntity.of("dave", "d@a.com", "hash"));
     CharacterEntity c = characterRepository.save(CharacterEntity.of("렌", "#FFC56C", null));
-    Tag t = tagRepository.save(Tag.of("rock"));
+    TagEntity t = tagRepository.save(TagEntity.of("rock"));
     Song s = Song.of(u, "Title", null, null, null, null, Mood.ENERGETIC);
     s.addCharacter(c);
     s.addTag(t);

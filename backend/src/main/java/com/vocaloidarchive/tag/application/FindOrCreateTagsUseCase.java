@@ -1,7 +1,8 @@
-package com.vocaloidarchive.tag.service;
+package com.vocaloidarchive.tag.application;
 
+import com.vocaloidarchive.tag.application.dto.result.TagResult;
+import com.vocaloidarchive.tag.application.port.TagRepository;
 import com.vocaloidarchive.tag.domain.Tag;
-import com.vocaloidarchive.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,12 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
-public class TagService {
+public class FindOrCreateTagsUseCase {
 
   private final TagRepository tagRepository;
 
   @Transactional
-  public List<Tag> findOrCreateAll(List<String> rawNames) {
+  public List<TagResult> invoke(List<String> rawNames) {
     if (rawNames == null || rawNames.isEmpty()) return List.of();
 
     Set<String> normalized = new LinkedHashSet<>();
@@ -39,7 +39,7 @@ public class TagService {
 
     List<Tag> toCreate = new ArrayList<>();
     for (String n : normalized) {
-      if (!existing.containsKey(n)) toCreate.add(Tag.of(n));
+      if (!existing.containsKey(n)) toCreate.add(Tag.newTag(n));
     }
     if (!toCreate.isEmpty()) {
       try {
@@ -50,8 +50,6 @@ public class TagService {
       tagRepository.findAllByNameIn(normalized).forEach(t -> existing.put(t.getName(), t));
     }
 
-    List<Tag> result = new ArrayList<>(normalized.size());
-    for (String n : normalized) result.add(existing.get(n));
-    return result;
+    return normalized.stream().map(existing::get).map(TagResult::from).toList();
   }
 }

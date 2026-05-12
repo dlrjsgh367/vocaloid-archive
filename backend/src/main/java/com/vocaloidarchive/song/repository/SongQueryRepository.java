@@ -15,7 +15,7 @@ import com.vocaloidarchive.song.domain.QSongTag;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.dto.request.SongSearchRequest;
 import com.vocaloidarchive.song.dto.request.SongSort;
-import com.vocaloidarchive.tag.domain.QTag;
+import com.vocaloidarchive.tag.infra.persistence.QTagEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +32,7 @@ public class SongQueryRepository {
   private static final QSongCharacter SC = QSongCharacter.songCharacter;
   private static final QSongTag ST = QSongTag.songTag;
   private static final QCharacterEntity C = QCharacterEntity.characterEntity;
-  private static final QTag T = QTag.tag;
+  private static final QTagEntity T = QTagEntity.tagEntity;
   private static final QLike L = QLike.like;
 
   private final JPAQueryFactory queryFactory;

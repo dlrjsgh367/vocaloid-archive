@@ -1,6 +1,6 @@
 package com.vocaloidarchive.song.domain;
 
-import com.vocaloidarchive.tag.domain.Tag;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,9 +21,9 @@ public class SongTag {
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "tag_id", nullable = false)
-  private Tag tag;
+  private TagEntity tag;
 
-  static SongTag of(Song song, Tag tag) {
+  static SongTag of(Song song, TagEntity tag) {
     SongTag st = new SongTag();
     st.song = song;
     st.tag = tag;

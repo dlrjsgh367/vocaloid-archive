@@ -1,7 +1,7 @@
 package com.vocaloidarchive.song.domain;
 
 import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
-import com.vocaloidarchive.tag.domain.Tag;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -82,7 +82,7 @@ public class Song {
     characters.add(SongCharacter.of(this, character));
   }
 
-  public void addTag(Tag tag) {
+  public void addTag(TagEntity tag) {
     tags.add(SongTag.of(this, tag));
   }
 }

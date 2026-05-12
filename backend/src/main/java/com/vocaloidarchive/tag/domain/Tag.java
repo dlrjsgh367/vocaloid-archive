@@ -1,28 +1,23 @@
 package com.vocaloidarchive.tag.domain;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Entity
-@Table(name = "tags")
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private final Long id;
+  private final String name;
 
-  @Column(nullable = false, unique = true, length = 50)
-  private String name;
-
-  private Tag(String name) {
+  private Tag(Long id, String name) {
+    this.id = id;
     this.name = name;
   }
 
-  public static Tag of(String normalizedName) {
-    return new Tag(normalizedName);
+  public static Tag newTag(String normalizedName) {
+    return new Tag(null, normalizedName);
   }
+
+  public static Tag reconstitute(Long id, String name) {
+    return new Tag(id, name);
+  }
+
+  public Long getId() { return id; }
+  public String getName() { return name; }
 }
