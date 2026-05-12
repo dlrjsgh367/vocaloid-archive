@@ -7,8 +7,8 @@ import com.vocaloidarchive.playlist.infra.persistence.PlaylistJpaRepository;
 import com.vocaloidarchive.playlist.infra.persistence.PlaylistSongEntity;
 import com.vocaloidarchive.playlist.infra.persistence.PlaylistSongJpaRepository;
 import com.vocaloidarchive.song.domain.Mood;
-import com.vocaloidarchive.song.domain.Song;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.infra.persistence.SongEntity;
+import com.vocaloidarchive.song.infra.persistence.SongJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -32,20 +32,20 @@ class PlaylistSongRepositoryTest extends AbstractMysqlContainerTest {
 
   @Autowired PlaylistJpaRepository playlistRepository;
   @Autowired PlaylistSongJpaRepository playlistSongRepository;
-  @Autowired SongRepository songRepository;
+  @Autowired SongJpaRepository songRepository;
   @Autowired UserJpaRepository userRepository;
   @PersistenceContext EntityManager em;
 
   private PlaylistEntity playlist;
-  private Song song1;
-  private Song song2;
+  private SongEntity song1;
+  private SongEntity song2;
 
   @BeforeEach
   void setUp() {
     UserEntity u = userRepository.save(UserEntity.of("test", "t@a.com", "hash"));
     playlist = playlistRepository.save(PlaylistEntity.of(u, "My List", true));
-    song1 = songRepository.save(Song.of(u, "Song 1", null, null, null, null, Mood.BRIGHT));
-    song2 = songRepository.save(Song.of(u, "Song 2", null, null, null, null, Mood.CALM));
+    song1 = songRepository.save(SongEntity.of(u, "Song 1", null, null, null, null, Mood.BRIGHT));
+    song2 = songRepository.save(SongEntity.of(u, "Song 2", null, null, null, null, Mood.CALM));
     em.flush();
     em.clear();
   }

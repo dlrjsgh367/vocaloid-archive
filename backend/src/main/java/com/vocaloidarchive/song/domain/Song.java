@@ -1,88 +1,58 @@
 package com.vocaloidarchive.song.domain;
 
-import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
-import com.vocaloidarchive.tag.infra.persistence.TagEntity;
-import com.vocaloidarchive.user.infra.persistence.UserEntity;
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table(name = "songs")
-@EntityListeners(AuditingEntityListener.class)
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Song {
+  private final Long id;
+  private final Long registeredById;
+  private final String title;
+  private final String youtubeUrl;
+  private final String niconicoUrl;
+  private final String thumbnailUrl;
+  private final Integer bpm;
+  private final Mood mood;
+  private final Integer playCount;
+  private final LocalDateTime createdAt;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "registered_by", nullable = false)
-  private UserEntity registeredBy;
-
-  @Column(nullable = false, length = 200)
-  private String title;
-
-  @Column(name = "youtube_url", length = 500)
-  private String youtubeUrl;
-
-  @Column(name = "niconico_url", length = 500)
-  private String niconicoUrl;
-
-  @Column(name = "thumbnail_url", length = 500)
-  private String thumbnailUrl;
-
-  private Integer bpm;
-
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false, columnDefinition = "VARCHAR(20)")
-  private Mood mood;
-
-  @Column(name = "play_count", nullable = false)
-  private Integer playCount = 0;
-
-  @CreatedDate
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
-
-  @BatchSize(size = 20)
-  @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<SongCharacter> characters = new ArrayList<>();
-
-  @BatchSize(size = 20)
-  @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<SongTag> tags = new ArrayList<>();
-
-  public static Song of(
-      UserEntity registeredBy, String title, String youtubeUrl, String niconicoUrl,
-      String thumbnailUrl, Integer bpm, Mood mood) {
-    Song s = new Song();
-    s.registeredBy = registeredBy;
-    s.title = title;
-    s.youtubeUrl = youtubeUrl;
-    s.niconicoUrl = niconicoUrl;
-    s.thumbnailUrl = thumbnailUrl;
-    s.bpm = bpm;
-    s.mood = mood;
-    s.playCount = 0;
-    return s;
+  private Song(Long id, Long registeredById, String title, String youtubeUrl, String niconicoUrl,
+      String thumbnailUrl, Integer bpm, Mood mood, Integer playCount, LocalDateTime createdAt) {
+    this.id = id;
+    this.registeredById = registeredById;
+    this.title = title;
+    this.youtubeUrl = youtubeUrl;
+    this.niconicoUrl = niconicoUrl;
+    this.thumbnailUrl = thumbnailUrl;
+    this.bpm = bpm;
+    this.mood = mood;
+    this.playCount = playCount;
+    this.createdAt = createdAt;
   }
 
-  public void addCharacter(CharacterEntity character) {
-    characters.add(SongCharacter.of(this, character));
+  public static Song newSong(Long registeredById, String title, String youtubeUrl,
+      String niconicoUrl, String thumbnailUrl, Integer bpm, Mood mood) {
+    return new Song(null, registeredById, title, youtubeUrl, niconicoUrl,
+        thumbnailUrl, bpm, mood, 0, null);
   }
 
-  public void addTag(TagEntity tag) {
-    tags.add(SongTag.of(this, tag));
+  public static Song reconstitute(Long id, Long registeredById, String title, String youtubeUrl,
+      String niconicoUrl, String thumbnailUrl, Integer bpm, Mood mood, Integer playCount,
+      LocalDateTime createdAt) {
+    return new Song(id, registeredById, title, youtubeUrl, niconicoUrl,
+        thumbnailUrl, bpm, mood, playCount, createdAt);
   }
+
+  public boolean isRegisteredBy(Long userId) {
+    return registeredById != null && registeredById.equals(userId);
+  }
+
+  public Long getId() { return id; }
+  public Long getRegisteredById() { return registeredById; }
+  public String getTitle() { return title; }
+  public String getYoutubeUrl() { return youtubeUrl; }
+  public String getNiconicoUrl() { return niconicoUrl; }
+  public String getThumbnailUrl() { return thumbnailUrl; }
+  public Integer getBpm() { return bpm; }
+  public Mood getMood() { return mood; }
+  public Integer getPlayCount() { return playCount; }
+  public LocalDateTime getCreatedAt() { return createdAt; }
 }

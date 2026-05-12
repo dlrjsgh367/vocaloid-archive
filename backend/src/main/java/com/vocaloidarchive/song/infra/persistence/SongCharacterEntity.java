@@ -1,4 +1,4 @@
-package com.vocaloidarchive.song.domain;
+package com.vocaloidarchive.song.infra.persistence;
 
 import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
 import jakarta.persistence.*;
@@ -11,20 +11,20 @@ import lombok.NoArgsConstructor;
 @IdClass(SongCharacterId.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SongCharacter {
+public class SongCharacterEntity {
 
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "song_id", nullable = false)
-  private Song song;
+  private SongEntity song;
 
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "character_id", nullable = false)
   private CharacterEntity character;
 
-  static SongCharacter of(Song song, CharacterEntity character) {
-    SongCharacter sc = new SongCharacter();
+  static SongCharacterEntity of(SongEntity song, CharacterEntity character) {
+    SongCharacterEntity sc = new SongCharacterEntity();
     sc.song = song;
     sc.character = character;
     return sc;

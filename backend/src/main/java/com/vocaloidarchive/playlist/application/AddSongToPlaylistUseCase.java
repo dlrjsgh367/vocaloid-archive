@@ -6,7 +6,7 @@ import com.vocaloidarchive.playlist.application.dto.command.AddSongToPlaylistCom
 import com.vocaloidarchive.playlist.application.port.PlaylistRepository;
 import com.vocaloidarchive.playlist.application.port.PlaylistSongRepository;
 import com.vocaloidarchive.playlist.domain.Playlist;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.application.port.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

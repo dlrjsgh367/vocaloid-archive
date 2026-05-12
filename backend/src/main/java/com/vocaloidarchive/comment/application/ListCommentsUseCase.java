@@ -5,7 +5,7 @@ import com.vocaloidarchive.comment.application.port.CommentQueryRepository;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.response.PageResponse;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.application.port.SongRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

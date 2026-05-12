@@ -6,7 +6,7 @@ import com.vocaloidarchive.comment.application.port.CommentRepository;
 import com.vocaloidarchive.comment.domain.Comment;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
-import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.song.application.port.SongRepository;
 import com.vocaloidarchive.user.application.port.UserRepository;
 import com.vocaloidarchive.user.domain.User;
 import lombok.RequiredArgsConstructor;
