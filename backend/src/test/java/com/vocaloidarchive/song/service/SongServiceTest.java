@@ -1,7 +1,7 @@
 package com.vocaloidarchive.song.service;
 
-import com.vocaloidarchive.character.domain.Character;
-import com.vocaloidarchive.character.repository.CharacterRepository;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
+import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.security.SecurityUtil;
@@ -38,7 +38,7 @@ class SongServiceTest {
 
   @Mock SongRepository songRepository;
   @Mock SongQueryRepository songQueryRepository;
-  @Mock CharacterRepository characterRepository;
+  @Mock CharacterJpaRepository characterRepository;
   @Mock UserJpaRepository userRepository;
   @Mock TagService tagService;
   @Mock SecurityUtil securityUtil;
@@ -49,7 +49,7 @@ class SongServiceTest {
     // given
     Long userId = 1L;
     UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
-    Character character = Character.of("Miku", "#39C5BB", null);
+    CharacterEntity character = CharacterEntity.of("Miku", "#39C5BB", null);
     Tag tag = Tag.of("pop");
 
     SongCreateRequest req = new SongCreateRequest(
@@ -117,7 +117,7 @@ class SongServiceTest {
     // given
     Long userId = 1L;
     UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
-    Character character = Character.of("Miku", "#39C5BB", null);
+    CharacterEntity character = CharacterEntity.of("Miku", "#39C5BB", null);
 
     SongCreateRequest req = new SongCreateRequest(
         "Test Song",
@@ -149,7 +149,7 @@ class SongServiceTest {
     // given
     Long userId = 1L;
     UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
-    Character character = Character.of("Miku", "#39C5BB", null);
+    CharacterEntity character = CharacterEntity.of("Miku", "#39C5BB", null);
 
     SongCreateRequest req = new SongCreateRequest(
         "Test Song",

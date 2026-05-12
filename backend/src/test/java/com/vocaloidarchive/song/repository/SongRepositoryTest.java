@@ -2,8 +2,8 @@ package com.vocaloidarchive.song.repository;
 
 import com.vocaloidarchive.common.config.AuditingConfig;
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
-import com.vocaloidarchive.character.domain.Character;
-import com.vocaloidarchive.character.repository.CharacterRepository;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
+import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.tag.domain.Tag;
@@ -30,7 +30,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
 
   @Autowired SongRepository songRepository;
   @Autowired UserJpaRepository userRepository;
-  @Autowired CharacterRepository characterRepository;
+  @Autowired CharacterJpaRepository characterRepository;
   @Autowired TagRepository tagRepository;
   @PersistenceContext EntityManager em;
 
@@ -60,7 +60,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @DisplayName("findDetailWithCharacters: LAZY 초기화 없이 character 컬렉션 접근")
   void findDetailWithCharacters_fetchJoin() {
     UserEntity u = userRepository.save(UserEntity.of("bob", "bob@a.com", "hash"));
-    Character c = characterRepository.save(Character.of("미쿠", "#39C5BB", null));
+    CharacterEntity c = characterRepository.save(CharacterEntity.of("미쿠", "#39C5BB", null));
     Song s = Song.of(u, "Title", null, null, null, null, Mood.CALM);
     s.addCharacter(c);
     songRepository.save(s);
@@ -96,7 +96,7 @@ class SongRepositoryTest extends AbstractMysqlContainerTest {
   @DisplayName("Song 삭제 시 song_characters / song_tags CASCADE")
   void delete_cascades_join_tables() {
     UserEntity u = userRepository.save(UserEntity.of("dave", "d@a.com", "hash"));
-    Character c = characterRepository.save(Character.of("렌", "#FFC56C", null));
+    CharacterEntity c = characterRepository.save(CharacterEntity.of("렌", "#FFC56C", null));
     Tag t = tagRepository.save(Tag.of("rock"));
     Song s = Song.of(u, "Title", null, null, null, null, Mood.ENERGETIC);
     s.addCharacter(c);

@@ -1,8 +1,8 @@
 package com.vocaloidarchive.character.service;
 
-import com.vocaloidarchive.character.domain.Character;
 import com.vocaloidarchive.character.dto.response.CharacterResponse;
-import com.vocaloidarchive.character.repository.CharacterRepository;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
+import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class CharacterServiceTest {
 
-  @Mock CharacterRepository characterRepository;
+  @Mock CharacterJpaRepository characterRepository;
   @InjectMocks CharacterService characterService;
 
   @Test
@@ -26,8 +26,8 @@ class CharacterServiceTest {
   void findAll_maps_in_order() {
     given(characterRepository.findAllByOrderByIdAsc())
         .willReturn(List.of(
-            Character.of("하츠네 미쿠", "#39C5BB", null),
-            Character.of("KAITO", "#1E90FF", null)));
+            CharacterEntity.of("하츠네 미쿠", "#39C5BB", null),
+            CharacterEntity.of("KAITO", "#1E90FF", null)));
 
     List<CharacterResponse> result = characterService.findAll();
 

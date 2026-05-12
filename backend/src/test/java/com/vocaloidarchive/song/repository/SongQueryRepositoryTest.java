@@ -3,8 +3,8 @@ package com.vocaloidarchive.song.repository;
 import com.vocaloidarchive.common.config.AuditingConfig;
 import com.vocaloidarchive.common.config.JpaConfig;
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
-import com.vocaloidarchive.character.domain.Character;
-import com.vocaloidarchive.character.repository.CharacterRepository;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
+import com.vocaloidarchive.character.infra.persistence.CharacterJpaRepository;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.dto.request.SongSearchRequest;
@@ -38,11 +38,11 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
   @Autowired SongQueryRepository songQueryRepository;
   @Autowired SongRepository songRepository;
   @Autowired UserJpaRepository userRepository;
-  @Autowired CharacterRepository characterRepository;
+  @Autowired CharacterJpaRepository characterRepository;
   @Autowired TagRepository tagRepository;
   @PersistenceContext EntityManager em;
 
-  Character miku, len, kaito;
+  CharacterEntity miku, len, kaito;
   Tag pop, rock, anime;
   Song s1, s2, s3, s4;
 
@@ -50,7 +50,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
   void setUp() {
     UserEntity u = userRepository.save(UserEntity.of("alice", "alice@a.com", "hash"));
     // V2 migration already seeds characters — fetch them instead of inserting duplicates
-    List<Character> chars = characterRepository.findAllByOrderByIdAsc();
+    List<CharacterEntity> chars = characterRepository.findAllByOrderByIdAsc();
     miku  = chars.get(0);  // 하츠네 미쿠
     len   = chars.get(2);  // 카가미네 렌
     kaito = chars.get(4);  // KAITO
@@ -67,7 +67,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
     em.clear();
   }
 
-  private Song newSong(UserEntity u, String title, Mood mood, Character c, Tag t) {
+  private Song newSong(UserEntity u, String title, Mood mood, CharacterEntity c, Tag t) {
     Song s = Song.of(u, title, null, null, null, null, mood);
     s.addCharacter(c);
     s.addTag(t);

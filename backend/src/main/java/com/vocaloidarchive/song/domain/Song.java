@@ -1,6 +1,6 @@
 package com.vocaloidarchive.song.domain;
 
-import com.vocaloidarchive.character.domain.Character;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
 import com.vocaloidarchive.tag.domain.Tag;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
@@ -78,7 +78,7 @@ public class Song {
     return s;
   }
 
-  public void addCharacter(Character character) {
+  public void addCharacter(CharacterEntity character) {
     characters.add(SongCharacter.of(this, character));
   }
 

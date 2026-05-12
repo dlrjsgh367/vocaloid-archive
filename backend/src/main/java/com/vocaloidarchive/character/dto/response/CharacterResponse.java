@@ -1,6 +1,6 @@
 package com.vocaloidarchive.character.dto.response;
 
-import com.vocaloidarchive.character.domain.Character;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
 
 public record CharacterResponse(
     Long id,
@@ -8,7 +8,7 @@ public record CharacterResponse(
     String colorHex,
     String imageUrl
 ) {
-  public static CharacterResponse from(Character c) {
+  public static CharacterResponse from(CharacterEntity c) {
     return new CharacterResponse(c.getId(), c.getName(), c.getColorHex(), c.getImageUrl());
   }
 }

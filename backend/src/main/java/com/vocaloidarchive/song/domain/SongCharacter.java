@@ -1,6 +1,6 @@
 package com.vocaloidarchive.song.domain;
 
-import com.vocaloidarchive.character.domain.Character;
+import com.vocaloidarchive.character.infra.persistence.CharacterEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,9 +21,9 @@ public class SongCharacter {
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "character_id", nullable = false)
-  private Character character;
+  private CharacterEntity character;
 
-  static SongCharacter of(Song song, Character character) {
+  static SongCharacter of(Song song, CharacterEntity character) {
     SongCharacter sc = new SongCharacter();
     sc.song = song;
     sc.character = character;
