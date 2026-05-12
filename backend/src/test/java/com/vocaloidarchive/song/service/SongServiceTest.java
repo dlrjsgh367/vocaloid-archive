@@ -12,7 +12,7 @@ import com.vocaloidarchive.song.dto.response.SongDetailResponse;
 import com.vocaloidarchive.song.dto.response.SongResponse;
 import com.vocaloidarchive.song.repository.SongQueryRepository;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.tag.domain.Tag;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
 import com.vocaloidarchive.tag.service.TagService;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
@@ -50,7 +50,7 @@ class SongServiceTest {
     Long userId = 1L;
     UserEntity user = UserEntity.of("user", "user@example.com", "hashed");
     CharacterEntity character = CharacterEntity.of("Miku", "#39C5BB", null);
-    Tag tag = Tag.of("pop");
+    TagEntity tag = TagEntity.of("pop");
 
     SongCreateRequest req = new SongCreateRequest(
         "Test Song",

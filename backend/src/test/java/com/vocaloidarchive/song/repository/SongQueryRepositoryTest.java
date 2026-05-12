@@ -9,8 +9,8 @@ import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.dto.request.SongSearchRequest;
 import com.vocaloidarchive.song.dto.request.SongSort;
-import com.vocaloidarchive.tag.domain.Tag;
-import com.vocaloidarchive.tag.repository.TagRepository;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
+import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import jakarta.persistence.EntityManager;
@@ -39,11 +39,11 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
   @Autowired SongRepository songRepository;
   @Autowired UserJpaRepository userRepository;
   @Autowired CharacterJpaRepository characterRepository;
-  @Autowired TagRepository tagRepository;
+  @Autowired TagJpaRepository tagRepository;
   @PersistenceContext EntityManager em;
 
   CharacterEntity miku, len, kaito;
-  Tag pop, rock, anime;
+  TagEntity pop, rock, anime;
   Song s1, s2, s3, s4;
 
   @BeforeEach
@@ -54,9 +54,9 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
     miku  = chars.get(0);  // 하츠네 미쿠
     len   = chars.get(2);  // 카가미네 렌
     kaito = chars.get(4);  // KAITO
-    pop   = tagRepository.save(Tag.of("pop"));
-    rock  = tagRepository.save(Tag.of("rock"));
-    anime = tagRepository.save(Tag.of("anime"));
+    pop   = tagRepository.save(TagEntity.of("pop"));
+    rock  = tagRepository.save(TagEntity.of("rock"));
+    anime = tagRepository.save(TagEntity.of("anime"));
 
     s1 = newSong(u, "Bright Day",   Mood.BRIGHT,    miku, pop);
     s2 = newSong(u, "Dark Night",   Mood.DARK,      len,  rock);
@@ -67,7 +67,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
     em.clear();
   }
 
-  private Song newSong(UserEntity u, String title, Mood mood, CharacterEntity c, Tag t) {
+  private Song newSong(UserEntity u, String title, Mood mood, CharacterEntity c, TagEntity t) {
     Song s = Song.of(u, title, null, null, null, null, mood);
     s.addCharacter(c);
     s.addTag(t);

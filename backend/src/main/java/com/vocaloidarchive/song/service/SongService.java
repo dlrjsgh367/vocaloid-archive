@@ -14,7 +14,7 @@ import com.vocaloidarchive.song.dto.response.SongDetailResponse;
 import com.vocaloidarchive.song.dto.response.SongResponse;
 import com.vocaloidarchive.song.repository.SongQueryRepository;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.tag.domain.Tag;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
 import com.vocaloidarchive.tag.service.TagService;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
@@ -50,7 +50,7 @@ public class SongService {
       throw new BusinessException(ErrorCode.CHARACTER_NOT_FOUND);
     }
 
-    List<Tag> tags = tagService.findOrCreateAll(req.tagNames());
+    List<TagEntity> tags = tagService.findOrCreateAll(req.tagNames());
     String thumbnailUrl = YoutubeUtil.extractThumbnailUrl(req.youtubeUrl());
 
     Song song = Song.of(

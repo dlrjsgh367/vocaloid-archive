@@ -1,7 +1,7 @@
 package com.vocaloidarchive.tag.service;
 
-import com.vocaloidarchive.tag.domain.Tag;
-import com.vocaloidarchive.tag.repository.TagRepository;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
+import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyCollection;
 @ExtendWith(MockitoExtension.class)
 class TagServiceTest {
 
-  @Mock TagRepository tagRepository;
+  @Mock TagJpaRepository tagRepository;
   @InjectMocks TagService tagService;
 
   @Test
@@ -28,9 +28,9 @@ class TagServiceTest {
   void normalize_and_dedupe() {
     given(tagRepository.findAllByNameIn(anyCollection()))
         .willReturn(List.of())
-        .willReturn(List.of(Tag.of("pop")));
+        .willReturn(List.of(TagEntity.of("pop")));
 
-    List<Tag> result = tagService.findOrCreateAll(List.of("  Pop  ", "POP", "pop"));
+    List<TagEntity> result = tagService.findOrCreateAll(List.of("  Pop  ", "POP", "pop"));
 
     assertThat(result).hasSize(1);
     assertThat(result.get(0).getName()).isEqualTo("pop");
@@ -41,12 +41,12 @@ class TagServiceTest {
   @DisplayName("findOrCreateAll: 기존 + 신규 mix → 신규만 saveAll")
   void mix_existing_and_new() {
     given(tagRepository.findAllByNameIn(anyCollection()))
-        .willReturn(List.of(Tag.of("rock")))
-        .willReturn(List.of(Tag.of("rock"), Tag.of("ballad")));
+        .willReturn(List.of(TagEntity.of("rock")))
+        .willReturn(List.of(TagEntity.of("rock"), TagEntity.of("ballad")));
 
-    List<Tag> result = tagService.findOrCreateAll(List.of("rock", "ballad"));
+    List<TagEntity> result = tagService.findOrCreateAll(List.of("rock", "ballad"));
 
-    assertThat(result).extracting(Tag::getName).containsExactly("rock", "ballad");
+    assertThat(result).extracting(TagEntity::getName).containsExactly("rock", "ballad");
     then(tagRepository).should().saveAll(any());
   }
 
@@ -54,9 +54,9 @@ class TagServiceTest {
   @DisplayName("findOrCreateAll: 모두 기존이면 saveAll 호출 안 함")
   void all_existing_no_save() {
     given(tagRepository.findAllByNameIn(anyCollection()))
-        .willReturn(List.of(Tag.of("pop"), Tag.of("rock")));
+        .willReturn(List.of(TagEntity.of("pop"), TagEntity.of("rock")));
 
-    List<Tag> result = tagService.findOrCreateAll(List.of("pop", "rock"));
+    List<TagEntity> result = tagService.findOrCreateAll(List.of("pop", "rock"));
 
     assertThat(result).hasSize(2);
     then(tagRepository).should(org.mockito.Mockito.never()).saveAll(any());

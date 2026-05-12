@@ -1,7 +1,8 @@
 package com.vocaloidarchive.tag.repository;
 
 import com.vocaloidarchive.support.AbstractMysqlContainerTest;
-import com.vocaloidarchive.tag.domain.Tag;
+import com.vocaloidarchive.tag.infra.persistence.TagEntity;
+import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +17,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TagRepositoryTest extends AbstractMysqlContainerTest {
 
-  @Autowired TagRepository tagRepository;
+  @Autowired TagJpaRepository tagRepository;
 
   @Test
   @DisplayName("findAllByNameIn: 매치되는 태그만 반환")
   void findAllByNameIn_matches() {
-    tagRepository.saveAll(List.of(Tag.of("pop"), Tag.of("rock"), Tag.of("ballad")));
+    tagRepository.saveAll(List.of(TagEntity.of("pop"), TagEntity.of("rock"), TagEntity.of("ballad")));
 
-    List<Tag> result = tagRepository.findAllByNameIn(List.of("pop", "ballad", "missing"));
+    List<TagEntity> result = tagRepository.findAllByNameIn(List.of("pop", "ballad", "missing"));
 
-    assertThat(result).extracting(Tag::getName).containsExactlyInAnyOrder("pop", "ballad");
+    assertThat(result).extracting(TagEntity::getName).containsExactlyInAnyOrder("pop", "ballad");
   }
 
   @Test
   @DisplayName("existsByName: 정확 일치 시 true")
   void existsByName() {
-    tagRepository.save(Tag.of("anime"));
+    tagRepository.save(TagEntity.of("anime"));
 
     assertThat(tagRepository.existsByName("anime")).isTrue();
     assertThat(tagRepository.existsByName("Anime")).isFalse();

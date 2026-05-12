@@ -1,4 +1,4 @@
-package com.vocaloidarchive.tag.domain;
+package com.vocaloidarchive.tag.infra.persistence;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "tags")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag {
+public class TagEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,11 +18,11 @@ public class Tag {
   @Column(nullable = false, unique = true, length = 50)
   private String name;
 
-  private Tag(String name) {
+  private TagEntity(String name) {
     this.name = name;
   }
 
-  public static Tag of(String normalizedName) {
-    return new Tag(normalizedName);
+  public static TagEntity of(String normalizedName) {
+    return new TagEntity(normalizedName);
   }
 }
