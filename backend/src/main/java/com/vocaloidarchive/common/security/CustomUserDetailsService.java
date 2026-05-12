@@ -1,6 +1,7 @@
 package com.vocaloidarchive.common.security;
 
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.application.port.UserRepository;
+import com.vocaloidarchive.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,8 +18,8 @@ public class CustomUserDetailsService implements UserDetailsService {
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return userRepository.findByEmail(email)
-        .map(user -> new CustomUserDetails(user.getId()))
+    User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+    return new CustomUserDetails(user.getId());
   }
 }

@@ -11,8 +11,8 @@ import com.vocaloidarchive.song.dto.request.SongSearchRequest;
 import com.vocaloidarchive.song.dto.request.SongSort;
 import com.vocaloidarchive.tag.domain.Tag;
 import com.vocaloidarchive.tag.repository.TagRepository;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
 
   @Autowired SongQueryRepository songQueryRepository;
   @Autowired SongRepository songRepository;
-  @Autowired UserRepository userRepository;
+  @Autowired UserJpaRepository userRepository;
   @Autowired CharacterRepository characterRepository;
   @Autowired TagRepository tagRepository;
   @PersistenceContext EntityManager em;
@@ -48,7 +48,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
 
   @BeforeEach
   void setUp() {
-    User u = userRepository.save(User.of("alice", "alice@a.com", "hash"));
+    UserEntity u = userRepository.save(UserEntity.of("alice", "alice@a.com", "hash"));
     // V2 migration already seeds characters — fetch them instead of inserting duplicates
     List<Character> chars = characterRepository.findAllByOrderByIdAsc();
     miku  = chars.get(0);  // 하츠네 미쿠
@@ -67,7 +67,7 @@ class SongQueryRepositoryTest extends AbstractMysqlContainerTest {
     em.clear();
   }
 
-  private Song newSong(User u, String title, Mood mood, Character c, Tag t) {
+  private Song newSong(UserEntity u, String title, Mood mood, Character c, Tag t) {
     Song s = Song.of(u, title, null, null, null, null, mood);
     s.addCharacter(c);
     s.addTag(t);

@@ -1,44 +1,38 @@
 package com.vocaloidarchive.user.domain;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "refresh_tokens")
-@EntityListeners(AuditingEntityListener.class)
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private final Long id;
+  private final Long userId;
+  private final String tokenHash;
+  private final LocalDateTime expiresAt;
+  private final LocalDateTime createdAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
-
-  @Column(name = "token_hash", nullable = false, length = 255)
-  private String tokenHash;
-
-  @Column(name = "expires_at", nullable = false)
-  private LocalDateTime expiresAt;
-
-  @CreatedDate
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
-
-  public static RefreshToken of(User user, String tokenHash, LocalDateTime expiresAt) {
-    RefreshToken rt = new RefreshToken();
-    rt.user = user;
-    rt.tokenHash = tokenHash;
-    rt.expiresAt = expiresAt;
-    return rt;
+  private RefreshToken(Long id, Long userId, String tokenHash,
+                       LocalDateTime expiresAt, LocalDateTime createdAt) {
+    this.id = id;
+    this.userId = userId;
+    this.tokenHash = tokenHash;
+    this.expiresAt = expiresAt;
+    this.createdAt = createdAt;
   }
+
+  public static RefreshToken issue(Long userId, String tokenHash, LocalDateTime expiresAt) {
+    return new RefreshToken(null, userId, tokenHash, expiresAt, null);
+  }
+
+  public static RefreshToken reconstitute(Long id, Long userId, String tokenHash,
+                                          LocalDateTime expiresAt, LocalDateTime createdAt) {
+    return new RefreshToken(id, userId, tokenHash, expiresAt, createdAt);
+  }
+
+  public boolean isExpired(LocalDateTime now) { return !now.isBefore(expiresAt); }
+
+  public Long getId() { return id; }
+  public Long getUserId() { return userId; }
+  public String getTokenHash() { return tokenHash; }
+  public LocalDateTime getExpiresAt() { return expiresAt; }
+  public LocalDateTime getCreatedAt() { return createdAt; }
 }

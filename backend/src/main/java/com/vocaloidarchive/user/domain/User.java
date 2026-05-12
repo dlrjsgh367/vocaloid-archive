@@ -1,46 +1,39 @@
 package com.vocaloidarchive.user.domain;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
-@EntityListeners(AuditingEntityListener.class)
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private final Long id;
+  private final String username;
+  private final String email;
+  private final String passwordHash;
+  private final String profileImageUrl;
+  private final LocalDateTime createdAt;
 
-  @Column(nullable = false, unique = true, length = 50)
-  private String username;
-
-  @Column(nullable = false, unique = true, length = 100)
-  private String email;
-
-  @Column(name = "password_hash", nullable = false, length = 255)
-  private String passwordHash;
-
-  @Column(name = "profile_image_url", length = 500)
-  private String profileImageUrl;
-
-  @CreatedDate
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
-
-  public static User of(String username, String email, String passwordHash) {
-    User user = new User();
-    user.username = username;
-    user.email = email;
-    user.passwordHash = passwordHash;
-    return user;
+  private User(Long id, String username, String email, String passwordHash,
+               String profileImageUrl, LocalDateTime createdAt) {
+    this.id = id;
+    this.username = username;
+    this.email = email;
+    this.passwordHash = passwordHash;
+    this.profileImageUrl = profileImageUrl;
+    this.createdAt = createdAt;
   }
+
+  public static User newSignup(String username, String email, String passwordHash) {
+    return new User(null, username, email, passwordHash, null, null);
+  }
+
+  public static User reconstitute(Long id, String username, String email, String passwordHash,
+                                   String profileImageUrl, LocalDateTime createdAt) {
+    return new User(id, username, email, passwordHash, profileImageUrl, createdAt);
+  }
+
+  public Long getId() { return id; }
+  public String getUsername() { return username; }
+  public String getEmail() { return email; }
+  public String getPasswordHash() { return passwordHash; }
+  public String getProfileImageUrl() { return profileImageUrl; }
+  public LocalDateTime getCreatedAt() { return createdAt; }
 }

@@ -16,8 +16,8 @@ import com.vocaloidarchive.song.repository.SongQueryRepository;
 import com.vocaloidarchive.song.repository.SongRepository;
 import com.vocaloidarchive.tag.domain.Tag;
 import com.vocaloidarchive.tag.service.TagService;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,14 +36,14 @@ public class SongService {
   private final SongRepository songRepository;
   private final SongQueryRepository songQueryRepository;
   private final CharacterRepository characterRepository;
-  private final UserRepository userRepository;
+  private final UserJpaRepository userRepository;
   private final TagService tagService;
   private final SecurityUtil securityUtil;
 
   @Transactional
   public SongResponse create(SongCreateRequest req) {
     Long currentUserId = securityUtil.getCurrentUserId();
-    User registeredBy = userRepository.getReferenceById(currentUserId);
+    UserEntity registeredBy = userRepository.getReferenceById(currentUserId);
 
     List<Character> characters = characterRepository.findAllById(req.characterIds());
     if (characters.size() != req.characterIds().size()) {

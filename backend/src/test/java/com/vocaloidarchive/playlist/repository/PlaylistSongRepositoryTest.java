@@ -7,8 +7,8 @@ import com.vocaloidarchive.playlist.domain.PlaylistSong;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class PlaylistSongRepositoryTest extends AbstractMysqlContainerTest {
   @Autowired PlaylistRepository playlistRepository;
   @Autowired PlaylistSongRepository playlistSongRepository;
   @Autowired SongRepository songRepository;
-  @Autowired UserRepository userRepository;
+  @Autowired UserJpaRepository userRepository;
   @PersistenceContext EntityManager em;
 
   private Playlist playlist;
@@ -40,7 +40,7 @@ class PlaylistSongRepositoryTest extends AbstractMysqlContainerTest {
 
   @BeforeEach
   void setUp() {
-    User u = userRepository.save(User.of("test", "t@a.com", "hash"));
+    UserEntity u = userRepository.save(UserEntity.of("test", "t@a.com", "hash"));
     playlist = playlistRepository.save(Playlist.of(u, "My List", true));
     song1 = songRepository.save(Song.of(u, "Song 1", null, null, null, null, Mood.BRIGHT));
     song2 = songRepository.save(Song.of(u, "Song 2", null, null, null, null, Mood.CALM));

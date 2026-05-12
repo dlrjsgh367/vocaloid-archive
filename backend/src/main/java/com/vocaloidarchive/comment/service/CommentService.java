@@ -9,7 +9,7 @@ import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.response.PageResponse;
 import com.vocaloidarchive.common.security.SecurityUtil;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class CommentService {
 
   private final CommentRepository commentRepository;
   private final SongRepository songRepository;
-  private final UserRepository userRepository;
+  private final UserJpaRepository userRepository;
   private final SecurityUtil securityUtil;
 
   public PageResponse<CommentResponse> list(Long songId, Pageable pageable) {

@@ -1,4 +1,4 @@
-package com.vocaloidarchive.user.dto.request;
+package com.vocaloidarchive.user.interfaces.dto.request;
 
 import jakarta.validation.constraints.*;
 

@@ -14,8 +14,8 @@ import com.vocaloidarchive.playlist.repository.PlaylistSongRepository;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,17 +38,17 @@ class PlaylistServiceTest {
   @Mock PlaylistRepository playlistRepository;
   @Mock PlaylistSongRepository playlistSongRepository;
   @Mock SongRepository songRepository;
-  @Mock UserRepository userRepository;
+  @Mock UserJpaRepository userRepository;
   @Mock SecurityUtil securityUtil;
   @InjectMocks PlaylistService playlistService;
 
-  private User owner() {
-    User u = User.of("alice", "alice@a.com", "hash");
+  private UserEntity owner() {
+    UserEntity u = UserEntity.of("alice", "alice@a.com", "hash");
     ReflectionTestUtils.setField(u, "id", 1L);
     return u;
   }
 
-  private Playlist playlist(User u, boolean isPublic) {
+  private Playlist playlist(UserEntity u, boolean isPublic) {
     Playlist p = Playlist.of(u, "My List", isPublic);
     ReflectionTestUtils.setField(p, "id", 10L);
     return p;
@@ -59,7 +59,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("getMyPlaylists: 본인 플레이리스트 목록 반환")
   void getMyPlaylists_returnsList() {
-    User u = owner();
+    UserEntity u = owner();
     given(securityUtil.getCurrentUserId()).willReturn(1L);
     given(playlistRepository.findAllByUserId(1L)).willReturn(List.of(
         playlist(u, true), playlist(u, false)));
@@ -76,7 +76,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("getDetail: public playlist → 누구나 접근")
   void getDetail_public_ok() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
     given(playlistSongRepository.findWithSongByPlaylistId(10L)).willReturn(List.of());
@@ -90,7 +90,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("getDetail: private playlist → 본인 접근")
   void getDetail_private_ownerAccess() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, false);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
     given(securityUtil.getCurrentUserId()).willReturn(1L);
@@ -104,7 +104,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("getDetail: private playlist → 타인 → FORBIDDEN")
   void getDetail_private_otherUser_forbidden() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, false);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
     given(securityUtil.getCurrentUserId()).willReturn(2L);
@@ -118,7 +118,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("getDetail: private playlist → 미인증 → FORBIDDEN")
   void getDetail_private_anonymous_forbidden() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, false);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
     given(securityUtil.getCurrentUserId()).willThrow(new BusinessException(ErrorCode.INVALID_TOKEN));
@@ -145,7 +145,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("create: 저장 후 PlaylistResponse 반환")
   void create_ok() {
-    User u = owner();
+    UserEntity u = owner();
     given(securityUtil.getCurrentUserId()).willReturn(1L);
     given(userRepository.getReferenceById(1L)).willReturn(u);
     given(playlistRepository.save(any(Playlist.class))).willAnswer(inv -> inv.getArgument(0));
@@ -162,7 +162,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("delete: 본인 → repo.delete 호출")
   void delete_owner_ok() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(securityUtil.getCurrentUserId()).willReturn(1L);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
@@ -175,7 +175,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("delete: 타인 → FORBIDDEN")
   void delete_forbidden() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(securityUtil.getCurrentUserId()).willReturn(2L);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
@@ -203,7 +203,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("addSong: 새 곡 추가, orderIndex = max+1")
   void addSong_newSong_savedWithOrder() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     Song song = Song.of(u, "T", null, null, null, null, Mood.BRIGHT);
     ReflectionTestUtils.setField(song, "id", 5L);
@@ -223,7 +223,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("addSong: 이미 있는 곡 → skip (save 미호출)")
   void addSong_duplicate_skipped() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(securityUtil.getCurrentUserId()).willReturn(1L);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
@@ -250,7 +250,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("addSong: 타인 → FORBIDDEN")
   void addSong_forbidden() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(securityUtil.getCurrentUserId()).willReturn(2L);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
@@ -264,7 +264,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("addSong: 곡 없음 → SONG_NOT_FOUND")
   void addSong_songNotFound() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(securityUtil.getCurrentUserId()).willReturn(1L);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
@@ -281,7 +281,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("removeSong: 본인 → deleteByPlaylistIdAndSongId 호출")
   void removeSong_owner_ok() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(securityUtil.getCurrentUserId()).willReturn(1L);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));
@@ -294,7 +294,7 @@ class PlaylistServiceTest {
   @Test
   @DisplayName("removeSong: 타인 → FORBIDDEN")
   void removeSong_forbidden() {
-    User u = owner();
+    UserEntity u = owner();
     Playlist p = playlist(u, true);
     given(securityUtil.getCurrentUserId()).willReturn(2L);
     given(playlistRepository.findById(10L)).willReturn(Optional.of(p));

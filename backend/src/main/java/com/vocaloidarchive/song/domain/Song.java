@@ -2,7 +2,7 @@ package com.vocaloidarchive.song.domain;
 
 import com.vocaloidarchive.character.domain.Character;
 import com.vocaloidarchive.tag.domain.Tag;
-import com.vocaloidarchive.user.domain.User;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class Song {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "registered_by", nullable = false)
-  private User registeredBy;
+  private UserEntity registeredBy;
 
   @Column(nullable = false, length = 200)
   private String title;
@@ -64,7 +64,7 @@ public class Song {
   private List<SongTag> tags = new ArrayList<>();
 
   public static Song of(
-      User registeredBy, String title, String youtubeUrl, String niconicoUrl,
+      UserEntity registeredBy, String title, String youtubeUrl, String niconicoUrl,
       String thumbnailUrl, Integer bpm, Mood mood) {
     Song s = new Song();
     s.registeredBy = registeredBy;

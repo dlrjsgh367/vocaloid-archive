@@ -9,8 +9,8 @@ import com.vocaloidarchive.like.dto.response.LikeToggleResponse;
 import com.vocaloidarchive.like.repository.LikeRepository;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
-import com.vocaloidarchive.user.domain.User;
-import com.vocaloidarchive.user.repository.UserRepository;
+import com.vocaloidarchive.user.infra.persistence.UserEntity;
+import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ class LikeServiceTest {
 
   @Mock LikeRepository likeRepository;
   @Mock SongRepository songRepository;
-  @Mock UserRepository userRepository;
+  @Mock UserJpaRepository userRepository;
   @Mock SecurityUtil securityUtil;
   @InjectMocks LikeService likeService;
 
@@ -41,9 +41,9 @@ class LikeServiceTest {
     given(securityUtil.getCurrentUserId()).willReturn(userId);
     given(songRepository.existsById(songId)).willReturn(true);
     given(likeRepository.existsById(new LikeId(userId, songId))).willReturn(false);
-    given(userRepository.getReferenceById(userId)).willReturn(User.of("u", "u@a.com", "h"));
+    given(userRepository.getReferenceById(userId)).willReturn(UserEntity.of("u", "u@a.com", "h"));
     given(songRepository.getReferenceById(songId)).willReturn(
-        Song.of(User.of("u", "u@a.com", "h"), "Title", null, null, null, null,
+        Song.of(UserEntity.of("u", "u@a.com", "h"), "Title", null, null, null, null,
             com.vocaloidarchive.song.domain.Mood.BRIGHT));
     given(likeRepository.save(any(Like.class))).willAnswer(inv -> inv.getArgument(0));
     given(likeRepository.countBySongId(songId)).willReturn(5L);
