@@ -12,8 +12,10 @@ import com.vocaloidarchive.song.dto.response.SongDetailResponse;
 import com.vocaloidarchive.song.dto.response.SongResponse;
 import com.vocaloidarchive.song.repository.SongQueryRepository;
 import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.tag.application.FindOrCreateTagsUseCase;
+import com.vocaloidarchive.tag.application.dto.result.TagResult;
 import com.vocaloidarchive.tag.infra.persistence.TagEntity;
-import com.vocaloidarchive.tag.service.TagService;
+import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -40,7 +42,8 @@ class SongServiceTest {
   @Mock SongQueryRepository songQueryRepository;
   @Mock CharacterJpaRepository characterRepository;
   @Mock UserJpaRepository userRepository;
-  @Mock TagService tagService;
+  @Mock FindOrCreateTagsUseCase findOrCreateTagsUseCase;
+  @Mock TagJpaRepository tagJpaRepository;
   @Mock SecurityUtil securityUtil;
   @InjectMocks SongService songService;
 
@@ -64,7 +67,9 @@ class SongServiceTest {
     given(securityUtil.getCurrentUserId()).willReturn(userId);
     given(userRepository.getReferenceById(userId)).willReturn(user);
     given(characterRepository.findAllById(List.of(1L))).willReturn(List.of(character));
-    given(tagService.findOrCreateAll(List.of("pop"))).willReturn(List.of(tag));
+    TagResult tagResult = new TagResult(1L, "pop");
+    given(findOrCreateTagsUseCase.invoke(List.of("pop"))).willReturn(List.of(tagResult));
+    given(tagJpaRepository.getReferenceById(1L)).willReturn(tag);
     given(songRepository.save(any(Song.class))).willAnswer(inv -> inv.getArgument(0));
 
     // when
@@ -131,7 +136,7 @@ class SongServiceTest {
     given(securityUtil.getCurrentUserId()).willReturn(userId);
     given(userRepository.getReferenceById(userId)).willReturn(user);
     given(characterRepository.findAllById(List.of(1L))).willReturn(List.of(character));
-    given(tagService.findOrCreateAll(null)).willReturn(List.of());
+    given(findOrCreateTagsUseCase.invoke(null)).willReturn(List.of());
     given(songRepository.save(any(Song.class))).willAnswer(inv -> inv.getArgument(0));
 
     // when
@@ -163,7 +168,7 @@ class SongServiceTest {
     given(securityUtil.getCurrentUserId()).willReturn(userId);
     given(userRepository.getReferenceById(userId)).willReturn(user);
     given(characterRepository.findAllById(List.of(1L))).willReturn(List.of(character));
-    given(tagService.findOrCreateAll(null)).willReturn(List.of());
+    given(findOrCreateTagsUseCase.invoke(null)).willReturn(List.of());
     given(songRepository.save(any(Song.class))).willAnswer(inv -> inv.getArgument(0));
 
     // when

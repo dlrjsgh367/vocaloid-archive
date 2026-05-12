@@ -14,8 +14,10 @@ import com.vocaloidarchive.song.dto.response.SongDetailResponse;
 import com.vocaloidarchive.song.dto.response.SongResponse;
 import com.vocaloidarchive.song.repository.SongQueryRepository;
 import com.vocaloidarchive.song.repository.SongRepository;
+import com.vocaloidarchive.tag.application.FindOrCreateTagsUseCase;
+import com.vocaloidarchive.tag.application.dto.result.TagResult;
 import com.vocaloidarchive.tag.infra.persistence.TagEntity;
-import com.vocaloidarchive.tag.service.TagService;
+import com.vocaloidarchive.tag.infra.persistence.TagJpaRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,8 @@ public class SongService {
   private final SongQueryRepository songQueryRepository;
   private final CharacterJpaRepository characterRepository;
   private final UserJpaRepository userRepository;
-  private final TagService tagService;
+  private final FindOrCreateTagsUseCase findOrCreateTagsUseCase;
+  private final TagJpaRepository tagJpaRepository;
   private final SecurityUtil securityUtil;
 
   @Transactional
@@ -50,7 +53,10 @@ public class SongService {
       throw new BusinessException(ErrorCode.CHARACTER_NOT_FOUND);
     }
 
-    List<TagEntity> tags = tagService.findOrCreateAll(req.tagNames());
+    List<TagResult> tagResults = findOrCreateTagsUseCase.invoke(req.tagNames());
+    List<TagEntity> tags = tagResults.stream()
+        .map(r -> tagJpaRepository.getReferenceById(r.id()))
+        .toList();
     String thumbnailUrl = YoutubeUtil.extractThumbnailUrl(req.youtubeUrl());
 
     Song song = Song.of(
