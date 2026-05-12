@@ -1,4 +1,4 @@
-package com.vocaloidarchive.playlist.domain;
+package com.vocaloidarchive.playlist.infra.persistence;
 
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
 import jakarta.persistence.*;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Playlist {
+public class PlaylistEntity {
 
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -34,8 +34,8 @@ public class Playlist {
   @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
 
-  public static Playlist of(UserEntity user, String title, boolean isPublic) {
-    Playlist p = new Playlist();
+  public static PlaylistEntity of(UserEntity user, String title, boolean isPublic) {
+    PlaylistEntity p = new PlaylistEntity();
     p.user = user;
     p.title = title;
     p.isPublic = isPublic;

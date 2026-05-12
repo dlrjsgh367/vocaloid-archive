@@ -1,7 +1,7 @@
 package com.vocaloidarchive.playlist.dto.response;
 
-import com.vocaloidarchive.playlist.domain.Playlist;
-import com.vocaloidarchive.playlist.domain.PlaylistSong;
+import com.vocaloidarchive.playlist.infra.persistence.PlaylistEntity;
+import com.vocaloidarchive.playlist.infra.persistence.PlaylistSongEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +16,7 @@ public record PlaylistDetailResponse(
 ) {
   public record SongItem(Long songId, String title, String thumbnailUrl, int orderIndex) {}
 
-  public static PlaylistDetailResponse from(Playlist p, List<PlaylistSong> songs) {
+  public static PlaylistDetailResponse from(PlaylistEntity p, List<PlaylistSongEntity> songs) {
     List<SongItem> items = songs.stream()
         .map(ps -> new SongItem(ps.getSong().getId(), ps.getSong().getTitle(),
             ps.getSong().getThumbnailUrl(), ps.getOrderIndex()))

@@ -1,6 +1,6 @@
 package com.vocaloidarchive.playlist.dto.response;
 
-import com.vocaloidarchive.playlist.domain.Playlist;
+import com.vocaloidarchive.playlist.infra.persistence.PlaylistEntity;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,7 @@ public record PlaylistResponse(
     long songCount,
     LocalDateTime createdAt
 ) {
-  public static PlaylistResponse from(Playlist p, long songCount) {
+  public static PlaylistResponse from(PlaylistEntity p, long songCount) {
     return new PlaylistResponse(p.getId(), p.getTitle(), p.isPublic(),
         p.getUser().getUsername(), songCount, p.getCreatedAt());
   }

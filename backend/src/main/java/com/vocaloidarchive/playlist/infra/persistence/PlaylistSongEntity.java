@@ -1,4 +1,4 @@
-package com.vocaloidarchive.playlist.domain;
+package com.vocaloidarchive.playlist.infra.persistence;
 
 import com.vocaloidarchive.song.domain.Song;
 import jakarta.persistence.*;
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @IdClass(PlaylistSongId.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PlaylistSong {
+public class PlaylistSongEntity {
 
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "playlist_id", nullable = false)
-  private Playlist playlist;
+  private PlaylistEntity playlist;
 
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
@@ -26,8 +26,8 @@ public class PlaylistSong {
   @Column(name = "order_index", nullable = false)
   private int orderIndex;
 
-  public static PlaylistSong of(Playlist playlist, Song song, int orderIndex) {
-    PlaylistSong ps = new PlaylistSong();
+  public static PlaylistSongEntity of(PlaylistEntity playlist, Song song, int orderIndex) {
+    PlaylistSongEntity ps = new PlaylistSongEntity();
     ps.playlist = playlist;
     ps.song = song;
     ps.orderIndex = orderIndex;
