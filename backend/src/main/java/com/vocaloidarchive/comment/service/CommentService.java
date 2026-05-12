@@ -1,9 +1,9 @@
 package com.vocaloidarchive.comment.service;
 
-import com.vocaloidarchive.comment.domain.Comment;
 import com.vocaloidarchive.comment.dto.request.CommentCreateRequest;
 import com.vocaloidarchive.comment.dto.response.CommentResponse;
-import com.vocaloidarchive.comment.repository.CommentRepository;
+import com.vocaloidarchive.comment.infra.persistence.CommentEntity;
+import com.vocaloidarchive.comment.infra.persistence.CommentJpaRepository;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.response.PageResponse;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CommentService {
 
-  private final CommentRepository commentRepository;
+  private final CommentJpaRepository commentRepository;
   private final SongRepository songRepository;
   private final UserJpaRepository userRepository;
   private final SecurityUtil securityUtil;
@@ -42,7 +42,7 @@ public class CommentService {
     }
     var user = userRepository.getReferenceById(userId);
     var song = songRepository.getReferenceById(songId);
-    Comment saved = commentRepository.save(Comment.of(user, song, req.content()));
+    CommentEntity saved = commentRepository.save(CommentEntity.of(user, song, req.content()));
     return CommentResponse.from(saved);
   }
 

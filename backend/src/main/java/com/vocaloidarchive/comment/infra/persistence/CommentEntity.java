@@ -1,4 +1,4 @@
-package com.vocaloidarchive.comment.domain;
+package com.vocaloidarchive.comment.infra.persistence;
 
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class CommentEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +37,8 @@ public class Comment {
   @Column(name = "created_at", nullable = false, updatable = false)
   private LocalDateTime createdAt;
 
-  public static Comment of(UserEntity user, Song song, String content) {
-    Comment c = new Comment();
+  public static CommentEntity of(UserEntity user, Song song, String content) {
+    CommentEntity c = new CommentEntity();
     c.user = user;
     c.song = song;
     c.content = content;

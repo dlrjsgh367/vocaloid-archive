@@ -1,6 +1,7 @@
 package com.vocaloidarchive.comment.repository;
 
-import com.vocaloidarchive.comment.domain.Comment;
+import com.vocaloidarchive.comment.infra.persistence.CommentEntity;
+import com.vocaloidarchive.comment.infra.persistence.CommentJpaRepository;
 import com.vocaloidarchive.common.config.AuditingConfig;
 import com.vocaloidarchive.song.domain.Mood;
 import com.vocaloidarchive.song.domain.Song;
@@ -27,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Import(AuditingConfig.class)
 class CommentRepositoryTest extends AbstractMysqlContainerTest {
 
-  @Autowired CommentRepository commentRepository;
+  @Autowired CommentJpaRepository commentRepository;
   @Autowired UserJpaRepository userRepository;
   @Autowired SongRepository songRepository;
   @Autowired TestEntityManager em;
@@ -47,15 +48,15 @@ class CommentRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("findWithUserBySongId: 최신순으로 페이징 반환, user 즉시 로딩")
   void findWithUserBySongId_returnsPaginatedNewestFirst() throws InterruptedException {
-    Comment c1 = commentRepository.save(Comment.of(user1, song, "first"));
+    CommentEntity c1 = commentRepository.save(CommentEntity.of(user1, song, "first"));
     // flush now so c1 gets a createdAt before the sleep
     em.flush();
     // TIMESTAMP precision is 1 second in MySQL — sleep past 1 s boundary
     Thread.sleep(1100);
-    Comment c2 = commentRepository.save(Comment.of(user2, song, "second"));
+    CommentEntity c2 = commentRepository.save(CommentEntity.of(user2, song, "second"));
     em.flush();
 
-    Page<Comment> page = commentRepository.findWithUserBySongId(song.getId(),
+    Page<CommentEntity> page = commentRepository.findWithUserBySongId(song.getId(),
         PageRequest.of(0, 20, Sort.by(Sort.Direction.DESC, "createdAt")));
 
     assertThat(page.getTotalElements()).isEqualTo(2);
@@ -68,7 +69,7 @@ class CommentRepositoryTest extends AbstractMysqlContainerTest {
   @Test
   @DisplayName("existsByIdAndUserId: 소유자 true, 타인 false")
   void existsByIdAndUserId_ownerReturnsTrue_otherReturnsFalse() {
-    Comment comment = commentRepository.save(Comment.of(user1, song, "content"));
+    CommentEntity comment = commentRepository.save(CommentEntity.of(user1, song, "content"));
 
     assertThat(commentRepository.existsByIdAndUserId(comment.getId(), user1.getId())).isTrue();
     assertThat(commentRepository.existsByIdAndUserId(comment.getId(), user2.getId())).isFalse();

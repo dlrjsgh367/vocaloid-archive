@@ -1,6 +1,6 @@
 package com.vocaloidarchive.comment.dto.response;
 
-import com.vocaloidarchive.comment.domain.Comment;
+import com.vocaloidarchive.comment.infra.persistence.CommentEntity;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +10,7 @@ public record CommentResponse(
     String username,
     LocalDateTime createdAt
 ) {
-  public static CommentResponse from(Comment c) {
+  public static CommentResponse from(CommentEntity c) {
     return new CommentResponse(
         c.getId(),
         c.getContent(),

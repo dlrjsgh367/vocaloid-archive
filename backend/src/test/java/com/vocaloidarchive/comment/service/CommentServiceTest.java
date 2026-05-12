@@ -1,9 +1,9 @@
 package com.vocaloidarchive.comment.service;
 
-import com.vocaloidarchive.comment.domain.Comment;
 import com.vocaloidarchive.comment.dto.request.CommentCreateRequest;
 import com.vocaloidarchive.comment.dto.response.CommentResponse;
-import com.vocaloidarchive.comment.repository.CommentRepository;
+import com.vocaloidarchive.comment.infra.persistence.CommentEntity;
+import com.vocaloidarchive.comment.infra.persistence.CommentJpaRepository;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.response.PageResponse;
@@ -32,7 +32,7 @@ import static org.mockito.BDDMockito.then;
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
 
-  @Mock CommentRepository commentRepository;
+  @Mock CommentJpaRepository commentRepository;
   @Mock SongRepository songRepository;
   @Mock UserJpaRepository userRepository;
   @Mock SecurityUtil securityUtil;
@@ -50,7 +50,7 @@ class CommentServiceTest {
   void givenSongExists_whenList_thenReturnsPageResponse() {
     UserEntity user = makeUser("alice");
     Song song = makeSong(user);
-    Comment comment = Comment.of(user, song, "hello");
+    CommentEntity comment = CommentEntity.of(user, song, "hello");
     PageRequest pageable = PageRequest.of(0, 20);
 
     given(songRepository.existsById(10L)).willReturn(true);
@@ -76,19 +76,19 @@ class CommentServiceTest {
     Long userId = 1L, songId = 10L;
     UserEntity user = makeUser("alice");
     Song song = makeSong(user);
-    Comment comment = Comment.of(user, song, "great song");
+    CommentEntity comment = CommentEntity.of(user, song, "great song");
     CommentCreateRequest req = new CommentCreateRequest("great song");
 
     given(securityUtil.getCurrentUserId()).willReturn(userId);
     given(songRepository.existsById(songId)).willReturn(true);
     given(userRepository.getReferenceById(userId)).willReturn(user);
     given(songRepository.getReferenceById(songId)).willReturn(song);
-    given(commentRepository.save(any(Comment.class))).willReturn(comment);
+    given(commentRepository.save(any(CommentEntity.class))).willReturn(comment);
 
     CommentResponse res = commentService.create(songId, req);
 
     assertThat(res.content()).isEqualTo("great song");
-    then(commentRepository).should().save(any(Comment.class));
+    then(commentRepository).should().save(any(CommentEntity.class));
   }
 
   @Test
