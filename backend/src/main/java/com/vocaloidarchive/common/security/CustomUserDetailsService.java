@@ -1,6 +1,7 @@
 package com.vocaloidarchive.common.security;
 
-import com.vocaloidarchive.user.infra.persistence.UserJpaRepository;
+import com.vocaloidarchive.user.application.port.UserRepository;
+import com.vocaloidarchive.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,13 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-  private final UserJpaRepository userRepository;
+  private final UserRepository userRepository;
 
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return userRepository.findByEmail(email)
-        .map(user -> new CustomUserDetails(user.getId()))
+    User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
+    return new CustomUserDetails(user.getId());
   }
 }
