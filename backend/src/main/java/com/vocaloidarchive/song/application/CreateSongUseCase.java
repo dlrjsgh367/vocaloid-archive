@@ -11,6 +11,8 @@ import com.vocaloidarchive.song.application.port.SongRepository;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.tag.application.FindOrCreateTagsUseCase;
 import com.vocaloidarchive.tag.application.dto.result.TagResult;
+import com.vocaloidarchive.user.application.dto.result.UserSummaryResult;
+import com.vocaloidarchive.user.application.port.UserQueryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class CreateSongUseCase {
   private final SongRepository songRepository;
   private final CharacterJpaRepository characterJpaRepository;
   private final FindOrCreateTagsUseCase findOrCreateTagsUseCase;
+  private final UserQueryRepository userQueryRepository;
 
   @Transactional
   public SongResult invoke(CreateSongCommand cmd) {
@@ -42,7 +45,10 @@ public class CreateSongUseCase {
 
     Song saved = songRepository.save(song, cmd.characterIds(), tagIds);
 
-    SongResult.Owner owner = new SongResult.Owner(saved.getRegisteredById(), null);
+    String username = userQueryRepository.findSummaryById(saved.getRegisteredById())
+        .map(UserSummaryResult::username)
+        .orElse(null);
+    SongResult.Owner owner = new SongResult.Owner(saved.getRegisteredById(), username);
     List<SongResult.CharacterRef> characterRefs = characters.stream()
         .map(c -> new SongResult.CharacterRef(c.getId(), c.getName(), c.getColorHex(), c.getImageUrl()))
         .toList();
