@@ -1,4 +1,4 @@
-package com.vocaloidarchive.like.domain;
+package com.vocaloidarchive.like.infra.persistence;
 
 import java.io.Serializable;
 import java.util.Objects;

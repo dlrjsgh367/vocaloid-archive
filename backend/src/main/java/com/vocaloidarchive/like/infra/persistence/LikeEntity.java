@@ -1,4 +1,4 @@
-package com.vocaloidarchive.like.domain;
+package com.vocaloidarchive.like.infra.persistence;
 
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @IdClass(LikeId.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class LikeEntity {
 
   @Id
   @ManyToOne(fetch = FetchType.LAZY)
@@ -29,8 +29,8 @@ public class Like {
   @Column(name = "liked_at", nullable = false, insertable = false, updatable = false)
   private LocalDateTime likedAt;
 
-  public static Like of(UserEntity user, Song song) {
-    Like like = new Like();
+  public static LikeEntity of(UserEntity user, Song song) {
+    LikeEntity like = new LikeEntity();
     like.user = user;
     like.song = song;
     return like;

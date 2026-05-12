@@ -8,7 +8,7 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.vocaloidarchive.character.infra.persistence.QCharacterEntity;
-import com.vocaloidarchive.like.domain.QLike;
+import com.vocaloidarchive.like.infra.persistence.QLikeEntity;
 import com.vocaloidarchive.song.domain.QSong;
 import com.vocaloidarchive.song.domain.QSongCharacter;
 import com.vocaloidarchive.song.domain.QSongTag;
@@ -33,7 +33,7 @@ public class SongQueryRepository {
   private static final QSongTag ST = QSongTag.songTag;
   private static final QCharacterEntity C = QCharacterEntity.characterEntity;
   private static final QTagEntity T = QTagEntity.tagEntity;
-  private static final QLike L = QLike.like;
+  private static final QLikeEntity L = QLikeEntity.likeEntity;
 
   private final JPAQueryFactory queryFactory;
 

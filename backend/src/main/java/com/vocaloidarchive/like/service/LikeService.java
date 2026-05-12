@@ -3,10 +3,10 @@ package com.vocaloidarchive.like.service;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.security.SecurityUtil;
-import com.vocaloidarchive.like.domain.Like;
-import com.vocaloidarchive.like.domain.LikeId;
 import com.vocaloidarchive.like.dto.response.LikeToggleResponse;
-import com.vocaloidarchive.like.repository.LikeRepository;
+import com.vocaloidarchive.like.infra.persistence.LikeEntity;
+import com.vocaloidarchive.like.infra.persistence.LikeId;
+import com.vocaloidarchive.like.infra.persistence.LikeJpaRepository;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LikeService {
 
-  private final LikeRepository likeRepository;
+  private final LikeJpaRepository likeRepository;
   private final SongRepository songRepository;
   private final UserJpaRepository userRepository;
   private final SecurityUtil securityUtil;
@@ -37,7 +37,7 @@ public class LikeService {
     } else {
       UserEntity user = userRepository.getReferenceById(userId);
       Song song = songRepository.getReferenceById(songId);
-      likeRepository.save(Like.of(user, song));
+      likeRepository.save(LikeEntity.of(user, song));
     }
     long likeCount = likeRepository.countBySongId(songId);
     return new LikeToggleResponse(!currentlyLiked, likeCount);

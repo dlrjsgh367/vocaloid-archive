@@ -3,10 +3,10 @@ package com.vocaloidarchive.like.service;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.security.SecurityUtil;
-import com.vocaloidarchive.like.domain.Like;
-import com.vocaloidarchive.like.domain.LikeId;
 import com.vocaloidarchive.like.dto.response.LikeToggleResponse;
-import com.vocaloidarchive.like.repository.LikeRepository;
+import com.vocaloidarchive.like.infra.persistence.LikeEntity;
+import com.vocaloidarchive.like.infra.persistence.LikeId;
+import com.vocaloidarchive.like.infra.persistence.LikeJpaRepository;
 import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.song.repository.SongRepository;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
@@ -28,7 +28,7 @@ import static org.mockito.BDDMockito.then;
 @ExtendWith(MockitoExtension.class)
 class LikeServiceTest {
 
-  @Mock LikeRepository likeRepository;
+  @Mock LikeJpaRepository likeRepository;
   @Mock SongRepository songRepository;
   @Mock UserJpaRepository userRepository;
   @Mock SecurityUtil securityUtil;
@@ -45,7 +45,7 @@ class LikeServiceTest {
     given(songRepository.getReferenceById(songId)).willReturn(
         Song.of(UserEntity.of("u", "u@a.com", "h"), "Title", null, null, null, null,
             com.vocaloidarchive.song.domain.Mood.BRIGHT));
-    given(likeRepository.save(any(Like.class))).willAnswer(inv -> inv.getArgument(0));
+    given(likeRepository.save(any(LikeEntity.class))).willAnswer(inv -> inv.getArgument(0));
     given(likeRepository.countBySongId(songId)).willReturn(5L);
 
     // when
@@ -54,7 +54,7 @@ class LikeServiceTest {
     // then
     assertThat(res.liked()).isTrue();
     assertThat(res.likeCount()).isEqualTo(5L);
-    then(likeRepository).should().save(any(Like.class));
+    then(likeRepository).should().save(any(LikeEntity.class));
   }
 
   @Test
