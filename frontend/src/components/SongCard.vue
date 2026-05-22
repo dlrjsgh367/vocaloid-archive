@@ -1,9 +1,21 @@
 <template>
   <div class="song-card" :style="cardVars">
     <div class="card-thumb" :style="{ background: thumbGradient }">
+      <img
+        v-if="coverImage"
+        :src="coverImage"
+        class="card-thumb-img"
+        alt="Cover Art"
+      />
       <div class="card-thumb-corner">{{ thumbLabel }}</div>
       <div class="card-thumb-corner-r">{{ song.duration ?? '—' }}</div>
-      <div class="card-thumb-inner" :class="{ small: thumbText.length > 2 }">{{ thumbText }}</div>
+      <div
+        v-if="!coverImage"
+        class="card-thumb-inner"
+        :class="{ small: thumbText.length > 2 }"
+      >
+        {{ thumbText }}
+      </div>
       <div class="card-play">▶</div>
     </div>
 
@@ -42,6 +54,8 @@
 
 <script setup>
 import { computed } from 'vue';
+import mikuJacket from '@/assets/miku-jacket.png';
+import lukaJacket from '@/assets/luka-jacket.png';
 
 const props = defineProps({
   song: { type: Object, required: true },
@@ -78,6 +92,21 @@ const thumbGradient = computed(() => {
 
 const thumbText = computed(() => primaryChar.value?.jpName ?? '♪');
 
+const coverImage = computed(() => {
+  if (props.song.thumbnailUrl) {
+    return props.song.thumbnailUrl;
+  }
+  const hasMiku = props.song.characters?.some((c) => c.colorKey === 'miku');
+  if (hasMiku) {
+    return mikuJacket;
+  }
+  const hasLuka = props.song.characters?.some((c) => c.colorKey === 'luka');
+  if (hasLuka) {
+    return lukaJacket;
+  }
+  return null;
+});
+
 const THUMB_LABELS = ['★ HOT', '♡ FEELS', '⚡ COLLAB', '♪ BALLAD', '✦ PICK'];
 const thumbLabel = computed(() => {
   const idx = (props.song.id ?? 0) % THUMB_LABELS.length;
@@ -113,7 +142,8 @@ function formatCount(n) {
   cursor: pointer;
   transition:
     transform 0.25s,
-    box-shadow 0.25s;
+    box-shadow 0.25s,
+    border-color 0.25s;
   position: relative;
 }
 
@@ -132,10 +162,11 @@ function formatCount(n) {
 }
 
 .song-card:hover {
-  transform: translateY(-6px) rotate(-0.4deg);
+  transform: translateY(-6px) scale(1.01) rotate(-0.5deg);
   box-shadow:
-    0 16px 40px color-mix(in srgb, var(--c) 55%, transparent),
-    0 0 0 1.5px var(--c);
+    0 16px 36px color-mix(in srgb, var(--c) 45%, transparent),
+    0 0 20px color-mix(in srgb, var(--c-dk) 35%, transparent);
+  border-color: var(--c);
 }
 
 .song-card:hover::before {
@@ -165,28 +196,25 @@ function formatCount(n) {
     radial-gradient(circle at 12% 85%, rgba(255, 255, 255, 0.7) 0, transparent 2px);
   pointer-events: none;
   opacity: 0.85;
+  z-index: 2;
 }
 
 .card-thumb::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    115deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.45) 50%,
-    transparent 70%
-  );
-  background-size: 250% 100%;
+  background: var(--holo);
+  background-size: 200% 200%;
   pointer-events: none;
-  mix-blend-mode: overlay;
+  mix-blend-mode: color-dodge;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: all 0.35s ease;
+  z-index: 1;
 }
 
 .song-card:hover .card-thumb::before {
-  opacity: 1;
-  animation: shimmer 1.6s linear infinite;
+  opacity: 0.6;
+  animation: holo-shift 3s ease infinite alternate;
 }
 
 .card-thumb-inner {
@@ -206,6 +234,20 @@ function formatCount(n) {
 
 .card-thumb-inner.small {
   font-size: 72px;
+}
+
+.card-thumb-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.song-card:hover .card-thumb-img {
+  transform: scale(1.08) rotate(1deg);
 }
 
 .card-thumb-corner {

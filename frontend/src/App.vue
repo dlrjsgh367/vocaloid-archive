@@ -14,12 +14,23 @@
         <RouterLink to="/songs/new" class="nav-link" active-class="active">+ 곡 등록</RouterLink>
       </nav>
 
-      <RouterLink v-if="!authStore.isAuthenticated" to="/login" class="btn-login">
-        ログイン ✦
-      </RouterLink>
-      <button v-else class="btn-login" @click="authStore.logout">
-        {{ authStore.user?.username }} · 로그아웃
-      </button>
+      <div class="header-actions">
+        <button
+          class="theme-toggle"
+          @click="toggleTheme"
+          :title="theme === 'light' ? '다크 모드로 전환' : '라이트 모드로 전환'"
+        >
+          <span class="theme-icon">{{ theme === 'light' ? '♪' : '⚡' }}</span>
+          <span class="theme-text">{{ theme === 'light' ? 'LIGHT' : 'DARK' }}</span>
+        </button>
+
+        <RouterLink v-if="!authStore.isAuthenticated" to="/login" class="btn-login">
+          ログイン ✦
+        </RouterLink>
+        <button v-else class="btn-login" @click="authStore.logout">
+          {{ authStore.user?.username }} · 로그아웃
+        </button>
+      </div>
     </header>
 
     <main>
@@ -29,22 +40,35 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { useAuthStore } from './stores/auth.js';
 
 const authStore = useAuthStore();
+
+const theme = ref(localStorage.getItem('theme') || 'light');
+
+function toggleTheme() {
+  theme.value = theme.value === 'light' ? 'dark' : 'light';
+  localStorage.setItem('theme', theme.value);
+  document.documentElement.setAttribute('data-theme', theme.value);
+}
+
+onMounted(() => {
+  document.documentElement.setAttribute('data-theme', theme.value);
+});
 </script>
 
 <style scoped>
 .app-header {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(253, 232, 243, 0.85) 50%,
-    rgba(255, 255, 255, 0.92) 100%
+    color-mix(in srgb, var(--surface) 92%, transparent) 0%,
+    color-mix(in srgb, var(--surface2) 85%, transparent) 50%,
+    color-mix(in srgb, var(--surface) 92%, transparent) 100%
   );
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1.5px solid var(--border);
   padding: 0 32px;
   height: 68px;
@@ -55,6 +79,7 @@ const authStore = useAuthStore();
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
 }
 
 .app-header::after {
@@ -62,16 +87,19 @@ const authStore = useAuthStore();
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -4px;
-  height: 4px;
-  background: repeating-linear-gradient(
+  bottom: -3px;
+  height: 3px;
+  background: linear-gradient(
     90deg,
-    var(--miku) 0 24px,
-    var(--pink) 24px 48px,
-    var(--lav) 48px 72px,
-    var(--yellow) 72px 96px
+    var(--miku),
+    var(--pink),
+    var(--lav),
+    var(--yellow),
+    var(--miku)
   );
-  opacity: 0.7;
+  background-size: 300% 100%;
+  animation: shimmer 4s linear infinite;
+  opacity: 0.8;
 }
 
 .logo {
@@ -126,12 +154,13 @@ nav {
   font-size: 14px;
   font-weight: 700;
   color: var(--text2);
-  padding: 7px 16px;
+  padding: 8px 18px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.18s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
   position: relative;
+  overflow: hidden;
 }
 
 .nav-link:hover {
@@ -143,17 +172,76 @@ nav {
 .nav-link.active {
   background: var(--miku-lt);
   color: var(--miku-dk);
-  box-shadow: inset 0 0 0 1.5px var(--miku);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--miku-dk);
+  border-radius: 99px;
+  transform: translateX(-50%);
+  transition: width 0.25s ease;
 }
 
 .nav-link.active::after {
+  width: 16px;
+}
+
+.nav-link.active::before {
   content: '♪';
   position: absolute;
-  top: -6px;
-  right: -2px;
-  font-size: 12px;
+  top: -2px;
+  right: 2px;
+  font-size: 10px;
   color: var(--pink-dk);
   animation: float-y 1.6s ease-in-out infinite;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  color: var(--text2);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+  outline: none;
+}
+
+.theme-toggle:hover {
+  background: var(--lav-lt);
+  border-color: var(--lav);
+  color: var(--lav-dk);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--miku-lt);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+.theme-icon {
+  font-size: 13px;
+  color: var(--pink-dk);
+  display: inline-block;
+  animation: float-y 2.0s ease-in-out infinite;
 }
 
 .btn-login {

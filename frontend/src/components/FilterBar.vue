@@ -45,12 +45,13 @@ const MOODS = [
 .filter-bar {
   background: var(--surface);
   border-bottom: 1.5px solid var(--border);
-  padding: 16px 32px;
+  padding: 20px 32px;
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
   position: relative;
+  transition: background 0.3s ease;
 }
 
 .filter-bar::before {
@@ -60,13 +61,8 @@ const MOODS = [
   left: 0;
   right: 0;
   height: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    transparent 0 8px,
-    var(--pink) 8px 12px,
-    transparent 12px 20px
-  );
-  opacity: 0.4;
+  background: linear-gradient(90deg, transparent, var(--pink), var(--miku), transparent);
+  opacity: 0.5;
 }
 
 .filter-label {
@@ -92,10 +88,10 @@ const MOODS = [
   padding: 7px 16px;
   border-radius: 99px;
   border: 1.5px solid var(--border);
-  background: var(--surface);
+  background: var(--surface2);
   color: var(--text2);
   cursor: pointer;
-  transition: all 0.18s;
+  transition: all 0.2s ease;
   position: relative;
 }
 
@@ -110,7 +106,7 @@ const MOODS = [
   background: var(--miku-dk);
   color: white;
   border-color: var(--miku-dk);
-  box-shadow: 0 4px 12px rgba(59, 188, 176, 0.4);
+  box-shadow: 0 4px 14px rgba(59, 188, 176, 0.45);
 }
 
 .chip.active::before {
@@ -136,17 +132,17 @@ const MOODS = [
 .chip.pink.active {
   background: var(--pink-dk);
   border-color: var(--pink-dk);
-  box-shadow: 0 4px 12px rgba(232, 121, 176, 0.45);
+  box-shadow: 0 4px 14px rgba(232, 121, 176, 0.5);
 }
 .chip.lav.active {
   background: var(--lav-dk);
   border-color: var(--lav-dk);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.5);
 }
 .chip.yellow.active {
   background: var(--yellow-dk);
   border-color: var(--yellow-dk);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
 }
 
 .search-wrap {
@@ -165,7 +161,7 @@ const MOODS = [
   padding: 8px 16px 8px 36px;
   width: 240px;
   outline: none;
-  transition: all 0.2s;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .search-input::placeholder {
@@ -173,10 +169,10 @@ const MOODS = [
 }
 
 .search-input:focus {
-  border-color: var(--pink);
+  border-color: var(--miku-dk);
   width: 280px;
   background: var(--surface);
-  box-shadow: 0 0 0 4px var(--pink-lt);
+  box-shadow: 0 0 16px var(--miku-lt);
 }
 
 .search-icon {
@@ -184,7 +180,7 @@ const MOODS = [
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--pink-dk);
+  color: var(--miku-dk);
   font-size: 14px;
   pointer-events: none;
 }

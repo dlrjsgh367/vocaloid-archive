@@ -1,6 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Gochi+Hand&family=Zen+Maru+Gothic:wght@500;700;900&display=swap');
 
 :root {
+  /* Common non-color tokens */
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --font-display: 'Gochi Hand', cursive;
+  --font-body: 'Nunito', sans-serif;
+  --font-jp: 'Zen Maru Gothic', 'Gochi Hand', sans-serif;
+
+  --glitter: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.6) 0 2px,
+    transparent 2px 6px,
+    rgba(196, 181, 253, 0.4) 6px 8px,
+    transparent 8px 14px
+  );
+
+  /* Light Theme Variables (Cyber Light) */
   --bg: #fdf8ff;
   --bg2: #f5eeff;
   --surface: #ffffff;
@@ -30,15 +49,6 @@
   --text3: #a890c0;
   --border: #ede0fa;
 
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
-
-  --font-display: 'Gochi Hand', cursive;
-  --font-body: 'Nunito', sans-serif;
-  --font-jp: 'Zen Maru Gothic', 'Gochi Hand', sans-serif;
-
   --shadow-sm: 0 2px 8px rgba(139, 92, 246, 0.08);
   --shadow-md: 0 4px 20px rgba(139, 92, 246, 0.12);
   --shadow-lg: 0 8px 32px rgba(139, 92, 246, 0.16);
@@ -53,13 +63,60 @@
     #c8f5f0 90%,
     #ede9fe 100%
   );
-  --glitter: repeating-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.6) 0 2px,
-    transparent 2px 6px,
-    rgba(196, 181, 253, 0.4) 6px 8px,
-    transparent 8px 14px
+
+  /* Cyber Grid Variables */
+  --grid-color: rgba(139, 92, 246, 0.07);
+  --grid-glow: rgba(125, 223, 212, 0.15);
+}
+
+[data-theme="dark"] {
+  /* Dark Theme Variables (Cyber Dark) */
+  --bg: #0b071e;
+  --bg2: #120c2b;
+  --surface: #171035;
+  --surface2: #1e1542;
+
+  --miku: #4ef2d2;
+  --miku-lt: rgba(78, 242, 210, 0.12);
+  --miku-dk: #00e0b8;
+
+  --pink: #ff75c3;
+  --pink-lt: rgba(255, 117, 195, 0.12);
+  --pink-dk: #ff9ee2;
+
+  --lav: #a78bfa;
+  --lav-lt: rgba(167, 139, 250, 0.12);
+  --lav-dk: #c4b5fd;
+
+  --yellow: #fef08a;
+  --yellow-lt: rgba(254, 240, 138, 0.08);
+  --yellow-dk: #facc15;
+
+  --coral: #fca5a5;
+  --coral-lt: rgba(252, 165, 165, 0.12);
+
+  --text: #f3f0ff;
+  --text2: #b2a8d4;
+  --text3: #7b6f9f;
+  --border: #291e52;
+
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.45), 0 0 15px rgba(78, 242, 210, 0.15);
+  --shadow-lg: 0 16px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 117, 195, 0.25);
+
+  --holo: linear-gradient(
+    115deg,
+    rgba(78, 242, 210, 0.4) 0%,
+    rgba(255, 117, 195, 0.4) 20%,
+    rgba(167, 139, 250, 0.4) 40%,
+    rgba(254, 240, 138, 0.4) 60%,
+    rgba(255, 117, 195, 0.4) 80%,
+    rgba(78, 242, 210, 0.4) 100%
   );
+
+  /* Cyber Grid Variables */
+  --grid-color: rgba(78, 242, 210, 0.06);
+  --grid-glow: rgba(255, 117, 195, 0.12);
 }
 
 @keyframes shimmer {

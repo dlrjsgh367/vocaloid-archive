@@ -1,5 +1,6 @@
 <template>
   <div class="hero">
+    <div class="cyber-grid"></div>
     <div class="particles" ref="particlesEl"></div>
 
     <div class="hero-text">
@@ -100,13 +101,41 @@ function formatCount(n) {
 <style scoped>
 .hero {
   background: linear-gradient(135deg, var(--miku-lt) 0%, var(--lav-lt) 50%, var(--pink-lt) 100%);
-  padding: 72px 32px 64px;
+  padding: 80px 32px 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 32px;
   position: relative;
   overflow: hidden;
+  border-bottom: 1.5px solid var(--border);
+}
+
+.cyber-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(var(--grid-color) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, var(--grid-color) 1.5px, transparent 1.5px);
+  background-size: 50px 50px;
+  background-position: center top;
+  opacity: 0.8;
+  z-index: 0;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+  transform: perspective(250px) rotateX(60deg) translateY(-25%) translateZ(0);
+  transform-origin: top center;
+  animation: grid-flow 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes grid-flow {
+  0% {
+    background-position: center 0px;
+  }
+  100% {
+    background-position: center 1000px;
+  }
 }
 
 .hero::before {
@@ -339,23 +368,57 @@ p {
 
 .stat-card {
   background: var(--surface);
-  border-radius: var(--radius-md);
-  padding: 16px 24px;
+  border-radius: var(--radius-lg);
+  padding: 18px 24px;
   box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
   gap: 14px;
-  min-width: 220px;
+  min-width: 230px;
   border: 1.5px solid var(--border);
   position: relative;
-  transition: transform 0.2s;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, var(--miku), var(--pink)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .stat-card:hover {
-  transform: translateY(-3px) rotate(-1deg);
+  transform: translateY(-5px) scale(1.03) rotate(-1.5deg);
+  box-shadow: 
+    0 12px 28px rgba(139, 92, 246, 0.15),
+    0 0 14px var(--miku-lt);
+  border-color: var(--miku);
 }
+
 .stat-card:nth-child(2):hover {
-  transform: translateY(-3px) rotate(1deg);
+  transform: translateY(-5px) scale(1.03) rotate(1.5deg);
+  border-color: var(--pink);
+  box-shadow: 
+    0 12px 28px rgba(139, 92, 246, 0.15),
+    0 0 14px var(--pink-lt);
+}
+
+.stat-card:nth-child(3):hover {
+  transform: translateY(-5px) scale(1.03) rotate(-0.5deg);
+  border-color: var(--lav);
+  box-shadow: 
+    0 12px 28px rgba(139, 92, 246, 0.15),
+    0 0 14px var(--lav-lt);
 }
 
 .stat-card::before {
