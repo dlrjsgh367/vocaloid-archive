@@ -44,3 +44,6 @@ db_data/
 # --- Logs ---
 *.log
 logs/
+
+# --- Local notes in docs/ (subdirs like docs/superpowers/ stay tracked) ---
+docs/*.md
