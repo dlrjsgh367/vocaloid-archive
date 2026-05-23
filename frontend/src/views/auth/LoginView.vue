@@ -420,4 +420,20 @@ form {
   color: var(--lav-dk);
   border-color: var(--lav-dk);
 }
+
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 24px 12px;
+    align-items: flex-start;
+  }
+
+  .auth-card {
+    padding: 28px 20px 24px;
+    border-radius: var(--radius-lg);
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+}
 </style>

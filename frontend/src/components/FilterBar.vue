@@ -184,4 +184,24 @@ const MOODS = [
   font-size: 14px;
   pointer-events: none;
 }
+
+@media (max-width: 768px) {
+  .filter-bar {
+    padding: 14px 16px;
+    gap: 8px;
+  }
+
+  .search-wrap {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .search-input:focus {
+    width: 100%;
+  }
+}
 </style>

@@ -829,4 +829,35 @@ h1 {
   color: var(--text3);
   cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+  .playlist-page {
+    padding: 24px 16px 60px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .detail-empty {
+    padding: 40px 16px;
+    font-size: 15px;
+  }
+
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    max-width: 100%;
+  }
+}
 </style>
