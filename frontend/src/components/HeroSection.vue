@@ -24,21 +24,21 @@
 
     <div class="hero-stats">
       <div class="stat-card">
-        <div class="stat-icon" style="background: var(--miku-lt); color: var(--miku-dk)">♪</div>
+        <div class="stat-icon stat-icon--miku">♪</div>
         <div>
           <div class="stat-num">{{ formatCount(stats.songCount) }}</div>
           <div class="stat-label">등록된 곡 / songs</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon" style="background: var(--pink-lt); color: var(--pink-dk)">♡</div>
+        <div class="stat-icon stat-icon--pink">♡</div>
         <div>
           <div class="stat-num">{{ formatCount(stats.userCount) }}</div>
           <div class="stat-label">활동 유저 / fans</div>
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon" style="background: var(--lav-lt); color: var(--lav-dk)">✦</div>
+        <div class="stat-icon stat-icon--lav">✦</div>
         <div>
           <div class="stat-num">{{ formatCount(stats.tagCount) }}</div>
           <div class="stat-label">태그 / tags</div>
@@ -444,6 +444,9 @@ p {
   flex-shrink: 0;
   box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6);
 }
+.stat-icon--miku { background: var(--miku-lt); color: var(--miku-dk); }
+.stat-icon--pink { background: var(--pink-lt); color: var(--pink-dk); }
+.stat-icon--lav  { background: var(--lav-lt);  color: var(--lav-dk);  }
 
 .stat-num {
   font-family: var(--font-display);
@@ -461,5 +464,55 @@ p {
   margin-top: 4px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding: 40px 16px 36px;
+    gap: 24px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 34px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .stat-card {
+    min-width: unset;
+    flex: 1 1 140px;
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .stat-num {
+    font-size: 20px;
+  }
+
+  .hero-badge {
+    font-size: 11px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    font-size: 14px;
+    padding: 12px 22px;
+  }
 }
 </style>

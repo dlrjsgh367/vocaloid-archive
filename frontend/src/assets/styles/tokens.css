@@ -69,6 +69,17 @@
   --grid-glow: rgba(125, 223, 212, 0.15);
 }
 
+/* ── Character color classes ──
+ * 적용 대상 요소에 --c / --c-dk / --c-lt CSS 변수를 주입한다.
+ * 컴포넌트 CSS에서 var(--c), var(--c-dk), var(--c-lt)로 참조.
+ */
+.char-miku  { --c: #7DDFD4; --c-dk: #3BBCB0; --c-lt: #C8F5F0; }
+.char-luka  { --c: #F9A8D4; --c-dk: #E879B0; --c-lt: #FDE8F3; }
+.char-ren   { --c: #FDE68A; --c-dk: #F59E0B; --c-lt: #FFFBEB; }
+.char-rin   { --c: #FFCA34; --c-dk: #F59E0B; --c-lt: #FFFBEB; }
+.char-kaito { --c: #A0C4D8; --c-dk: #5A8FB0; --c-lt: #DAEEF7; }
+.char-meiko { --c: #D4A5C9; --c-dk: #A66E96; --c-lt: #F5E6F1; }
+
 [data-theme="dark"] {
   /* Dark Theme Variables (Cyber Dark) */
   --bg: #0b071e;

@@ -47,7 +47,7 @@
               v-for="char in song.characters"
               :key="char.id"
               class="char-badge"
-              :style="charBadgeStyle(char)"
+              :class="getCharColorClass(char)"
             >
               {{ char.name }}
             </span>
@@ -205,6 +205,7 @@ import { toggleLike } from '../api/likes.js';
 import { fetchComments, createComment, deleteComment } from '../api/comments.js';
 import { fetchMyPlaylists, addSongToPlaylist } from '../api/playlists.js';
 import { useAuthStore } from '../stores/auth.js';
+import { getCharColorClass } from '../utils/characterColors.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -216,15 +217,6 @@ const MOOD_LABELS = {
   EMOTIONAL: '감성',
   ENERGETIC: '신남',
   CALM: '잔잔함',
-};
-
-const CHAR_COLORS = {
-  '하츠네 미쿠': { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
-  '메구리네 루카': { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  '카가미네 렌': { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카가미네 린': { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
-  카이토: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
-  메이코: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
 };
 
 const songId = computed(() => Number(route.params.id));
@@ -391,11 +383,6 @@ async function onAddToPlaylist(playlistId) {
   } finally {
     addingTo.value = null;
   }
-}
-
-function charBadgeStyle(char) {
-  const col = CHAR_COLORS[char.name] ?? { c: char.colorHex, dk: char.colorHex, lt: '#FFFFFF' };
-  return { color: col.dk, borderColor: col.c, background: col.lt };
 }
 
 function formatCount(n) {
@@ -570,7 +557,9 @@ onMounted(() => {
   font-weight: 800;
   padding: 4px 10px;
   border-radius: 99px;
-  border: 1.5px solid;
+  border: 1.5px solid var(--c);
+  color: var(--c-dk);
+  background: var(--c-lt);
 }
 
 .producer-row {
@@ -1060,5 +1049,34 @@ onMounted(() => {
   font-size: 12px;
   font-weight: 800;
   color: var(--lav-dk);
+}
+
+@media (max-width: 768px) {
+  .detail-page {
+    padding: 20px 16px 60px;
+  }
+
+  .meta-title {
+    font-size: 18px;
+  }
+
+  .action-row {
+    flex-direction: column;
+  }
+
+  .btn-like,
+  .btn-playlist {
+    flex: unset;
+  }
+
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal {
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    max-width: 100%;
+  }
 }
 </style>

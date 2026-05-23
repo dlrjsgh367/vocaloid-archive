@@ -16,8 +16,10 @@
             v-for="char in characters"
             :key="char.id"
             class="char-pill"
-            :class="{ active: selectedCharacterId === char.id }"
-            :style="charPillStyle(char, selectedCharacterId === char.id)"
+            :class="[
+              getCharColorClass(char),
+              { active: selectedCharacterId === char.id },
+            ]"
             @click="setCharacter(char.id)"
           >
             {{ char.name }}
@@ -67,6 +69,7 @@ import { fetchSongs } from '../api/songs.js';
 import { fetchCharacters } from '../api/characters.js';
 import { toggleLike } from '../api/likes.js';
 import { useAuthStore } from '../stores/auth.js';
+import { getCharColorKey, getCharColorClass } from '../utils/characterColors.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -86,23 +89,6 @@ const MOOD_LABELS = {
   emotional: '감성',
   energetic: '신남',
   calm: '잔잔함',
-};
-
-const CHAR_COLORS = {
-  '하츠네 미쿠': { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
-  '메구리네 루카': { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  '카가미네 렌': { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카가미네 린': { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
-  카이토: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
-  메이코: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
-};
-const CHAR_COLOR_KEY_MAP = {
-  '하츠네 미쿠': 'miku',
-  '메구리네 루카': 'luka',
-  '카가미네 렌': 'ren',
-  '카가미네 린': 'rin',
-  카이토: 'kaito',
-  메이코: 'meiko',
 };
 
 const PAGE_SIZE = 20;
@@ -242,7 +228,7 @@ const songItems = computed(() =>
     characters: (s.characters ?? []).map((c) => ({
       id: c.id,
       name: c.name,
-      colorKey: CHAR_COLOR_KEY_MAP[c.name] ?? 'miku',
+      colorKey: getCharColorKey(c.name),
     })),
     tags: s.tags ?? [],
     bpm: null,
@@ -271,13 +257,6 @@ const filterSummary = computed(() => {
   }
   return parts.join(' · ');
 });
-
-function charPillStyle(char, active) {
-  const col = CHAR_COLORS[char.name] ?? { c: char.colorHex, dk: char.colorHex, lt: '#FFFFFF' };
-  return active
-    ? { background: col.dk, borderColor: col.dk, color: 'white' }
-    : { background: col.lt, borderColor: col.c, color: col.dk };
-}
 
 async function onLike(songId) {
   if (!authStore.isAuthenticated) {
@@ -320,12 +299,15 @@ function onOpen(songId) {
   flex: 1;
   min-width: 0;
 }
+/* .char-pill에 .char-{key} 클래스가 같이 부여되면 --c/--c-dk/--c-lt가 채워져
+ * 캐릭터 색으로 렌더된다. 클래스가 없는 '전체' 버튼은 fallback 값(중립색)으로 렌더된다.
+ */
 .char-pill {
   font-size: 12px;
   font-weight: 800;
-  color: var(--text2);
-  background: var(--surface);
-  border: 1.5px solid var(--border);
+  color: var(--c-dk, var(--text2));
+  background: var(--c-lt, var(--surface));
+  border: 1.5px solid var(--c, var(--border));
   padding: 6px 14px;
   border-radius: 99px;
   cursor: pointer;
@@ -335,9 +317,9 @@ function onOpen(songId) {
   transform: translateY(-1px);
 }
 .char-pill.active {
-  background: var(--miku-dk);
+  background: var(--c-dk, var(--miku-dk));
   color: white;
-  border-color: var(--miku-dk);
+  border-color: var(--c-dk, var(--miku-dk));
 }
 
 .sort-wrap {
@@ -444,5 +426,25 @@ function onOpen(songId) {
   font-size: 13px;
   font-weight: 800;
   color: var(--text2);
+}
+
+@media (max-width: 768px) {
+  .search-page {
+    padding: 20px 16px 60px;
+  }
+
+  .search-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .sort-wrap {
+    justify-content: flex-end;
+  }
+
+  .sort-select {
+    font-size: 12px;
+  }
 }
 </style>

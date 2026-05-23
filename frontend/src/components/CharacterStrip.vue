@@ -4,12 +4,10 @@
       v-for="char in characters"
       :key="char.id"
       class="char-pill"
-      :style="{ '--c': char.color, '--c-dk': char.colorDk }"
+      :class="getCharColorClass(char)"
       @click="$emit('select', char.id)"
     >
-      <div class="char-avatar" :style="{ background: char.color, color: char.color }">
-        {{ char.initial }}
-      </div>
+      <div class="char-avatar">{{ char.initial }}</div>
       <div>
         <div class="char-name">{{ char.name }}</div>
         <div class="char-count">{{ char.jpName }} · {{ char.songCount }}곡</div>
@@ -19,6 +17,8 @@
 </template>
 
 <script setup>
+import { getCharColorClass } from '@/utils/characterColors.js';
+
 defineProps({
   characters: { type: Array, required: true },
 });
@@ -44,8 +44,6 @@ defineEmits(['select']);
 }
 
 .char-pill {
-  --c: var(--miku);
-  --c-dk: var(--miku-dk);
   display: flex;
   align-items: center;
   gap: 10px;
@@ -92,7 +90,8 @@ defineEmits(['select']);
   justify-content: center;
   font-size: 16px;
   font-weight: 800;
-  color: white !important;
+  color: white;
+  background: var(--c);
   flex-shrink: 0;
   font-family: var(--font-jp);
   box-shadow:
@@ -113,5 +112,12 @@ defineEmits(['select']);
   font-weight: 700;
   letter-spacing: 0.04em;
   white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .char-strip {
+    margin-bottom: 28px;
+    padding: 4px 0 10px;
+  }
 }
 </style>

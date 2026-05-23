@@ -29,6 +29,7 @@ import { fetchCharacters } from '../api/characters.js';
 import { fetchSongs } from '../api/songs.js';
 import { toggleLike } from '../api/likes.js';
 import { useAuthStore } from '../stores/auth.js';
+import { getCharColorKey } from '../utils/characterColors.js';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -58,8 +59,7 @@ const characterItems = computed(() =>
     name: c.name,
     jpName: '',
     initial: c.name.charAt(0),
-    color: c.colorHex ?? '#7DDFD4',
-    colorDk: c.colorHex ?? '#3BBCB0',
+    colorKey: getCharColorKey(c.name),
     songCount: 0,
   })),
 );
@@ -105,15 +105,6 @@ watch([selectedMood, searchQuery], () => {
 });
 
 // SongResponse → SongCard props shape
-const CHAR_COLOR_KEY_MAP = {
-  '하츠네 미쿠': 'miku',
-  '메구리네 루카': 'luka',
-  '카가미네 렌': 'ren',
-  '카가미네 린': 'rin',
-  카이토: 'kaito',
-  메이코: 'meiko',
-};
-
 const songItems = computed(() =>
   songs.value.map((s) => ({
     id: s.id,
@@ -122,7 +113,7 @@ const songItems = computed(() =>
     characters: (s.characters ?? []).map((c) => ({
       id: c.id,
       name: c.name,
-      colorKey: CHAR_COLOR_KEY_MAP[c.name] ?? 'miku',
+      colorKey: getCharColorKey(c.name),
     })),
     tags: s.tags ?? [],
     bpm: null,
@@ -229,5 +220,15 @@ function onOpen(songId) {
   border-radius: var(--radius-md);
   padding: 16px 24px;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 24px 16px;
+  }
+
+  .section-title {
+    font-size: 22px;
+  }
 }
 </style>

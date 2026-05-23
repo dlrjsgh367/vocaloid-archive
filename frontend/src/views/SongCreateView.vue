@@ -1,4 +1,4 @@
-n<template>
+<template>
   <div class="create-page">
     <div class="create-card">
       <div class="card-header">
@@ -104,8 +104,10 @@ n<template>
               :key="char.id"
               type="button"
               class="char-chip"
-              :class="{ active: form.characterIds.includes(char.id) }"
-              :style="charChipStyle(char, form.characterIds.includes(char.id))"
+              :class="[
+                getCharColorClass(char),
+                { active: form.characterIds.includes(char.id) },
+              ]"
               @click="toggleCharacter(char.id)"
             >
               {{ char.name }}
@@ -153,6 +155,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { fetchCharacters } from '../api/characters.js';
 import { createSong } from '../api/songs.js';
+import { getCharColorClass } from '../utils/characterColors.js';
 
 const router = useRouter();
 
@@ -163,15 +166,6 @@ const MOODS = [
   { value: 'ENERGETIC', label: '신남' },
   { value: 'CALM', label: '잔잔함' },
 ];
-
-const CHAR_COLORS = {
-  '하츠네 미쿠': { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
-  '메구리네 루카': { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  '카가미네 렌': { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  '카가미네 린': { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
-  카이토: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
-  메이코: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
-};
 
 const form = reactive({
   title: '',
@@ -240,13 +234,6 @@ function commitTag() {
 
 function removeTag(tag) {
   form.tagNames = form.tagNames.filter((t) => t !== tag);
-}
-
-function charChipStyle(char, active) {
-  const col = CHAR_COLORS[char.name] ?? { c: char.colorHex, dk: char.colorHex, lt: '#FFFFFF' };
-  return active
-    ? { background: col.dk, borderColor: col.dk, color: 'white' }
-    : { background: col.lt, borderColor: col.c, color: col.dk };
 }
 
 function validate() {
@@ -549,12 +536,19 @@ h1 {
   font-weight: 800;
   padding: 8px 14px;
   border-radius: 99px;
-  border: 1.5px solid;
+  border: 1.5px solid var(--c);
+  background: var(--c-lt);
+  color: var(--c-dk);
   cursor: pointer;
   transition: all 0.2s;
 }
 .char-chip:hover {
   transform: translateY(-1px);
+}
+.char-chip.active {
+  background: var(--c-dk);
+  border-color: var(--c-dk);
+  color: white;
 }
 
 .tag-input-wrap {
@@ -683,5 +677,36 @@ h1 {
 }
 .loading-msg.sm {
   padding: 4px 0;
+}
+
+@media (max-width: 768px) {
+  .create-page {
+    padding: 20px 12px 60px;
+  }
+
+  .create-card {
+    padding: 28px 20px 24px;
+    border-radius: var(--radius-lg);
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .field-row {
+    flex-direction: column;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn-cancel {
+    order: 2;
+  }
+
+  .btn-submit {
+    order: 1;
+  }
 }
 </style>

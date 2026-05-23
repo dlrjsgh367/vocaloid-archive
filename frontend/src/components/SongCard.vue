@@ -1,6 +1,6 @@
 <template>
-  <div class="song-card" :style="cardVars">
-    <div class="card-thumb" :style="{ background: thumbGradient }">
+  <div class="song-card" :class="primaryColorClass">
+    <div class="card-thumb">
       <img
         v-if="coverImage"
         :src="coverImage"
@@ -25,7 +25,7 @@
           v-for="char in song.characters"
           :key="char.id"
           class="char-badge"
-          :style="charBadgeStyle(char)"
+          :class="getCharColorClass(char)"
           >{{ char.name }}</span
         >
       </div>
@@ -56,6 +56,7 @@
 import { computed } from 'vue';
 import mikuJacket from '@/assets/miku-jacket.png';
 import lukaJacket from '@/assets/luka-jacket.png';
+import { getCharColorClass } from '@/utils/characterColors.js';
 
 const props = defineProps({
   song: { type: Object, required: true },
@@ -63,32 +64,9 @@ const props = defineProps({
 
 defineEmits(['like']);
 
-const CHAR_COLORS = {
-  miku: { c: '#7DDFD4', dk: '#3BBCB0', lt: '#C8F5F0' },
-  luka: { c: '#F9A8D4', dk: '#E879B0', lt: '#FDE8F3' },
-  ren: { c: '#FDE68A', dk: '#F59E0B', lt: '#FFFBEB' },
-  rin: { c: '#FFCA34', dk: '#F59E0B', lt: '#FFFBEB' },
-  kaito: { c: '#A0C4D8', dk: '#5A8FB0', lt: '#DAEEF7' },
-  meiko: { c: '#D4A5C9', dk: '#A66E96', lt: '#F5E6F1' },
-};
-
 const primaryChar = computed(() => props.song.characters?.[0]);
 
-const cardColors = computed(() => {
-  const key = primaryChar.value?.colorKey;
-  return CHAR_COLORS[key] ?? CHAR_COLORS.miku;
-});
-
-const cardVars = computed(() => ({
-  '--c': cardColors.value.c,
-  '--c-dk': cardColors.value.dk,
-  '--c-lt': cardColors.value.lt,
-}));
-
-const thumbGradient = computed(() => {
-  const { c, dk, lt } = cardColors.value;
-  return `linear-gradient(135deg, ${lt} 0%, ${c} 60%, ${dk} 100%)`;
-});
+const primaryColorClass = computed(() => getCharColorClass(primaryChar.value));
 
 const thumbText = computed(() => primaryChar.value?.jpName ?? '♪');
 
@@ -113,16 +91,6 @@ const thumbLabel = computed(() => {
   return THUMB_LABELS[idx];
 });
 
-function charBadgeStyle(char) {
-  const key = char.colorKey;
-  const col = CHAR_COLORS[key] ?? CHAR_COLORS.miku;
-  return {
-    color: col.dk,
-    borderColor: col.c,
-    background: col.lt,
-  };
-}
-
 function formatCount(n) {
   if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
   return String(n);
@@ -131,9 +99,6 @@ function formatCount(n) {
 
 <style scoped>
 .song-card {
-  --c: var(--miku);
-  --c-dk: var(--miku-dk);
-  --c-lt: var(--miku-lt);
   background: var(--surface);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -182,6 +147,7 @@ function formatCount(n) {
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  background: linear-gradient(135deg, var(--c-lt) 0%, var(--c) 60%, var(--c-dk) 100%);
 }
 
 .card-thumb::after {
@@ -339,7 +305,9 @@ function formatCount(n) {
   font-weight: 800;
   padding: 3px 9px;
   border-radius: 99px;
-  border: 1.5px solid;
+  border: 1.5px solid var(--c);
+  color: var(--c-dk);
+  background: var(--c-lt);
 }
 
 .card-title {
