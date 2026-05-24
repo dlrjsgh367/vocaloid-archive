@@ -3,6 +3,7 @@ package com.vocaloidarchive.playlist.infra.persistence;
 import com.vocaloidarchive.playlist.application.dto.result.PlaylistDetailResult;
 import com.vocaloidarchive.playlist.application.dto.result.PlaylistResult;
 import com.vocaloidarchive.playlist.application.port.PlaylistQueryRepository;
+import com.vocaloidarchive.common.util.YoutubeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -28,7 +29,9 @@ public class PlaylistQueryRepositoryImpl implements PlaylistQueryRepository {
       List<PlaylistDetailResult.SongItem> items = songJpa.findWithSongByPlaylistId(playlistId).stream()
           .map(ps -> new PlaylistDetailResult.SongItem(
               ps.getSong().getId(), ps.getSong().getTitle(),
-              ps.getSong().getThumbnailUrl(), ps.getOrderIndex()))
+              YoutubeUtil.resolveThumbnailUrl(
+                  ps.getSong().getThumbnailUrl(), ps.getSong().getYoutubeUrl()),
+              ps.getOrderIndex()))
           .toList();
       return new PlaylistDetailResult(p.getId(), p.getTitle(), p.isPublic(),
           p.getUser().getUsername(), items, p.getCreatedAt());

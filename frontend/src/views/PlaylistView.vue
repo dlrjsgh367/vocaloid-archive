@@ -62,12 +62,11 @@
           <ul v-if="detail.songs.length" class="song-list">
             <li v-for="item in detail.songs" :key="item.songId" class="song-row">
               <img
-                v-if="item.thumbnailUrl"
-                :src="item.thumbnailUrl"
+                :src="item.thumbnailUrl || emptyThumb"
                 :alt="item.title"
                 class="song-thumb"
+                @error="onThumbError"
               />
-              <div v-else class="song-thumb-empty">♪</div>
               <div class="song-info">
                 <div class="song-title">{{ item.title }}</div>
                 <div class="song-order">#{{ item.orderIndex + 1 }}</div>
@@ -130,6 +129,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import emptyThumb from '@/assets/empty-thumb.svg';
 import {
   fetchMyPlaylists,
   fetchPlaylist,
@@ -137,6 +137,12 @@ import {
   deletePlaylist,
   removeSongFromPlaylist,
 } from '../api/playlists.js';
+
+function onThumbError(e) {
+  if (e.target.dataset.fallback) return;
+  e.target.dataset.fallback = '1';
+  e.target.src = emptyThumb;
+}
 
 const playlists = ref([]);
 const loading = ref(true);
@@ -568,18 +574,6 @@ h1 {
   border-radius: var(--radius-sm);
   flex-shrink: 0;
   border: 1.5px solid var(--border);
-}
-.song-thumb-empty {
-  width: 56px;
-  height: 56px;
-  display: grid;
-  place-items: center;
-  background: var(--bg2);
-  border-radius: var(--radius-sm);
-  font-family: var(--font-display);
-  font-size: 22px;
-  color: var(--text3);
-  flex-shrink: 0;
 }
 .song-info {
   flex: 1;

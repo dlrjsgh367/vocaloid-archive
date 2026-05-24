@@ -2,20 +2,13 @@
   <div class="song-card" :class="primaryColorClass">
     <div class="card-thumb">
       <img
-        v-if="coverImage"
         :src="coverImage"
         class="card-thumb-img"
         alt="Cover Art"
+        @error="onThumbError"
       />
       <div class="card-thumb-corner">{{ thumbLabel }}</div>
       <div class="card-thumb-corner-r">{{ song.duration ?? '—' }}</div>
-      <div
-        v-if="!coverImage"
-        class="card-thumb-inner"
-        :class="{ small: thumbText.length > 2 }"
-      >
-        {{ thumbText }}
-      </div>
       <div class="card-play">▶</div>
     </div>
 
@@ -54,8 +47,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import mikuJacket from '@/assets/miku-jacket.png';
-import lukaJacket from '@/assets/luka-jacket.png';
+import emptyThumb from '@/assets/empty-thumb.svg';
 import { getCharColorClass } from '@/utils/characterColors.js';
 
 const props = defineProps({
@@ -68,22 +60,13 @@ const primaryChar = computed(() => props.song.characters?.[0]);
 
 const primaryColorClass = computed(() => getCharColorClass(primaryChar.value));
 
-const thumbText = computed(() => primaryChar.value?.jpName ?? '♪');
+const coverImage = computed(() => props.song.thumbnailUrl || emptyThumb);
 
-const coverImage = computed(() => {
-  if (props.song.thumbnailUrl) {
-    return props.song.thumbnailUrl;
-  }
-  const hasMiku = props.song.characters?.some((c) => c.colorKey === 'miku');
-  if (hasMiku) {
-    return mikuJacket;
-  }
-  const hasLuka = props.song.characters?.some((c) => c.colorKey === 'luka');
-  if (hasLuka) {
-    return lukaJacket;
-  }
-  return null;
-});
+function onThumbError(e) {
+  if (e.target.dataset.fallback) return;
+  e.target.dataset.fallback = '1';
+  e.target.src = emptyThumb;
+}
 
 const THUMB_LABELS = ['★ HOT', '♡ FEELS', '⚡ COLLAB', '♪ BALLAD', '✦ PICK'];
 const thumbLabel = computed(() => {
@@ -181,25 +164,6 @@ function formatCount(n) {
 .song-card:hover .card-thumb::before {
   opacity: 0.6;
   animation: holo-shift 3s ease infinite alternate;
-}
-
-.card-thumb-inner {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-jp);
-  font-weight: 900;
-  font-size: 96px;
-  color: white;
-  letter-spacing: -4px;
-  opacity: 0.32;
-  user-select: none;
-}
-
-.card-thumb-inner.small {
-  font-size: 72px;
 }
 
 .card-thumb-img {

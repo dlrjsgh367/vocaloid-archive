@@ -9,6 +9,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.vocaloidarchive.character.infra.persistence.QCharacterEntity;
 import com.vocaloidarchive.common.response.PageResponse;
+import com.vocaloidarchive.common.util.YoutubeUtil;
 import com.vocaloidarchive.like.infra.persistence.QLikeEntity;
 import com.vocaloidarchive.song.application.SongSortKey;
 import com.vocaloidarchive.song.application.dto.result.SongDetailResult;
@@ -120,7 +121,8 @@ public class SongQueryRepositoryImpl implements SongQueryRepository {
     List<String> tags = s.getTags().stream()
         .map(st -> st.getTag().getName())
         .toList();
-    return new SongResult(s.getId(), s.getTitle(), s.getThumbnailUrl(), s.getMood(),
+    return new SongResult(s.getId(), s.getTitle(),
+        YoutubeUtil.resolveThumbnailUrl(s.getThumbnailUrl(), s.getYoutubeUrl()), s.getMood(),
         s.getPlayCount(), likeCount, owner, characters, tags, s.getCreatedAt());
   }
 
@@ -138,7 +140,8 @@ public class SongQueryRepositoryImpl implements SongQueryRepository {
         .map(st -> st.getTag().getName())
         .toList();
     return new SongDetailResult(s.getId(), s.getTitle(), s.getYoutubeUrl(), s.getNiconicoUrl(),
-        s.getThumbnailUrl(), s.getBpm(), s.getMood(), s.getPlayCount(), likeCount,
+        YoutubeUtil.resolveThumbnailUrl(s.getThumbnailUrl(), s.getYoutubeUrl()),
+        s.getBpm(), s.getMood(), s.getPlayCount(), likeCount,
         owner, characters, tags, s.getCreatedAt());
   }
 

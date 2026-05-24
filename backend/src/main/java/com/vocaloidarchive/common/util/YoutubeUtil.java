@@ -16,4 +16,16 @@ public final class YoutubeUtil {
     Matcher m = PATTERN.matcher(url);
     return m.find() ? "https://i.ytimg.com/vi/" + m.group(1) + "/hqdefault.jpg" : null;
   }
+
+  /**
+   * Resolves the thumbnail to display: the stored value if present, otherwise the YouTube
+   * thumbnail derived from the YouTube URL. Returns null when neither is available, leaving the
+   * client to render an empty-image placeholder.
+   */
+  public static String resolveThumbnailUrl(String storedThumbnailUrl, String youtubeUrl) {
+    if (storedThumbnailUrl != null && !storedThumbnailUrl.isBlank()) {
+      return storedThumbnailUrl;
+    }
+    return extractThumbnailUrl(youtubeUrl);
+  }
 }

@@ -61,4 +61,30 @@ class YoutubeUtilTest {
   void nullInput() {
     assertThat(YoutubeUtil.extractThumbnailUrl(null)).isNull();
   }
+
+  @Test
+  @DisplayName("resolve: 저장된 썸네일이 있으면 그대로 사용")
+  void resolveKeepsStored() {
+    assertThat(YoutubeUtil.resolveThumbnailUrl("https://cdn.example/custom.jpg",
+        "https://youtu.be/" + VID)).isEqualTo("https://cdn.example/custom.jpg");
+  }
+
+  @Test
+  @DisplayName("resolve: 저장된 썸네일이 없으면 youtubeUrl에서 유도")
+  void resolveDerivesFromYoutube() {
+    assertThat(YoutubeUtil.resolveThumbnailUrl(null, "https://youtu.be/" + VID)).isEqualTo(EXPECTED);
+  }
+
+  @Test
+  @DisplayName("resolve: 저장된 썸네일이 빈 문자열이면 youtubeUrl에서 유도")
+  void resolveBlankDerivesFromYoutube() {
+    assertThat(YoutubeUtil.resolveThumbnailUrl("  ", "https://www.youtube.com/watch?v=" + VID))
+        .isEqualTo(EXPECTED);
+  }
+
+  @Test
+  @DisplayName("resolve: 저장된 썸네일도 youtubeUrl도 없으면 null")
+  void resolveReturnsNull() {
+    assertThat(YoutubeUtil.resolveThumbnailUrl(null, null)).isNull();
+  }
 }
