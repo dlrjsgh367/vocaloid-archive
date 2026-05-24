@@ -45,13 +45,41 @@ const errorMsg = ref('');
 let copyTimer;
 async function onCopyLink() {
   errorMsg.value = '';
-  try {
-    await navigator.clipboard.writeText(props.shareUrl);
+  if (await copyToClipboard(props.shareUrl)) {
     copied.value = true;
     clearTimeout(copyTimer);
     copyTimer = setTimeout(() => (copied.value = false), 2000);
-  } catch {
+  } else {
     errorMsg.value = '복사에 실패했어요. 링크를 길게 눌러 직접 복사해주세요.';
+  }
+}
+
+// navigator.clipboard는 보안 컨텍스트(HTTPS/localhost)에서만 동작 → HTTP에선 execCommand 폴백.
+async function copyToClipboard(text) {
+  try {
+    if (window.isSecureContext && navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // 폴백으로 진행
+  }
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '0';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, text.length); // iOS Safari
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch {
+    return false;
   }
 }
 
