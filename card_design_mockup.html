@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VocaloidArchive — 공유 카드 디자인 목업</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #FDF8FF;
+    --bg2: #F5EEFF;
+    --surface: #FFFFFF;
+    --text:    #2D1B4E;
+    --text2:   #6B4F8A;
+    --text3:   #A890C0;
+    --border:  #EDE0FA;
+    --font-display: 'Gochi Hand', cursive;
+    --font-body: 'Nunito', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg2);
+    color: var(--text);
+    padding: 48px 24px 96px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 40px;
+    text-align: center;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .page-sub {
+    text-align: center;
+    color: var(--text2);
+    font-size: 15px;
+    max-width: 720px;
+    margin: 0 auto 8px;
+    line-height: 1.6;
+  }
+  .section-label {
+    font-family: var(--font-body);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    text-align: center;
+    margin: 56px 0 20px;
+  }
+
+  .stage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 56px 48px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* preview wrappers scale the real-size cards down to fit screen */
+  .preview-square { width: 540px; height: 540px; }
+  .preview-square .card { transform: scale(0.5); transform-origin: top left; }
+  .preview-og { width: 600px; height: 315px; }
+  .preview-og .card { transform: scale(0.5); transform-origin: top left; }
+  .preview-caption {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text2);
+  }
+
+  /* ============================================================
+     SQUARE DOWNLOAD CARD — 1080 x 1080 (X 피드 / 스크린샷용)
+     ============================================================ */
+  .card-square {
+    width: 1080px;
+    height: 1080px;
+    --theme: #39C5BB;          /* 대표 캐릭터 color_hex 로 주입 */
+    background:
+      radial-gradient(120% 90% at 85% -10%, color-mix(in srgb, var(--theme) 34%, #fff) 0%, transparent 55%),
+      linear-gradient(165deg, color-mix(in srgb, var(--theme) 14%, #fff) 0%, var(--bg) 58%);
+    border-radius: 0;            /* export 시 풀블리드 */
+    padding: 72px 72px 64px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    font-family: var(--font-body);
+  }
+  .card-square .blob {
+    position: absolute;
+    width: 520px; height: 520px;
+    right: -160px; bottom: -200px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--theme) 38%, #fff) 0%, transparent 70%);
+    opacity: 0.6;
+  }
+
+  .brand {
+    display: flex; align-items: center; gap: 14px;
+    position: relative; z-index: 2;
+  }
+  .brand .dot {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--theme);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--theme) 22%, transparent);
+  }
+  .brand .word {
+    font-family: var(--font-display);
+    font-size: 34px; color: var(--text);
+  }
+  .brand .word b { color: color-mix(in srgb, var(--theme) 60%, var(--text)); }
+
+  .kicker {
+    margin-top: 48px;
+    display: inline-flex; align-items: center; gap: 10px;
+    align-self: flex-start;
+    background: #fff;
+    border: 2px solid color-mix(in srgb, var(--theme) 35%, var(--border));
+    color: color-mix(in srgb, var(--theme) 65%, var(--text));
+    font-weight: 900; font-size: 22px;
+    padding: 10px 22px; border-radius: 999px;
+    position: relative; z-index: 2;
+  }
+
+  .pl-title {
+    font-family: var(--font-display);
+    font-size: 88px; line-height: 1.05;
+    color: var(--text);
+    margin-top: 22px;
+    position: relative; z-index: 2;
+  }
+  .pl-by {
+    margin-top: 14px;
+    font-size: 28px; font-weight: 700; color: var(--text2);
+    position: relative; z-index: 2;
+  }
+  .pl-by b { color: color-mix(in srgb, var(--theme) 60%, var(--text)); }
+
+  .collage {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    position: relative; z-index: 2;
+  }
+  .tile {
+    aspect-ratio: 1 / 1;
+    border-radius: 22px;
+    box-shadow: 0 8px 22px rgba(45,27,78,0.14);
+    display: flex; align-items: flex-end; padding: 12px;
+    color: #fff; font-weight: 800; font-size: 17px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.35);
+    background-size: cover;
+  }
+
+  .tracklist {
+    margin-top: auto;
+    position: relative; z-index: 2;
+    padding-top: 36px;
+  }
+  .track {
+    display: flex; align-items: center; gap: 18px;
+    padding: 12px 0;
+    border-bottom: 2px dashed color-mix(in srgb, var(--theme) 30%, var(--border));
+  }
+  .track:last-child { border-bottom: none; }
+  .track .num {
+    font-family: var(--font-display);
+    font-size: 34px;
+    color: color-mix(in srgb, var(--theme) 65%, var(--text));
+    width: 42px; flex: none;
+  }
+  .track .tname { font-size: 30px; font-weight: 800; color: var(--text); }
+  .track .tmeta { margin-left: auto; font-size: 22px; font-weight: 700; color: var(--text3); }
+
+  .footer {
+    margin-top: 34px;
+    display: flex; align-items: center; gap: 16px;
+    position: relative; z-index: 2;
+  }
+  .chip {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 999px;
+    padding: 12px 22px;
+    font-weight: 900; font-size: 24px; color: var(--text2);
+  }
+  .chip.theme {
+    background: var(--theme);
+    border-color: var(--theme);
+    color: #fff;
+  }
+  .footer .url {
+    margin-left: auto;
+    font-weight: 900; font-size: 26px;
+    color: color-mix(in srgb, var(--theme) 55%, var(--text));
+  }
+
+  /* ============================================================
+     OG CARD — 1200 x 630 (링크 붙여넣기 자동 미리보기용)
+     ============================================================ */
+  .card-og {
+    width: 1200px;
+    height: 630px;
+    --theme: #39C5BB;
+    background:
+      radial-gradient(90% 120% at 110% 50%, color-mix(in srgb, var(--theme) 30%, #fff) 0%, transparent 55%),
+      linear-gradient(120deg, color-mix(in srgb, var(--theme) 10%, #fff) 0%, var(--bg) 60%);
+    display: flex;
+    font-family: var(--font-body);
+    overflow: hidden;
+  }
+  .og-left {
+    flex: 1;
+    padding: 64px 56px;
+    display: flex; flex-direction: column;
+  }
+  .og-left .brand { margin-bottom: 26px; }
+  .og-left .kicker { margin-top: 0; margin-bottom: 18px; font-size: 20px; }
+  .og-left .pl-title { font-size: 76px; margin-top: 0; }
+  .og-left .pl-by { font-size: 26px; }
+  .og-mini-tracks { margin-top: auto; }
+  .og-mini-tracks .track { padding: 9px 0; }
+  .og-mini-tracks .track .num { font-size: 28px; width: 36px; }
+  .og-mini-tracks .track .tname { font-size: 26px; }
+  .og-footer {
+    margin-top: 26px; display: flex; align-items: center; gap: 14px;
+  }
+  .og-right {
+    width: 440px; flex: none;
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 1fr;
+    gap: 18px;
+    align-content: center;
+  }
+  .og-right .tile { font-size: 16px; }
+</style>
+</head>
+<body>
+  <h1 class="page-title">공유 카드 디자인 ♪</h1>
+  <p class="page-sub">
+    실제 디자인 토큰(파스텔 보라/핑크, Gochi Hand + Nunito)으로 그린 목업.
+    <b>테마 컬러는 플리 대표 캐릭터의 <code>color_hex</code></b>에서 자동 주입됩니다.
+    아래는 화면 맞춤으로 50% 축소 표시 — 실제 export 해상도는 캡션 참고.
+  </p>
+
+  <!-- ===================== 정사각 다운로드 카드 ===================== -->
+  <div class="section-label">A. 다운로드형 · 정사각 1080×1080</div>
+  <div class="stage">
+
+    <!-- 미쿠 테마 -->
+    <div>
+      <div class="preview-square">
+        <div class="card card-square" style="--theme:#39C5BB;">
+          <div class="blob"></div>
+          <div class="brand"><span class="dot"></span><span class="word">Vocaloid<b>Archive</b></span></div>
+          <span class="kicker">▶ PLAYLIST</span>
+          <h2 class="pl-title">새벽 세시의<br/>미쿠</h2>
+          <div class="pl-by">by <b>@haku_39</b></div>
+          <div class="collage">
+            <div class="tile" style="background:linear-gradient(135deg,#39C5BB,#7DDFD4);">夜明け</div>
+            <div class="tile" style="background:linear-gradient(135deg,#8B5CF6,#C4B5FD);">テオ</div>
+            <div class="tile" style="background:linear-gradient(135deg,#E879B0,#F9A8D4);">ロキ</div>
+            <div class="tile" style="background:linear-gradient(135deg,#3BBCB0,#39C5BB);">愛</div>
+          </div>
+          <div class="tracklist">
+            <div class="track"><span class="num">1</span><span class="tname">夜明けと蛍</span><span class="tmeta">CALM</span></div>
+            <div class="track"><span class="num">2</span><span class="tname">テオ</span><span class="tmeta">ENERGETIC</span></div>
+            <div class="track"><span class="num">3</span><span class="tname">ロキ</span><span class="tmeta">BRIGHT</span></div>
+          </div>
+          <div class="footer">
+            <span class="chip theme">하츠네 미쿠</span>
+            <span class="chip">♪ 24곡</span>
+            <span class="chip">♥ 1.2k</span>
+            <span class="url">voca.archive/p/8f3a</span>
+          </div>
+        </div>
+      </div>
+      <div class="preview-caption">미쿠 테마 · #39C5BB</div>
+    </div>
+
+    <!-- 루카 테마 -->
+    <div>
+      <div class="preview-square">
+        <div class="card card-square" style="--theme:#FFB0C8;">
+          <div class="blob"></div>
+          <div class="brand"><span class="dot"></span><span class="word">Vocaloid<b>Archive</b></span></div>
+          <span class="kicker">▶ PLAYLIST</span>
+          <h2 class="pl-title">감성 발라드<br/>모음</h2>
+          <div class="pl-by">by <b>@luka_lover</b></div>
+          <div class="collage">
+            <div class="tile" style="background:linear-gradient(135deg,#E879B0,#FFB0C8);">Just</div>
+            <div class="tile" style="background:linear-gradient(135deg,#C4B5FD,#EDE9FE);">玩具</div>
+            <div class="tile" style="background:linear-gradient(135deg,#FCA5A5,#FEE2E2);">秒針</div>
+            <div class="tile" style="background:linear-gradient(135deg,#F9A8D4,#FDE8F3);">Be</div>
+          </div>
+          <div class="tracklist">
+            <div class="track"><span class="num">1</span><span class="tname">Just Be Friends</span><span class="tmeta">EMOTIONAL</span></div>
+            <div class="track"><span class="num">2</span><span class="tname">玩具</span><span class="tmeta">DARK</span></div>
+            <div class="track"><span class="num">3</span><span class="tname">秒針を噛む</span><span class="tmeta">EMOTIONAL</span></div>
+          </div>
+          <div class="footer">
+            <span class="chip theme">메구리네 루카</span>
+            <span class="chip">♪ 18곡</span>
+            <span class="chip">♥ 860</span>
+            <span class="url">voca.archive/p/2c1d</span>
+          </div>
+        </div>
+      </div>
+      <div class="preview-caption">루카 테마 · #FFC0CB</div>
+    </div>
+  </div>
+
+  <!-- ===================== OG 카드 ===================== -->
+  <div class="section-label">B. 링크 미리보기(OG) · 1200×630</div>
+  <div class="stage">
+    <div>
+      <div class="preview-og">
+        <div class="card card-og" style="--theme:#39C5BB;">
+          <div class="og-left">
+            <div class="brand"><span class="dot"></span><span class="word">Vocaloid<b>Archive</b></span></div>
+            <span class="kicker">▶ PLAYLIST</span>
+            <h2 class="pl-title">새벽 세시의 미쿠</h2>
+            <div class="pl-by">by <b>@haku_39</b> · 24곡 · ♥ 1.2k</div>
+            <div class="og-mini-tracks">
+              <div class="track"><span class="num">1</span><span class="tname">夜明けと蛍</span></div>
+              <div class="track"><span class="num">2</span><span class="tname">テオ</span></div>
+              <div class="track"><span class="num">3</span><span class="tname">ロキ</span></div>
+            </div>
+            <div class="og-footer">
+              <span class="chip theme">하츠네 미쿠</span>
+              <span class="url" style="margin-left:auto;font-weight:900;font-size:24px;color:color-mix(in srgb,#39C5BB 55%,#2D1B4E);">voca.archive/p/8f3a</span>
+            </div>
+          </div>
+          <div class="og-right">
+            <div class="tile" style="background:linear-gradient(135deg,#39C5BB,#7DDFD4);">夜明け</div>
+            <div class="tile" style="background:linear-gradient(135deg,#8B5CF6,#C4B5FD);">テオ</div>
+            <div class="tile" style="background:linear-gradient(135deg,#E879B0,#F9A8D4);">ロキ</div>
+            <div class="tile" style="background:linear-gradient(135deg,#3BBCB0,#39C5BB);">愛言葉</div>
+          </div>
+        </div>
+      </div>
+      <div class="preview-caption">X·디스코드에 링크만 붙여도 이 카드가 자동 노출</div>
+    </div>
+  </div>
+
+</body>
+</html>
