@@ -19,11 +19,14 @@ public enum ErrorCode {
   CHARACTER_NOT_FOUND(HttpStatus.NOT_FOUND, "CHARACTER_NOT_FOUND", "캐릭터를 찾을 수 없습니다"),
   COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "COMMENT_NOT_FOUND", "댓글을 찾을 수 없습니다"),
   PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "PLAYLIST_NOT_FOUND", "플레이리스트를 찾을 수 없습니다"),
+  PLAYLIST_NOT_PUBLIC(HttpStatus.BAD_REQUEST, "PLAYLIST_NOT_PUBLIC", "공개 플레이리스트만 공유할 수 있습니다"),
   DUPLICATE_USERNAME(HttpStatus.CONFLICT, "DUPLICATE_USERNAME", "이미 사용 중인 username입니다"),
   DUPLICATE_EMAIL(HttpStatus.CONFLICT, "DUPLICATE_EMAIL", "이미 사용 중인 email입니다"),
 
   // 5xx
-  INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버 오류가 발생했습니다");
+  INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", "서버 오류가 발생했습니다"),
+  SHARE_CODE_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "SHARE_CODE_GENERATION_FAILED", "공유 코드 생성에 실패했습니다"),
+  CARD_RENDER_FAILED(HttpStatus.BAD_GATEWAY, "CARD_RENDER_FAILED", "카드 이미지 생성에 실패했습니다");
 
   private final HttpStatus httpStatus;
   private final String code;

@@ -1,5 +1,7 @@
 package com.vocaloidarchive.playlist.infra.persistence;
 
+import com.vocaloidarchive.common.exception.BusinessException;
+import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.playlist.application.port.PlaylistRepository;
 import com.vocaloidarchive.playlist.domain.Playlist;
 import com.vocaloidarchive.user.infra.persistence.UserEntity;
@@ -34,5 +36,18 @@ public class PlaylistRepositoryImpl implements PlaylistRepository {
   @Override
   public boolean existsById(Long id) {
     return jpa.existsById(id);
+  }
+
+  @Override
+  public boolean existsByShareCode(String shareCode) {
+    return jpa.existsByShareCode(shareCode);
+  }
+
+  @Override
+  public void updateShareCode(Long playlistId, String shareCode) {
+    PlaylistEntity e = jpa.findById(playlistId)
+        .orElseThrow(() -> new BusinessException(ErrorCode.PLAYLIST_NOT_FOUND));
+    e.assignShareCode(shareCode);
+    jpa.saveAndFlush(e);
   }
 }
