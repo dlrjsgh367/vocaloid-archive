@@ -26,8 +26,15 @@
             :key="pl.id"
             class="playlist-row"
             :class="{ active: selectedId === pl.id }"
-            @click="selectPlaylist(pl.id)"
+            :aria-expanded="selectedId === pl.id"
+            @click="togglePlaylist(pl.id)"
           >
+            <span
+              class="row-chevron"
+              :class="{ open: selectedId === pl.id }"
+              aria-hidden="true"
+              >▸</span
+            >
             <div class="playlist-row-info">
               <div class="playlist-row-title">{{ pl.title }}</div>
               <div class="playlist-row-sub">
@@ -205,6 +212,17 @@ async function loadPlaylists() {
   } finally {
     loading.value = false;
   }
+}
+
+// 이미 선택된 행을 다시 누르면 접는다(collapse). 아니면 펼치고 상세를 불러온다.
+function togglePlaylist(id) {
+  if (selectedId.value === id) {
+    selectedId.value = null;
+    detail.value = null;
+    detailError.value = false;
+    return;
+  }
+  selectPlaylist(id);
 }
 
 async function selectPlaylist(id) {
@@ -516,6 +534,22 @@ h1 {
 .playlist-row.active {
   background: var(--miku-lt);
   border-color: var(--miku);
+}
+.row-chevron {
+  flex-shrink: 0;
+  color: var(--text3);
+  font-size: 12px;
+  line-height: 1;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+.playlist-row:hover .row-chevron {
+  color: var(--text2);
+}
+.row-chevron.open {
+  transform: rotate(90deg);
+  color: var(--miku-dk);
 }
 .playlist-row-info {
   flex: 1;

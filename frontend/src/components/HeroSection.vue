@@ -6,10 +6,10 @@
     <div class="hero-text">
       <div class="hero-badge">보컬로이드 팬들의 비밀기지</div>
       <h1>
-        좋아하는<br />
+        내 최애<br />
         <ruby><span class="gradient-word">ボカロ</span><rt>보 카 로</rt></ruby
         >를<br />
-        모두와 나눠요<span class="blink">_</span>
+        기록하는 곳<span class="blink">_</span>
       </h1>
       <p>
         미쿠, 루카, 렌… 좋아하는 캐릭터의 곡을 직접 등록하고<br />

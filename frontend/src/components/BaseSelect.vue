@@ -175,7 +175,10 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
+  /* 가장 넓은 옵션에 맞춰 폭을 잡아 한글 라벨이 한 글자씩 줄바꿈되지 않게 한다 */
+  width: max-content;
   min-width: 100%;
+  max-width: 70vw;
   list-style: none;
   margin: 0;
   padding: 6px;
@@ -209,13 +212,14 @@ onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 9px 12px;
+  padding: 9px 14px;
   margin-top: 2px;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 800;
   color: var(--text2);
   cursor: pointer;
+  white-space: nowrap;
   transition:
     background 0.12s,
     color 0.12s;
