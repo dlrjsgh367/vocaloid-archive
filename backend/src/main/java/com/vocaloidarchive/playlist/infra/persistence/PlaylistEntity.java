@@ -30,6 +30,9 @@ public class PlaylistEntity {
   @Column(name = "is_public", nullable = false)
   private boolean isPublic;
 
+  @Column(name = "share_code", length = 10, unique = true)
+  private String shareCode;
+
   @CreatedDate
   @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
@@ -40,5 +43,9 @@ public class PlaylistEntity {
     p.title = title;
     p.isPublic = isPublic;
     return p;
+  }
+
+  public void assignShareCode(String code) {
+    this.shareCode = code;
   }
 }

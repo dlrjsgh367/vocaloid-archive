@@ -51,6 +51,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/api/stats").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/songs/*/comments").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/playlists/*").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/share/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/share/**").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -14,8 +14,23 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${APP_DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       APP_CORS_ORIGINS: ${APP_CORS_ORIGINS}
+      RENDERER_BASE_URL: http://renderer:3000
+      CARD_CACHE_DIR: /var/cache/cards
+    volumes:
+      - card-cache:/var/cache/cards
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - renderer
+
+  renderer:
+    build:
+      context: ./renderer
+    image: vocaloid-archive-renderer
+    container_name: vocaloid-renderer
+    restart: unless-stopped
+    expose:
+      - "3000"
 
   web:
     build:
@@ -30,3 +45,6 @@ services:
       - "80:80"
     depends_on:
       - backend
+
+volumes:
+  card-cache:

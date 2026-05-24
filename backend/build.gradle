@@ -47,6 +47,11 @@ dependencies {
 
 tasks.named('test') {
   useJUnitPlatform()
+  // Testcontainers' bundled docker-java negotiates Docker API v1.32, which modern Docker
+  // Engines (>= 25, min API 1.40) reject. Pin a compatible version; override via env if needed.
+  def dockerApi = System.getenv('DOCKER_API_VERSION') ?: '1.43'
+  environment 'DOCKER_API_VERSION', dockerApi
+  systemProperty 'api.version', dockerApi
 }
 
 // QueryDSL Q-class generation

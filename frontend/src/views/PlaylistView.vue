@@ -53,7 +53,16 @@
             <span :class="['visibility', detail.isPublic ? 'public' : 'private']">
               {{ detail.isPublic ? '공개' : '비공개' }}
             </span>
+            <button
+              class="btn-share"
+              :disabled="sharing || detail.songs.length === 0"
+              :title="detail.songs.length === 0 ? '곡을 먼저 담아주세요' : '공유하기'"
+              @click="onShare"
+            >
+              {{ sharing ? '준비 중...' : '✦ 공유' }}
+            </button>
           </div>
+          <div v-if="shareError" class="error-banner sm share-msg">{{ shareError }}</div>
           <div class="detail-meta">
             {{ detail.ownerUsername }} · {{ detail.songs.length }}곡 ·
             {{ formatDate(detail.createdAt) }}
@@ -123,6 +132,14 @@
         </form>
       </div>
     </div>
+
+    <!-- 공유 시트 -->
+    <ShareSheet
+      v-if="shareOpen"
+      :share-url="shareData.shareUrl"
+      :code="shareData.shareCode"
+      @close="shareOpen = false"
+    />
   </div>
 </template>
 
@@ -130,12 +147,14 @@
 import { ref, reactive, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import emptyThumb from '@/assets/empty-thumb.svg';
+import ShareSheet from '../components/ShareSheet.vue';
 import {
   fetchMyPlaylists,
   fetchPlaylist,
   createPlaylist,
   deletePlaylist,
   removeSongFromPlaylist,
+  ensureShare,
 } from '../api/playlists.js';
 
 function onThumbError(e) {
@@ -152,6 +171,11 @@ const selectedId = ref(null);
 const detail = ref(null);
 const detailLoading = ref(false);
 const detailError = ref(false);
+
+const sharing = ref(false);
+const shareError = ref('');
+const shareOpen = ref(false);
+const shareData = reactive({ shareUrl: '', shareCode: '' });
 
 const createOpen = ref(false);
 const createForm = reactive({ title: '', isPublic: false });
@@ -176,6 +200,7 @@ async function selectPlaylist(id) {
   detail.value = null;
   detailError.value = false;
   detailLoading.value = true;
+  shareError.value = '';
   try {
     detail.value = await fetchPlaylist(id);
   } catch {
@@ -209,6 +234,31 @@ async function onRemoveSong(songId) {
     if (pl) pl.songCount = Math.max(0, pl.songCount - 1);
   } catch {
     alert('제거에 실패했어요.');
+  }
+}
+
+async function onShare() {
+  if (!detail.value || !selectedId.value) return;
+  if (detail.value.songs.length === 0) {
+    shareError.value = '곡을 먼저 담은 뒤 공유할 수 있어요.';
+    return;
+  }
+  sharing.value = true;
+  shareError.value = '';
+  try {
+    const res = await ensureShare(selectedId.value);
+    shareData.shareUrl = res.shareUrl;
+    shareData.shareCode = res.shareCode;
+    shareOpen.value = true;
+  } catch (err) {
+    const code = err.response?.data?.error?.code;
+    if (code === 'PLAYLIST_NOT_PUBLIC') {
+      shareError.value = '공개 플레이리스트만 공유할 수 있어요.';
+    } else {
+      shareError.value = err.response?.data?.error?.message ?? '공유 준비에 실패했어요.';
+    }
+  } finally {
+    sharing.value = false;
   }
 }
 
@@ -545,6 +595,33 @@ h1 {
   color: var(--text3);
   font-weight: 700;
   margin-bottom: 18px;
+}
+
+.btn-share {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  background: linear-gradient(135deg, var(--pink-dk) 0%, var(--lav-dk) 100%);
+  border: none;
+  padding: 7px 16px;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-share:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 4px 12px rgba(232, 121, 176, 0.4);
+}
+.btn-share:disabled {
+  background: var(--border);
+  color: var(--text3);
+  cursor: not-allowed;
+}
+.share-msg {
+  margin-bottom: 12px;
 }
 
 .song-list {

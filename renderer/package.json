@@ -1,0 +1,11 @@
+{
+  "name": "voca-card-renderer",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "playwright": "1.44.0"
+  }
+}

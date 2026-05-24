@@ -45,6 +45,12 @@ const routes = [
     meta: { title: '회원가입' },
   },
   {
+    path: '/p/:code',
+    name: 'public-playlist',
+    component: () => import('@/views/PublicPlaylistView.vue'),
+    meta: { title: '공유 플레이리스트' },
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/NotFoundView.vue'),
