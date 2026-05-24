@@ -4,8 +4,10 @@ import jakarta.validation.constraints.*;
 
 public record SignUpRequest(
     @NotBlank
-    @Size(min = 3, max = 20, message = "username은 3~20자여야 합니다")
-    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "username은 영문, 숫자, 밑줄(_)만 사용 가능합니다")
+    @Size(min = 2, max = 20, message = "username은 2~20자여야 합니다")
+    @Pattern(
+        regexp = "^[가-힣a-zA-Z0-9_]+$",
+        message = "username은 한글, 영문, 숫자, 밑줄(_)만 사용 가능합니다")
     String username,
 
     @NotBlank

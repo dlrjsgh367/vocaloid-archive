@@ -2,7 +2,7 @@
   <div class="create-page">
     <div class="create-card">
       <div class="card-header">
-        <div class="eyebrow">♪ NEW SONG · 新曲登録</div>
+        <div class="eyebrow">♪ NEW SONG · 신곡 등록</div>
         <h1>새로운 <span class="gradient-word">보카로</span> 곡 등록</h1>
         <p>유튜브 또는 니코니코 영상 URL과 캐릭터, 분위기를 알려주세요.</p>
       </div>

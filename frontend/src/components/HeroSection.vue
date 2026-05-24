@@ -4,7 +4,7 @@
     <div class="particles" ref="particlesEl"></div>
 
     <div class="hero-text">
-      <div class="hero-badge">보컬로이드 팬들의 비밀기지</div>
+      <div class="hero-badge">취향을 아카이빙하다</div>
       <h1>
         내 최애<br />
         <ruby><span class="gradient-word">ボカロ</span><rt>보 카 로</rt></ruby

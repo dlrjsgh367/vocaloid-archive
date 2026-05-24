@@ -26,7 +26,7 @@
         </button>
 
         <RouterLink v-if="!authStore.isAuthenticated" to="/login" class="btn-login">
-          ログイン ✦
+          로그인 ✦
         </RouterLink>
         <button v-else class="btn-login" @click="authStore.logout">
           {{ authStore.user?.username }} · 로그아웃
@@ -60,7 +60,7 @@
         <RouterLink to="/songs/new" class="drawer-link" active-class="active">＋ 곡 등록</RouterLink>
         <div class="drawer-divider"></div>
         <RouterLink v-if="!authStore.isAuthenticated" to="/login" class="drawer-link login">
-          ログイン ✦
+          로그인 ✦
         </RouterLink>
         <button v-else class="drawer-link login" @click="authStore.logout">
           {{ authStore.user?.username }} · 로그아웃

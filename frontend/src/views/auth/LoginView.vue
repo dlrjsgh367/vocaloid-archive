@@ -227,6 +227,8 @@ h1 {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shimmer 4s linear infinite;
+  /* h1's offset text-shadow ghosts behind transparent-fill gradient text — drop it here. */
+  text-shadow: none;
 }
 
 .card-header p {
