@@ -1,6 +1,6 @@
 package com.vocaloidarchive.character.application;
 
-import com.vocaloidarchive.character.application.dto.result.CharacterResult;
+import com.vocaloidarchive.character.application.dto.result.CharacterSummaryResult;
 import com.vocaloidarchive.character.application.port.CharacterQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ public class GetCharactersUseCase {
   private final CharacterQueryRepository characterQueryRepository;
 
   @Transactional(readOnly = true)
-  public List<CharacterResult> invoke() {
-    return characterQueryRepository.findAllOrderByIdAsc();
+  public List<CharacterSummaryResult> invoke() {
+    return characterQueryRepository.findAllSummariesOrderByIdAsc();
   }
 }

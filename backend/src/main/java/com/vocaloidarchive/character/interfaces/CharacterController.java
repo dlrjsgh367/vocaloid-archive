@@ -1,7 +1,7 @@
 package com.vocaloidarchive.character.interfaces;
 
 import com.vocaloidarchive.character.application.GetCharactersUseCase;
-import com.vocaloidarchive.character.interfaces.dto.response.CharacterResponse;
+import com.vocaloidarchive.character.interfaces.dto.response.CharacterSummaryResponse;
 import com.vocaloidarchive.common.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +18,10 @@ public class CharacterController {
   private final GetCharactersUseCase getCharactersUseCase;
 
   @GetMapping
-  public ApiResponse<List<CharacterResponse>> findAll() {
+  public ApiResponse<List<CharacterSummaryResponse>> findAll() {
     return ApiResponse.success(
         getCharactersUseCase.invoke().stream()
-            .map(CharacterResponse::from)
+            .map(CharacterSummaryResponse::from)
             .toList());
   }
 }

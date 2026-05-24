@@ -52,7 +52,7 @@ onMounted(async () => {
   loadSongs();
 });
 
-// CharacterResponse { id, name, colorHex, imageUrl } → CharacterStrip props shape
+// CharacterSummaryResponse { id, name, colorHex, imageUrl, songCount } → CharacterStrip props shape
 const characterItems = computed(() =>
   characters.value.map((c) => ({
     id: c.id,
@@ -60,7 +60,7 @@ const characterItems = computed(() =>
     jpName: '',
     initial: c.name.charAt(0),
     colorKey: getCharColorKey(c.name),
-    songCount: 0,
+    songCount: c.songCount ?? 0,
   })),
 );
 
