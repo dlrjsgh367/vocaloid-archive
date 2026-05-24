@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hachi+Maru+Pop&family=Mochiy+Pop+One&family=Gamja+Flower&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html, body { width:1080px; height:1080px; }
+  body {
+    font-family:'Nunito','Noto Sans CJK KR',sans-serif;
+    background:#f3e7ff; color:#5a3a7a; -webkit-font-smoothing:antialiased;
+  }
+
+  /* ===== 데코 카드 (1080x1080) ===== */
+  .deco {
+    width:1080px; height:1080px; position:relative; overflow:hidden;
+    --theme:#39C5BB;
+    background:
+      radial-gradient(circle at 14% 14%, rgba(255,255,255,.9) 0 4px, transparent 5px) 0 0/52px 52px,
+      radial-gradient(125% 80% at 82% -5%, color-mix(in srgb,var(--theme) 60%,#fff) 0%, transparent 52%),
+      linear-gradient(160deg,#fff2fb 0%, #ecd9ff 46%, color-mix(in srgb,var(--theme) 30%,#fff) 100%);
+    padding:72px 66px; font-family:'Nunito','Noto Sans CJK KR',sans-serif;
+  }
+  /* 스캘럽 데코 프레임 */
+  .deco .frame{ position:absolute; inset:26px; border:7px dashed rgba(255,255,255,.92); border-radius:48px;
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--theme) 35%,#fff) inset; z-index:1; pointer-events:none; }
+  .deco .corner{ position:absolute; z-index:4; font-size:46px; filter:drop-shadow(0 2px 3px rgba(120,60,160,.25)); }
+  .deco .c-tl{ top:34px; left:40px; } .deco .c-tr{ top:34px; right:40px; }
+  .deco .c-bl{ bottom:36px; left:42px; } .deco .c-br{ bottom:36px; right:44px; }
+  /* 트윙클 반짝이 */
+  .deco .tw{ position:absolute; z-index:2; color:#fff; text-shadow:0 0 8px color-mix(in srgb,var(--theme) 60%,#fff); }
+  .deco .tw.a{ top:200px; left:120px; font-size:30px; }
+  .deco .tw.b{ top:520px; right:140px; font-size:24px; color:#ffd6ef; }
+  .deco .tw.c{ bottom:330px; left:90px; font-size:22px; }
+  .deco .tw.d{ top:120px; left:48%; font-size:20px; color:#ffe9a8; }
+  /* 떠다니는 스티커 이모지 */
+  .deco .st{ position:absolute; z-index:3; filter:drop-shadow(0 3px 5px rgba(120,60,160,.28)); }
+  .deco .st1{ top:36px; right:120px; font-size:62px; transform:rotate(13deg); }
+  .deco .st2{ top:430px; right:34px; font-size:46px; transform:rotate(-12deg); }
+  .deco .st3{ bottom:300px; left:30px; font-size:50px; transform:rotate(-15deg); }
+
+  .deco .head{ position:relative; z-index:5; display:flex; align-items:center; gap:18px; }
+  .deco .ribbon{ display:inline-block; background:var(--theme); color:#fff;
+    font-family:'Mochiy Pop One','Noto Sans CJK KR',sans-serif; font-size:25px;
+    padding:12px 36px; border-radius:999px; border:4px solid #fff;
+    box-shadow:0 6px 0 color-mix(in srgb,var(--theme) 55%,#7a4ea0), 0 10px 16px rgba(120,60,160,.28); transform:rotate(-3deg); }
+  .deco .bubble{ position:relative; background:#fff; color:#ff4fa3;
+    font-family:'Mochiy Pop One','Noto Sans CJK KR',sans-serif; font-size:20px;
+    padding:10px 20px; border-radius:18px; box-shadow:0 4px 10px rgba(120,60,160,.18); }
+  .deco .bubble::after{ content:''; position:absolute; left:-10px; top:18px; border:9px solid transparent; border-right-color:#fff; }
+
+  .deco .burst{ position:relative; z-index:5; margin-top:30px; }
+  .deco .burst::before{ content:'\2726'; position:absolute; left:-34px; top:-8px; font-size:46px; color:color-mix(in srgb,var(--theme) 70%,#fff); }
+  /* 제목: 한글은 'Gamja Flower'가 커버(일/라틴 디스플레이 폰트는 한글 미지원→tofu 방지) */
+  .deco .pl-title{ font-family:'Hachi Maru Pop','Gamja Flower','Noto Sans CJK KR',cursive;
+    font-size:98px; line-height:1.08; color:#ff4fa3; max-width:840px;
+    transform:rotate(-2deg); -webkit-text-stroke:9px #fff; paint-order:stroke fill;
+    text-shadow:0 6px 0 #fff, 0 10px 14px rgba(120,60,160,.32), 5px 5px 0 color-mix(in srgb,var(--theme) 70%,#fff);
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    word-break:keep-all; overflow-wrap:anywhere; }
+  .deco .pl-by{ position:relative; z-index:5; margin-top:16px;
+    font-family:'Gamja Flower','Noto Sans CJK KR',cursive; font-size:44px; color:#7a4ea0; }
+  .deco .kao{ position:relative; z-index:5; font-family:'Mochiy Pop One','Noto Sans CJK KR',sans-serif;
+    font-size:28px; color:var(--theme); margin-top:2px; }
+
+  .deco .collage{ position:relative; z-index:5; margin-top:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .deco .tile{ aspect-ratio:1/1; border-radius:28px; border:6px solid #fff; box-shadow:0 8px 18px rgba(120,60,160,.26);
+    position:relative; display:flex; align-items:flex-end; padding:12px; color:#fff; font-weight:900; font-size:19px;
+    font-family:'Nunito','Noto Sans CJK KR',sans-serif;
+    text-shadow:0 1px 4px rgba(0,0,0,.4); background-size:cover; background-position:center;
+    word-break:break-word; overflow:hidden; }
+  .deco .tile .tile-label{ position:relative; z-index:2; max-height:60%; overflow:hidden; line-height:1.15; }
+  .deco .tile.has-img .tile-label{ display:none; }
+  .deco .tile::after{ content:'\2661'; position:absolute; top:-16px; right:-8px; font-size:34px; color:#ff7ec2; filter:drop-shadow(0 2px 2px rgba(0,0,0,.12)); }
+  .deco .tile::before{ content:'\25B6'; position:absolute; inset:0; margin:auto; width:54px; height:54px; line-height:54px; text-align:center;
+    font-size:22px; background:rgba(255,255,255,.85); color:var(--theme); border-radius:50%; box-shadow:0 3px 8px rgba(0,0,0,.2); z-index:1; }
+  .deco .tile:nth-child(2){ transform:rotate(3deg);} .deco .tile:nth-child(3){ transform:rotate(-3deg);}
+
+  .deco .tracklist{ position:relative; z-index:5; margin-top:28px; }
+  .deco .track{ display:flex; align-items:center; gap:16px;
+    font-family:'Gamja Flower','Noto Sans CJK KR',cursive; font-size:42px; color:#5a3a7a; padding:3px 0; }
+  .deco .track .b{ color:var(--theme); font-size:34px; flex:0 0 auto; }
+  .deco .track .t{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .deco .track .m{ margin-left:auto; flex:0 0 auto; font-family:'Mochiy Pop One','Noto Sans CJK KR',sans-serif;
+    font-size:19px; color:#fff; background:#ff7ec2; padding:5px 16px; border-radius:999px; white-space:nowrap; }
+
+  .deco .footer{ position:relative; z-index:5; margin-top:26px; display:flex; align-items:center; gap:12px; }
+  .deco .chip{ font-family:'Mochiy Pop One','Noto Sans CJK KR',sans-serif; font-size:23px; background:#fff; color:#7a4ea0;
+    padding:11px 22px; border-radius:999px; white-space:nowrap;
+    border:3px solid color-mix(in srgb,var(--theme) 40%,#fff); box-shadow:0 4px 0 color-mix(in srgb,var(--theme) 25%,#fff); }
+  .deco .chip.t{ background:var(--theme); color:#fff; border-color:#fff; }
+  .deco .url{ margin-left:auto; font-family:'Mochiy Pop One','Noto Sans CJK KR',sans-serif; font-size:25px; color:#ff4fa3; white-space:nowrap; }
+</style>
+</head>
+<body>
+  <div class="card deco">
+    <div class="frame"></div>
+    <span class="corner c-tl">🎀</span><span class="corner c-tr">✿</span><span class="corner c-bl">✿</span><span class="corner c-br">🎀</span>
+    <span class="tw a">✦</span><span class="tw b">✧</span><span class="tw c">✦</span><span class="tw d">✩</span>
+    <span class="st st1">✨</span><span class="st st2">💖</span><span class="st st3">🎧</span>
+    <div class="head"><span class="ribbon">★ MY PLAYLIST ★</span><span class="bubble">들어봐!! ♪</span></div>
+    <div class="burst"><h2 class="pl-title" id="pl-title"></h2></div>
+    <div class="pl-by" id="pl-by"></div>
+    <div class="kao">(｡•ᴗ•｡) 추천추천!! ♫</div>
+    <div class="collage" id="collage"></div>
+    <div class="tracklist" id="tracklist"></div>
+    <div class="footer" id="footer"></div>
+  </div>
+
+  <script id="card-data" type="application/json">__DATA__</script>
+  <script>
+    (function () {
+      var data = {};
+      try { data = JSON.parse(document.getElementById('card-data').textContent); }
+      catch (e) { data = {}; }
+
+      var DEFAULT_THEME = '#39C5BB';
+      var theme = (data.themeColorHex && /^#[0-9a-fA-F]{3,8}$/.test(data.themeColorHex))
+        ? data.themeColorHex : DEFAULT_THEME;
+      document.documentElement.style.setProperty('--theme', theme);
+      document.querySelector('.deco').style.setProperty('--theme', theme);
+
+      // ---- 제목 (최대 2줄, 줄바꿈 허용) ----
+      document.getElementById('pl-title').textContent = data.title || '';
+
+      // ---- by @owner ----
+      var owner = data.ownerUsername || '';
+      document.getElementById('pl-by').textContent = owner ? ('by @' + owner + ' ♡') : '';
+
+      // ---- 콜라주 (최대 4타일) ----
+      var GRADS = [
+        ['var(--theme)', 'color-mix(in srgb,var(--theme) 45%,#fff)'],
+        ['#8B5CF6', '#C4B5FD'],
+        ['#E879B0', '#F9A8D4'],
+        ['color-mix(in srgb,var(--theme) 75%,#7DDFD4)', 'var(--theme)']
+      ];
+      var collage = Array.isArray(data.collage) ? data.collage.slice(0, 4) : [];
+      var collageEl = document.getElementById('collage');
+      collage.forEach(function (tile, i) {
+        var div = document.createElement('div');
+        div.className = 'tile';
+        var url = (tile && tile.thumbnailUrl ? String(tile.thumbnailUrl) : '').trim();
+        var label = document.createElement('span');
+        label.className = 'tile-label';
+        label.textContent = (tile && tile.title) ? tile.title : '';
+        div.appendChild(label);
+        if (url) {
+          div.classList.add('has-img');
+          div.style.backgroundImage = "url('" + url.replace(/'/g, "%27") + "')";
+        } else {
+          var g = GRADS[i % GRADS.length];
+          div.style.background = 'linear-gradient(135deg,' + g[0] + ',' + g[1] + ')';
+        }
+        collageEl.appendChild(div);
+      });
+
+      // ---- 트랙리스트 (최대 3줄, title + mood 배지) ----
+      var tracks = Array.isArray(data.tracklist) ? data.tracklist.slice(0, 3) : [];
+      var tlEl = document.getElementById('tracklist');
+      tracks.forEach(function (tr) {
+        var row = document.createElement('div');
+        row.className = 'track';
+        var b = document.createElement('span'); b.className = 'b'; b.textContent = '♪';
+        var t = document.createElement('span'); t.className = 't'; t.textContent = (tr && tr.title) ? tr.title : '';
+        row.appendChild(b); row.appendChild(t);
+        if (tr && tr.mood) {
+          var m = document.createElement('span'); m.className = 'm'; m.textContent = tr.mood;
+          row.appendChild(m);
+        }
+        tlEl.appendChild(row);
+      });
+
+      // ---- 좋아요 합 포맷 (1200 -> 1.2k) ----
+      function fmt(n) {
+        n = Number(n) || 0;
+        if (n < 1000) return String(n);
+        var k = n / 1000;
+        var s = (k >= 100) ? String(Math.round(k)) : (Math.round(k * 10) / 10).toString();
+        return s + 'k';
+      }
+
+      // ---- footer 칩 ----
+      var footer = document.getElementById('footer');
+      var charName = data.primaryCharName || '하츠네 미쿠';
+      var charChip = document.createElement('span');
+      charChip.className = 'chip t'; charChip.textContent = charName;
+      footer.appendChild(charChip);
+
+      var songChip = document.createElement('span');
+      songChip.className = 'chip'; songChip.textContent = '♪' + (Number(data.songCount) || 0) + '곡';
+      footer.appendChild(songChip);
+
+      var likeChip = document.createElement('span');
+      likeChip.className = 'chip'; likeChip.textContent = '♥' + fmt(data.likeSum);
+      footer.appendChild(likeChip);
+
+      var urlEl = document.createElement('span');
+      urlEl.className = 'url'; urlEl.textContent = data.shareUrl || '';
+      footer.appendChild(urlEl);
+    })();
+  </script>
+</body>
+</html>
