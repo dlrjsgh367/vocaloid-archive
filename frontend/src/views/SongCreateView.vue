@@ -607,8 +607,8 @@ h1 {
 }
 .btn-cancel {
   flex: 0 0 auto;
-  height: 52px;
-  padding: 0 22px;
+  min-height: 52px;
+  padding: 15px 22px;
   border: 1.5px solid var(--border);
   background: var(--surface);
   border-radius: var(--radius-md);
@@ -625,7 +625,8 @@ h1 {
 }
 .btn-submit {
   flex: 1;
-  height: 52px;
+  min-height: 52px;
+  padding: 15px 20px;
   border: none;
   background: linear-gradient(135deg, var(--miku-dk) 0%, var(--lav-dk) 100%);
   color: white;

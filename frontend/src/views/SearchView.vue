@@ -26,11 +26,7 @@
 
         <div class="sort-wrap">
           <label class="sort-label">정렬</label>
-          <select v-model="selectedSort" class="sort-select">
-            <option value="LATEST">최신순</option>
-            <option value="POPULAR">인기순</option>
-            <option value="PLAYED">재생순</option>
-          </select>
+          <BaseSelect v-model="selectedSort" :options="SORT_OPTIONS" aria-label="정렬 기준" />
         </div>
       </div>
 
@@ -63,6 +59,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import FilterBar from '../components/FilterBar.vue';
 import SongGrid from '../components/SongGrid.vue';
+import BaseSelect from '../components/BaseSelect.vue';
 import { fetchSongs } from '../api/songs.js';
 import { fetchCharacters } from '../api/characters.js';
 import { toggleLike } from '../api/likes.js';
@@ -88,6 +85,12 @@ const MOOD_LABELS = {
   energetic: '신남',
   calm: '잔잔함',
 };
+
+const SORT_OPTIONS = [
+  { value: 'LATEST', label: '최신순' },
+  { value: 'POPULAR', label: '인기순' },
+  { value: 'PLAYED', label: '재생순' },
+];
 
 const PAGE_SIZE = 20;
 
@@ -332,24 +335,6 @@ function onOpen(songId) {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.sort-select {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--text);
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 99px;
-  padding: 6px 14px;
-  cursor: pointer;
-  outline: none;
-  transition: all 0.2s;
-}
-.sort-select:focus {
-  border-color: var(--miku);
-  box-shadow: 0 0 0 4px var(--miku-lt);
-}
-
 .result-meta {
   font-size: 13px;
   font-weight: 700;
@@ -439,10 +424,6 @@ function onOpen(songId) {
 
   .sort-wrap {
     justify-content: flex-end;
-  }
-
-  .sort-select {
-    font-size: 12px;
   }
 }
 </style>

@@ -114,7 +114,18 @@
 
           <label class="checkbox-row">
             <input type="checkbox" v-model="createForm.isPublic" />
-            <span>다른 사람에게 공개</span>
+            <span class="box">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M5 12l4 4 10-10"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <span class="checkbox-label">다른 사람에게 공개</span>
           </label>
 
           <div v-if="createServerError" class="error-banner sm">{{ createServerError }}</div>
@@ -156,6 +167,7 @@ import {
   removeSongFromPlaylist,
   ensureShare,
 } from '../api/playlists.js';
+import { confirmDialog, alertDialog } from '../composables/useDialog.js';
 
 function onThumbError(e) {
   if (e.target.dataset.fallback) return;
@@ -211,7 +223,13 @@ async function selectPlaylist(id) {
 }
 
 async function onDeletePlaylist(pl) {
-  if (!confirm(`'${pl.title}' 플레이리스트를 삭제할까요?`)) return;
+  const ok = await confirmDialog({
+    variant: 'danger',
+    title: '플레이리스트 삭제',
+    message: `'${pl.title}' 플레이리스트를 삭제할까요?\n담긴 곡은 사라지지 않아요.`,
+    confirmText: '삭제',
+  });
+  if (!ok) return;
   try {
     await deletePlaylist(pl.id);
     playlists.value = playlists.value.filter((p) => p.id !== pl.id);
@@ -220,20 +238,26 @@ async function onDeletePlaylist(pl) {
       detail.value = null;
     }
   } catch {
-    alert('삭제에 실패했어요.');
+    await alertDialog({ variant: 'danger', title: '삭제 실패', message: '삭제에 실패했어요.' });
   }
 }
 
 async function onRemoveSong(songId) {
   if (!detail.value || !selectedId.value) return;
-  if (!confirm('이 곡을 플레이리스트에서 제거할까요?')) return;
+  const ok = await confirmDialog({
+    variant: 'danger',
+    title: '곡 제거',
+    message: '이 곡을 플레이리스트에서 제거할까요?',
+    confirmText: '제거',
+  });
+  if (!ok) return;
   try {
     await removeSongFromPlaylist(selectedId.value, songId);
     detail.value.songs = detail.value.songs.filter((s) => s.songId !== songId);
     const pl = playlists.value.find((p) => p.id === selectedId.value);
     if (pl) pl.songCount = Math.max(0, pl.songCount - 1);
   } catch {
-    alert('제거에 실패했어요.');
+    await alertDialog({ variant: 'danger', title: '제거 실패', message: '제거에 실패했어요.' });
   }
 }
 
@@ -851,11 +875,43 @@ h1 {
   font-weight: 700;
   color: var(--text2);
   cursor: pointer;
+  user-select: none;
 }
 .checkbox-row input {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.checkbox-row .box {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  transition: all 0.15s;
+  background: var(--surface);
+}
+.checkbox-row .box svg {
+  width: 12px;
+  height: 12px;
+  color: white;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: all 0.15s;
+}
+.checkbox-row input:checked ~ .box {
+  background: var(--miku-dk);
+  border-color: var(--miku-dk);
+}
+.checkbox-row input:checked ~ .box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+.checkbox-row input:focus-visible ~ .box {
+  border-color: var(--miku);
+  box-shadow: 0 0 0 4px var(--miku-lt);
 }
 
 .modal-actions {

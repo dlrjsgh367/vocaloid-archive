@@ -204,6 +204,7 @@ import { fetchSong, deleteSong } from '../api/songs.js';
 import { toggleLike } from '../api/likes.js';
 import { fetchComments, createComment, deleteComment } from '../api/comments.js';
 import { fetchMyPlaylists, addSongToPlaylist } from '../api/playlists.js';
+import { confirmDialog, alertDialog } from '../composables/useDialog.js';
 import { useAuthStore } from '../stores/auth.js';
 import { getCharColorVars } from '../utils/characterColors.js';
 
@@ -324,24 +325,40 @@ async function onSubmitComment() {
 }
 
 async function onDeleteComment(commentId) {
-  if (!confirm('댓글을 삭제할까요?')) return;
+  const ok = await confirmDialog({
+    variant: 'danger',
+    title: '댓글 삭제',
+    message: '댓글을 삭제할까요?',
+    confirmText: '삭제',
+  });
+  if (!ok) return;
   try {
     await deleteComment(commentId);
     comments.value = comments.value.filter((c) => c.id !== commentId);
   } catch (err) {
     if (err.response?.status === 403) {
-      alert('본인이 작성한 댓글만 삭제할 수 있어요.');
+      await alertDialog({
+        variant: 'danger',
+        title: '삭제할 수 없어요',
+        message: '본인이 작성한 댓글만 삭제할 수 있어요.',
+      });
     }
   }
 }
 
 async function onDeleteSong() {
-  if (!confirm('이 곡을 정말 삭제할까요? 되돌릴 수 없어요.')) return;
+  const ok = await confirmDialog({
+    variant: 'danger',
+    title: '곡 삭제',
+    message: '이 곡을 정말 삭제할까요?\n되돌릴 수 없어요.',
+    confirmText: '삭제',
+  });
+  if (!ok) return;
   try {
     await deleteSong(songId.value);
     router.push('/');
   } catch {
-    alert('삭제하지 못했습니다.');
+    await alertDialog({ variant: 'danger', title: '삭제 실패', message: '삭제하지 못했습니다.' });
   }
 }
 

@@ -71,6 +71,8 @@
     <main>
       <RouterView />
     </main>
+
+    <AppDialog />
   </div>
 </template>
 
@@ -78,6 +80,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { useAuthStore } from './stores/auth.js';
+import AppDialog from './components/AppDialog.vue';
 
 const authStore = useAuthStore();
 const route = useRoute();
