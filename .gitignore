@@ -47,3 +47,4 @@ logs/
 
 # --- Local notes in docs/ (subdirs like docs/superpowers/ stay tracked) ---
 docs/*.md
+renderer/node_modules/
