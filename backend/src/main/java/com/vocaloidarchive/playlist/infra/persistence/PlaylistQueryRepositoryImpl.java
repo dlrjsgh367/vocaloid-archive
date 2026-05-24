@@ -1,5 +1,6 @@
 package com.vocaloidarchive.playlist.infra.persistence;
 
+import com.vocaloidarchive.playlist.application.dto.result.PlaylistCardData;
 import com.vocaloidarchive.playlist.application.dto.result.PlaylistDetailResult;
 import com.vocaloidarchive.playlist.application.dto.result.PlaylistResult;
 import com.vocaloidarchive.playlist.application.port.PlaylistQueryRepository;
@@ -44,5 +45,35 @@ public class PlaylistQueryRepositoryImpl implements PlaylistQueryRepository {
         .orElseThrow(() -> new IllegalStateException("just-created playlist not found: " + playlistId));
     return new PlaylistResult(p.getId(), p.getTitle(), p.isPublic(),
         p.getUser().getUsername(), 0L, p.getCreatedAt());
+  }
+
+  @Override
+  public Optional<PlaylistCardData> findCardDataByShareCode(String shareCode) {
+    return jpa.findByShareCode(shareCode).map(p -> {
+      Long pid = p.getId();
+      List<PlaylistCardData.SongLine> songs = songJpa.findWithSongByPlaylistId(pid).stream()
+          .map(ps -> new PlaylistCardData.SongLine(
+              ps.getSong().getId(),
+              ps.getSong().getTitle(),
+              YoutubeUtil.resolveThumbnailUrl(
+                  ps.getSong().getThumbnailUrl(), ps.getSong().getYoutubeUrl()),
+              ps.getSong().getMood() == null ? null : ps.getSong().getMood().name()))
+          .toList();
+
+      String themeColorHex = PlaylistCardData.DEFAULT_THEME_HEX;
+      String primaryCharName = null;
+      var top = songJpa.findTopCharacterByPlaylistId(pid);
+      if (top.isPresent()) {
+        primaryCharName = top.get().getName();
+        if (top.get().getColorHex() != null && !top.get().getColorHex().isBlank()) {
+          themeColorHex = top.get().getColorHex();
+        }
+      }
+
+      long likeSum = songJpa.sumLikesByPlaylistId(pid);
+
+      return new PlaylistCardData(pid, p.getShareCode(), p.getTitle(), p.getUser().getUsername(),
+          songs.size(), likeSum, themeColorHex, primaryCharName, p.isPublic(), songs);
+    });
   }
 }
