@@ -7,6 +7,7 @@ import com.vocaloidarchive.comment.domain.Comment;
 import com.vocaloidarchive.common.exception.BusinessException;
 import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.song.application.port.SongRepository;
+import com.vocaloidarchive.song.domain.Song;
 import com.vocaloidarchive.user.application.port.UserRepository;
 import com.vocaloidarchive.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,9 @@ public class CreateCommentUseCase {
       throw new BusinessException(ErrorCode.SONG_NOT_FOUND);
     }
     Comment saved =
-        commentRepository.save(Comment.newComment(cmd.userId(), cmd.songId(), cmd.content()));
+        commentRepository.save(
+            Comment.newComment(
+                User.reference(cmd.userId()), Song.reference(cmd.songId()), cmd.content()));
     User user =
         userRepository
             .findById(cmd.userId())

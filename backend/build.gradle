@@ -38,6 +38,13 @@ dependencies {
   compileOnly 'org.projectlombok:lombok'
   annotationProcessor 'org.projectlombok:lombok'
 
+  // MapStruct — Entity→Domain mappers with @Condition lazy-association guards (시안 2 pattern).
+  // lombok-mapstruct-binding must come after lombok so Lombok-generated accessors
+  // (domain @Builder, entity @Getter) exist before MapStruct's processor reads them.
+  implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+  annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.boot:spring-boot-testcontainers'
   testImplementation 'org.springframework.security:spring-security-test'

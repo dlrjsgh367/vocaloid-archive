@@ -8,6 +8,8 @@ import com.vocaloidarchive.like.application.port.LikeQueryRepository;
 import com.vocaloidarchive.like.application.port.LikeRepository;
 import com.vocaloidarchive.like.domain.Like;
 import com.vocaloidarchive.song.application.port.SongRepository;
+import com.vocaloidarchive.song.domain.Song;
+import com.vocaloidarchive.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +33,7 @@ public class ToggleLikeUseCase {
     if (currentlyLiked) {
       likeRepository.deleteBy(userId, songId);
     } else {
-      likeRepository.save(Like.newLike(userId, songId));
+      likeRepository.save(Like.newLike(User.reference(userId), Song.reference(songId)));
     }
     return new ToggleLikeResult(!currentlyLiked, likeQueryRepository.countBySongId(songId));
   }

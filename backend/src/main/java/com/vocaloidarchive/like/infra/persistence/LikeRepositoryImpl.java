@@ -16,6 +16,7 @@ public class LikeRepositoryImpl implements LikeRepository {
   private final LikeJpaRepository jpa;
   private final UserJpaRepository userJpa;
   private final SongJpaRepository songJpa;
+  private final LikeDomainMapper mapper;
 
   @Override
   public boolean existsBy(Long userId, Long songId) {
@@ -27,7 +28,7 @@ public class LikeRepositoryImpl implements LikeRepository {
     UserEntity userRef = userJpa.getReferenceById(like.getUserId());
     SongEntity songRef = songJpa.getReferenceById(like.getSongId());
     LikeEntity saved = jpa.save(LikeEntity.of(userRef, songRef));
-    return LikeEntityMapper.toDomain(saved);
+    return mapper.toDomain(saved);
   }
 
   @Override

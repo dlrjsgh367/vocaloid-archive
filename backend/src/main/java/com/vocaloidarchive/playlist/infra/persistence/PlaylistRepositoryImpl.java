@@ -15,17 +15,18 @@ import java.util.Optional;
 public class PlaylistRepositoryImpl implements PlaylistRepository {
   private final PlaylistJpaRepository jpa;
   private final UserJpaRepository userJpa;
+  private final PlaylistDomainMapper mapper;
 
   @Override
   public Playlist save(Playlist p) {
     UserEntity userRef = userJpa.getReferenceById(p.getUserId());
     PlaylistEntity saved = jpa.save(PlaylistEntity.of(userRef, p.getTitle(), p.isPublic()));
-    return PlaylistEntityMapper.toDomain(saved);
+    return mapper.toDomain(saved);
   }
 
   @Override
   public Optional<Playlist> findById(Long id) {
-    return jpa.findById(id).map(PlaylistEntityMapper::toDomain);
+    return jpa.findWithUserById(id).map(mapper::toDomain);
   }
 
   @Override

@@ -1,7 +1,9 @@
 package com.vocaloidarchive.user.domain;
 
 import java.time.LocalDateTime;
+import lombok.Builder;
 
+@Builder
 public class User {
 
   private final Long id;
@@ -28,6 +30,15 @@ public class User {
   public static User reconstitute(Long id, String username, String email, String passwordHash,
                                    String profileImageUrl, LocalDateTime createdAt) {
     return new User(id, username, email, passwordHash, profileImageUrl, createdAt);
+  }
+
+  /**
+   * Id-only stub used on write paths where only the foreign key is known (e.g. the current user's
+   * id from the security context). Other domains embed this so their {@code getXxxId()} accessors
+   * resolve without loading a full User. See the migration plan's "reference() 팩토리" decision.
+   */
+  public static User reference(Long id) {
+    return new User(id, null, null, null, null, null);
   }
 
   public Long getId() { return id; }

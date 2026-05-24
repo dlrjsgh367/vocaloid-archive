@@ -17,13 +17,14 @@ public class CommentRepositoryImpl implements CommentRepository {
   private final CommentJpaRepository jpa;
   private final UserJpaRepository userJpa;
   private final SongJpaRepository songJpa;
+  private final CommentDomainMapper mapper;
 
   @Override
   public Comment save(Comment c) {
     UserEntity userRef = userJpa.getReferenceById(c.getUserId());
     SongEntity songRef = songJpa.getReferenceById(c.getSongId());
     CommentEntity saved = jpa.save(CommentEntity.of(userRef, songRef, c.getContent()));
-    return CommentEntityMapper.toDomain(saved);
+    return mapper.toDomain(saved);
   }
 
   @Override

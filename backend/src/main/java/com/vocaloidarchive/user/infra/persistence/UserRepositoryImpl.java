@@ -12,21 +12,22 @@ import java.util.Optional;
 public class UserRepositoryImpl implements UserRepository {
 
   private final UserJpaRepository jpa;
+  private final UserDomainMapper mapper;
 
   @Override
   public User save(User user) {
     UserEntity saved = jpa.save(UserEntityMapper.toNewEntity(user));
-    return UserEntityMapper.toDomain(saved);
+    return mapper.toDomain(saved);
   }
 
   @Override
   public Optional<User> findById(Long id) {
-    return jpa.findById(id).map(UserEntityMapper::toDomain);
+    return jpa.findById(id).map(mapper::toDomain);
   }
 
   @Override
   public Optional<User> findByEmail(String email) {
-    return jpa.findByEmail(email).map(UserEntityMapper::toDomain);
+    return jpa.findByEmail(email).map(mapper::toDomain);
   }
 
   @Override

@@ -19,7 +19,7 @@ public class SongRepositoryImpl implements SongRepository {
   private final UserJpaRepository userJpa;
   private final CharacterJpaRepository characterJpa;
   private final TagJpaRepository tagJpa;
-  private final SongEntityMapper mapper;
+  private final SongDomainMapper mapper;
 
   @Override
   @Transactional

@@ -9,6 +9,7 @@ import com.vocaloidarchive.song.application.dto.command.CreateSongCommand;
 import com.vocaloidarchive.song.application.dto.result.SongResult;
 import com.vocaloidarchive.song.application.port.SongRepository;
 import com.vocaloidarchive.song.domain.Song;
+import com.vocaloidarchive.user.domain.User;
 import com.vocaloidarchive.tag.application.FindOrCreateTagsUseCase;
 import com.vocaloidarchive.tag.application.dto.result.TagResult;
 import com.vocaloidarchive.user.application.dto.result.UserSummaryResult;
@@ -40,7 +41,7 @@ public class CreateSongUseCase {
     String thumbnailUrl = YoutubeUtil.extractThumbnailUrl(cmd.youtubeUrl());
 
     Song song = Song.newSong(
-        cmd.userId(), cmd.title(), cmd.youtubeUrl(), cmd.niconicoUrl(),
+        User.reference(cmd.userId()), cmd.title(), cmd.youtubeUrl(), cmd.niconicoUrl(),
         thumbnailUrl, cmd.bpm(), cmd.mood());
 
     Song saved = songRepository.save(song, cmd.characterIds(), tagIds);

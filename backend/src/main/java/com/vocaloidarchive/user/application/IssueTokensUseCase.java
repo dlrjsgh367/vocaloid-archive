@@ -21,7 +21,7 @@ public class IssueTokensUseCase {
   public TokenResult invoke(User user) {
     String raw = jwtTokenProvider.generateRawRefreshToken();
     refreshTokenRepository.save(RefreshToken.issue(
-        user.getId(),
+        user,
         userDomainService.hashRefreshToken(raw),
         jwtTokenProvider.refreshTokenExpiry()));
     String access = jwtTokenProvider.generateAccessToken(user.getId());

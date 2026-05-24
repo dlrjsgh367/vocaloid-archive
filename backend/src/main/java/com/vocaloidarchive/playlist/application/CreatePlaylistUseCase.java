@@ -5,6 +5,7 @@ import com.vocaloidarchive.playlist.application.dto.result.PlaylistResult;
 import com.vocaloidarchive.playlist.application.port.PlaylistQueryRepository;
 import com.vocaloidarchive.playlist.application.port.PlaylistRepository;
 import com.vocaloidarchive.playlist.domain.Playlist;
+import com.vocaloidarchive.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class CreatePlaylistUseCase {
   @Transactional
   public PlaylistResult invoke(CreatePlaylistCommand cmd) {
     Playlist saved = playlistRepo.save(
-        Playlist.newPlaylist(cmd.userId(), cmd.title(), cmd.isPublic()));
+        Playlist.newPlaylist(User.reference(cmd.userId()), cmd.title(), cmd.isPublic()));
     return queryRepo.findResultAfterCreate(saved.getId());
   }
 }

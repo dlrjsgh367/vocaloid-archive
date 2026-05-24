@@ -15,6 +15,7 @@ import com.vocaloidarchive.common.exception.ErrorCode;
 import com.vocaloidarchive.common.security.SecurityUtil;
 import com.vocaloidarchive.playlist.application.port.PlaylistRepository;
 import com.vocaloidarchive.playlist.domain.Playlist;
+import com.vocaloidarchive.user.domain.User;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,8 @@ class EnsureShareCodeUseCaseTest {
   @InjectMocks EnsureShareCodeUseCase useCase;
 
   private Playlist playlist(boolean isPublic, String shareCode) {
-    return Playlist.reconstitute(10L, 1L, "My List", isPublic, shareCode, LocalDateTime.now());
+    return Playlist.reconstitute(
+        10L, User.reference(1L), "My List", isPublic, shareCode, LocalDateTime.now());
   }
 
   @Test
