@@ -4,6 +4,16 @@
 - 대상: `vocaloid-archive.kro.kr` (→ 138.2.127.124, OCI 프로덕션)
 - 목표: 사이트를 HTTPS로. 클립보드 API/보안/OG 미리보기 제약 해소.
 
+## ⏸ 상태: 보류 (2026-05-24)
+
+Stage 1(ACME 챌린지 location + certbot 서비스/볼륨)은 **배포 완료**, 사이트는 80에서 정상. **인증서 발급(Stage 2)에서 막힘:**
+- **Let's Encrypt**: `kro.kr`이 무료 공용 도메인이라 LE가 `kro.kr` 전체를 등록 도메인으로 보고 주 50개 한도 적용 → 타 사용자들이 소진 → 발급 불가(만성적).
+- **Buypass** 무료 ACME: 엔드포인트 404(서비스 종료/변경 추정).
+- EAB 없이 바로 되는 무료 CA는 LE뿐인데 그게 막힘.
+
+**재개 옵션:** ① ZeroSSL(무료, EAB 키 발급 후 `--server https://acme.zerossl.com/v2/DV90 --eab-kid ... --eab-hmac-key ...`) ② kro.kr이 아닌 본인 통제 도메인으로 이전(또는 Cloudflare 엣지 HTTPS) → LE 한도/공용 문제 근본 해소. ③ LE 재시도(불확실).
+참고: 원 트리거였던 "링크 복사"는 execCommand 폴백으로 이미 해결됨(커밋 `c35b82f`), HTTPS 없이도 동작.
+
 ## 전제 / 정찰 결과
 - DNS `vocaloid-archive.kro.kr → 138.2.127.124` 일치 ✅
 - 호스트 iptables 443 ACCEPT 존재, ufw 비활성 ✅
