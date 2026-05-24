@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>플레이리스트 공유 카드 — 흐름</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: #f3e7ff; color: #4a2d6b; padding: 28px 18px 60px;
+    -webkit-font-smoothing: antialiased; line-height: 1.5;
+  }
+  .doc-title { font-size: 30px; font-weight: 900; color: #ff4fa3; text-align: center; }
+  .doc-sub { text-align: center; color: #8a6aae; font-size: 16px; font-weight: 800; margin: 6px 0 26px; }
+
+  .phase { margin-bottom: 26px; }
+  .phase-head {
+    font-size: 21px; font-weight: 900; color: #fff; padding: 12px 18px;
+    border-radius: 16px; box-shadow: 0 5px 0 rgba(120,60,160,.18); margin-bottom: 4px;
+  }
+  .p1 .phase-head { background: #39C5BB; box-shadow: 0 5px 0 #2a9e96; }
+  .p2 .phase-head { background: #FF9DC0; box-shadow: 0 5px 0 #e0769e; }
+  .p3 .phase-head { background: #8B5CF6; box-shadow: 0 5px 0 #6d3fd4; }
+  .p4 .phase-head { background: #ff8b3d; box-shadow: 0 5px 0 #d96e22; }
+  .phase-note { font-size: 15px; font-weight: 800; color: #8a6aae; margin: 8px 4px 14px; }
+
+  .step {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: #fff; border-radius: 18px; padding: 14px 16px; margin: 10px 0;
+    border: 2px solid #efe0ff; box-shadow: 0 4px 12px rgba(120,60,160,.10);
+  }
+  .num {
+    flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%;
+    background: #f3e7ff; color: #8B5CF6; font-weight: 900; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-body { flex: 1; }
+  .who { font-size: 15px; font-weight: 900; color: #b06ad0; }
+  .arrow { color: #ff9dc0; font-weight: 900; }
+  .what { font-size: 18px; font-weight: 800; color: #3a2456; margin-top: 2px; }
+  code {
+    display: inline-block; font-family: ui-monospace, monospace; font-size: 14px;
+    background: #f3e7ff; color: #7a3fd0; padding: 3px 9px; border-radius: 8px;
+    margin-top: 6px; font-weight: 700; word-break: break-all;
+  }
+
+  .fork {
+    border: 3px dashed #c9a8f0; border-radius: 18px; padding: 6px 12px 12px; margin: 12px 0;
+    background: #faf4ff;
+  }
+  .fork-title { font-size: 15px; font-weight: 900; color: #8B5CF6; margin: 8px 2px; }
+  .branch-a { border-left: 6px solid #ff8b3d; }
+  .branch-b { border-left: 6px solid #39C5BB; }
+  .or { text-align: center; font-weight: 900; color: #b06ad0; font-size: 14px; margin: 4px 0; }
+
+  .highlight { background: #fff3d6; border-color: #ffd86b; }
+  .emoji { font-size: 20px; }
+  .key {
+    margin-top: 28px; background: #4a2d6b; color: #fff; border-radius: 18px; padding: 18px 20px;
+    font-size: 16px; font-weight: 800; line-height: 1.7;
+  }
+  .key b { color: #ffd86b; }
+</style>
+</head>
+<body>
+  <div class="doc-title">🎀 공유 카드 흐름</div>
+  <div class="doc-sub">플레이리스트 → 카드 → 유입 (위에서 아래로)</div>
+
+  <!-- 1 -->
+  <div class="phase p1">
+    <div class="phase-head">1단계 · 공유 만들기</div>
+    <div class="phase-note">플리 주인이 공유 링크를 발급받는 단계</div>
+
+    <div class="step"><div class="num">1</div><div class="step-body">
+      <div class="who">🧑 주인 <span class="arrow">→</span> 📱 앱</div>
+      <div class="what">[공유] 버튼 클릭</div></div></div>
+
+    <div class="step"><div class="num">2</div><div class="step-body">
+      <div class="who">📱 앱 <span class="arrow">→</span> 🍳 백엔드</div>
+      <div class="what">공유 코드 발급 요청</div>
+      <code>POST /api/playlists/{id}/share</code></div></div>
+
+    <div class="step"><div class="num">3</div><div class="step-body">
+      <div class="who">🍳 백엔드 <span class="arrow">→</span> 📒 DB</div>
+      <div class="what">share_code 발급/조회 (처음 한 번만)</div></div></div>
+
+    <div class="step"><div class="num">4</div><div class="step-body">
+      <div class="who">🍳 백엔드 <span class="arrow">→</span> 📱 주인</div>
+      <div class="what">링크 복사 / 이미지 저장 버튼 표시</div>
+      <code>shareUrl = /p/{code}</code></div></div>
+  </div>
+
+  <!-- 2 -->
+  <div class="phase p2">
+    <div class="phase-head">2단계 · X에 올리기</div>
+    <div class="phase-note">주인이 링크를 트윗에 붙임</div>
+    <div class="step"><div class="num">5</div><div class="step-body">
+      <div class="who">🧑 주인 <span class="arrow">→</span> 🐦 X(트위터)</div>
+      <div class="what">공유 링크를 붙여서 트윗</div>
+      <code>https://…/p/{code}</code></div></div>
+  </div>
+
+  <!-- 3 -->
+  <div class="phase p3">
+    <div class="phase-head">3단계 · 봇이 미리보기 카드 만들기</div>
+    <div class="phase-note">사람이 아니라 트위터 로봇(크롤러)이 먼저 와서 미리보기를 만듦</div>
+
+    <div class="step"><div class="num">6</div><div class="step-body">
+      <div class="who">🤖 크롤러봇 <span class="arrow">→</span> 🚪 nginx</div>
+      <div class="what">링크 구경하러 옴 (이름표: 봇)</div>
+      <code>GET /p/{code}  ·  UA=Twitterbot</code></div></div>
+
+    <div class="step highlight"><div class="num">7</div><div class="step-body">
+      <div class="who">🚪 nginx <span class="arrow">→</span> 🍳 백엔드</div>
+      <div class="what"><span class="emoji">🔀</span> "봇이네!" → 안내문 경로로 보냄 (OG SSR)</div>
+      <code>/share/p/{code}</code></div></div>
+
+    <div class="step"><div class="num">8</div><div class="step-body">
+      <div class="who">🍳 백엔드 <span class="arrow">→</span> 🐦 X</div>
+      <div class="what">대표 사진 이름표가 박힌 안내문 HTML</div>
+      <code>og:image = …/card.png</code></div></div>
+
+    <div class="step"><div class="num">9</div><div class="step-body">
+      <div class="who">🐦 X(봇) <span class="arrow">→</span> 🍳 백엔드</div>
+      <div class="what">그 카드 사진 줘!</div>
+      <code>GET …/card.png</code></div></div>
+
+    <div class="fork">
+      <div class="fork-title">🗄️ 백엔드: "이 카드 서랍(캐시)에 있어?"</div>
+
+      <div class="step branch-a"><div class="num">10</div><div class="step-body">
+        <div class="who">없으면 (캐시 미스)</div>
+        <div class="what">DB에서 카드 데이터 모음 → 🎨 화가에게 그리기 요청 → 사진 받아 서랍에 저장</div>
+        <code>POST /render  (HTML → PNG 찰칵)</code></div></div>
+
+      <div class="or">— 또는 —</div>
+
+      <div class="step branch-b"><div class="num">10</div><div class="step-body">
+        <div class="who">있으면 (캐시 히트)</div>
+        <div class="what">서랍에서 바로 꺼냄 (빠름, 다시 안 그림)</div></div></div>
+    </div>
+
+    <div class="step"><div class="num">11</div><div class="step-body">
+      <div class="who">🍳 백엔드 <span class="arrow">→</span> 🐦 X</div>
+      <div class="what">card.png 전달 → <b>미리보기 카드 표시 ✨</b></div></div></div>
+  </div>
+
+  <!-- 4 -->
+  <div class="phase p4">
+    <div class="phase-head">4단계 · 유입 루프</div>
+    <div class="phase-note">팔로워가 카드를 보고 들어와서 가입 → 또 공유 (반복!)</div>
+
+    <div class="step"><div class="num">12</div><div class="step-body">
+      <div class="who">🧒 팔로워</div>
+      <div class="what">타임라인에서 예쁜 카드를 봄 → 링크 클릭</div></div></div>
+
+    <div class="step highlight"><div class="num">13</div><div class="step-body">
+      <div class="who">🧒 팔로워 <span class="arrow">→</span> 🚪 nginx</div>
+      <div class="what"><span class="emoji">🔀</span> 같은 링크지만 이름표가 "사람" → 진짜 사이트(SPA)를 줌</div>
+      <code>GET /p/{code}  ·  UA=브라우저  →  index.html</code></div></div>
+
+    <div class="step"><div class="num">14</div><div class="step-body">
+      <div class="who">📱 앱 <span class="arrow">→</span> 🍳 백엔드</div>
+      <div class="what">공개 플리 데이터 요청</div>
+      <code>GET /api/share/playlists/{code}</code></div></div>
+
+    <div class="step"><div class="num">15</div><div class="step-body">
+      <div class="who">📱 앱 <span class="arrow">→</span> 🧒 팔로워</div>
+      <div class="what">공개 플리 화면 + <b>[가입하기]</b> 버튼</div></div></div>
+
+    <div class="step"><div class="num">16</div><div class="step-body">
+      <div class="who">🧒 팔로워</div>
+      <div class="what">가입 🎉 → 이제 이 사람이 또 플리를 공유 (루프!)</div></div></div>
+  </div>
+
+  <div class="key">
+    💡 <b>핵심 한 줄</b><br/>
+    같은 주소 <code style="background:#5d3d80;color:#ffd86b">/p/{code}</code> 인데,<br/>
+    손님 이름표(UA)가 <b>봇이면 → 안내문(OG)</b>,<br/>
+    <b>사람이면 → 진짜 사이트(SPA)</b> 로 갈라보내는 게 설계의 심장이에요.
+  </div>
+</body>
+</html>

@@ -7,6 +7,7 @@ final class PlaylistEntityMapper {
 
   static Playlist toDomain(PlaylistEntity e) {
     return e == null ? null : Playlist.reconstitute(
-        e.getId(), e.getUser().getId(), e.getTitle(), e.isPublic(), e.getCreatedAt());
+        e.getId(), e.getUser().getId(), e.getTitle(), e.isPublic(), e.getShareCode(),
+        e.getCreatedAt());
   }
 }

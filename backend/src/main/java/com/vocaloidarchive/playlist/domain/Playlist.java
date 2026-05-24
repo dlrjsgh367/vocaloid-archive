@@ -7,22 +7,26 @@ public class Playlist {
   private final Long userId;
   private final String title;
   private final boolean isPublic;
+  private final String shareCode;
   private final LocalDateTime createdAt;
 
-  private Playlist(Long id, Long userId, String title, boolean isPublic, LocalDateTime createdAt) {
+  private Playlist(Long id, Long userId, String title, boolean isPublic, String shareCode,
+      LocalDateTime createdAt) {
     this.id = id;
     this.userId = userId;
     this.title = title;
     this.isPublic = isPublic;
+    this.shareCode = shareCode;
     this.createdAt = createdAt;
   }
 
   public static Playlist newPlaylist(Long userId, String title, boolean isPublic) {
-    return new Playlist(null, userId, title, isPublic, null);
+    return new Playlist(null, userId, title, isPublic, null, null);
   }
 
-  public static Playlist reconstitute(Long id, Long userId, String title, boolean isPublic, LocalDateTime createdAt) {
-    return new Playlist(id, userId, title, isPublic, createdAt);
+  public static Playlist reconstitute(Long id, Long userId, String title, boolean isPublic,
+      String shareCode, LocalDateTime createdAt) {
+    return new Playlist(id, userId, title, isPublic, shareCode, createdAt);
   }
 
   public boolean isOwnedBy(Long candidateUserId) {
@@ -43,6 +47,10 @@ public class Playlist {
 
   public boolean isPublic() {
     return isPublic;
+  }
+
+  public String getShareCode() {
+    return shareCode;
   }
 
   public LocalDateTime getCreatedAt() {
