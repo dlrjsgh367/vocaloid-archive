@@ -393,6 +393,7 @@ h1 {
 }
 
 .list-pane {
+  min-width: 0;
   background: var(--surface);
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--border);
@@ -495,6 +496,7 @@ h1 {
 }
 
 .detail-pane {
+  min-width: 0;
   min-height: 200px;
 }
 .detail-empty {

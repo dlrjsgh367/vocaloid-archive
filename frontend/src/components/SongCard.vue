@@ -1,5 +1,5 @@
 <template>
-  <div class="song-card" :class="primaryColorClass">
+  <div class="song-card" :style="primaryColorVars">
     <div class="card-thumb">
       <img
         :src="coverImage"
@@ -18,7 +18,7 @@
           v-for="char in song.characters"
           :key="char.id"
           class="char-badge"
-          :class="getCharColorClass(char)"
+          :style="getCharColorVars(char.colorHex)"
           >{{ char.name }}</span
         >
       </div>
@@ -48,7 +48,7 @@
 <script setup>
 import { computed } from 'vue';
 import emptyThumb from '@/assets/empty-thumb.svg';
-import { getCharColorClass } from '@/utils/characterColors.js';
+import { getCharColorVars } from '@/utils/characterColors.js';
 
 const props = defineProps({
   song: { type: Object, required: true },
@@ -58,7 +58,7 @@ defineEmits(['like']);
 
 const primaryChar = computed(() => props.song.characters?.[0]);
 
-const primaryColorClass = computed(() => getCharColorClass(primaryChar.value));
+const primaryColorVars = computed(() => getCharColorVars(primaryChar.value?.colorHex));
 
 const coverImage = computed(() => props.song.thumbnailUrl || emptyThumb);
 

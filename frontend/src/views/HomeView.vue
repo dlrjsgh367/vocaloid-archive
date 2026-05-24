@@ -27,9 +27,9 @@ import CharacterStrip from '../components/CharacterStrip.vue';
 import SongGrid from '../components/SongGrid.vue';
 import { fetchCharacters } from '../api/characters.js';
 import { fetchSongs } from '../api/songs.js';
+import { fetchStats } from '../api/stats.js';
 import { toggleLike } from '../api/likes.js';
 import { useAuthStore } from '../stores/auth.js';
-import { getCharColorKey } from '../utils/characterColors.js';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -37,13 +37,18 @@ const authStore = useAuthStore();
 const selectedMood = ref('all');
 const searchQuery = ref('');
 
-// ── 통계 (추후 /api/stats 엔드포인트 생기면 교체) ──
-const stats = { songCount: 0, userCount: 0, tagCount: 0 };
+// ── 통계 ──
+const stats = ref({ songCount: 0, userCount: 0, tagCount: 0 });
 
 // ── 캐릭터 ──
 const characters = ref([]);
 
 onMounted(async () => {
+  try {
+    stats.value = await fetchStats();
+  } catch {
+    // 통계 로드 실패는 무시 (0 유지)
+  }
   try {
     characters.value = await fetchCharacters();
   } catch {
@@ -59,7 +64,7 @@ const characterItems = computed(() =>
     name: c.name,
     jpName: '',
     initial: c.name.charAt(0),
-    colorKey: getCharColorKey(c.name),
+    colorHex: c.colorHex,
     songCount: c.songCount ?? 0,
   })),
 );
@@ -113,7 +118,7 @@ const songItems = computed(() =>
     characters: (s.characters ?? []).map((c) => ({
       id: c.id,
       name: c.name,
-      colorKey: getCharColorKey(c.name),
+      colorHex: c.colorHex,
     })),
     tags: s.tags ?? [],
     bpm: null,

@@ -47,7 +47,7 @@
               v-for="char in song.characters"
               :key="char.id"
               class="char-badge"
-              :class="getCharColorClass(char)"
+              :style="getCharColorVars(char.colorHex)"
             >
               {{ char.name }}
             </span>
@@ -205,7 +205,7 @@ import { toggleLike } from '../api/likes.js';
 import { fetchComments, createComment, deleteComment } from '../api/comments.js';
 import { fetchMyPlaylists, addSongToPlaylist } from '../api/playlists.js';
 import { useAuthStore } from '../stores/auth.js';
-import { getCharColorClass } from '../utils/characterColors.js';
+import { getCharColorVars } from '../utils/characterColors.js';
 
 const route = useRoute();
 const router = useRouter();

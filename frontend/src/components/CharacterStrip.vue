@@ -4,7 +4,7 @@
       v-for="char in characters"
       :key="char.id"
       class="char-pill"
-      :class="getCharColorClass(char)"
+      :style="getCharColorVars(char.colorHex)"
       @click="$emit('select', char.id)"
     >
       <div class="char-avatar">{{ char.initial }}</div>
@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { getCharColorClass } from '@/utils/characterColors.js';
+import { getCharColorVars } from '@/utils/characterColors.js';
 
 defineProps({
   characters: { type: Array, required: true },

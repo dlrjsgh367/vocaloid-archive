@@ -16,10 +16,8 @@
             v-for="char in characters"
             :key="char.id"
             class="char-pill"
-            :class="[
-              getCharColorClass(char),
-              { active: selectedCharacterId === char.id },
-            ]"
+            :class="{ active: selectedCharacterId === char.id }"
+            :style="getCharColorVars(char.colorHex)"
             @click="setCharacter(char.id)"
           >
             {{ char.name }}
@@ -69,7 +67,7 @@ import { fetchSongs } from '../api/songs.js';
 import { fetchCharacters } from '../api/characters.js';
 import { toggleLike } from '../api/likes.js';
 import { useAuthStore } from '../stores/auth.js';
-import { getCharColorKey, getCharColorClass } from '../utils/characterColors.js';
+import { getCharColorVars } from '../utils/characterColors.js';
 
 const route = useRoute();
 const router = useRouter();
@@ -228,7 +226,7 @@ const songItems = computed(() =>
     characters: (s.characters ?? []).map((c) => ({
       id: c.id,
       name: c.name,
-      colorKey: getCharColorKey(c.name),
+      colorHex: c.colorHex,
     })),
     tags: s.tags ?? [],
     bpm: null,
@@ -299,8 +297,8 @@ function onOpen(songId) {
   flex: 1;
   min-width: 0;
 }
-/* .char-pill에 .char-{key} 클래스가 같이 부여되면 --c/--c-dk/--c-lt가 채워져
- * 캐릭터 색으로 렌더된다. 클래스가 없는 '전체' 버튼은 fallback 값(중립색)으로 렌더된다.
+/* char-pill에 colorHex 기반 --c/--c-dk/--c-lt가 인라인 스타일로 주입되면
+ * 캐릭터 색으로 렌더된다. 스타일이 없는 '전체' 버튼은 fallback 값(중립색)으로 렌더된다.
  */
 .char-pill {
   font-size: 12px;

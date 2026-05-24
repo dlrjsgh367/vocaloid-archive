@@ -104,10 +104,8 @@
               :key="char.id"
               type="button"
               class="char-chip"
-              :class="[
-                getCharColorClass(char),
-                { active: form.characterIds.includes(char.id) },
-              ]"
+              :class="{ active: form.characterIds.includes(char.id) }"
+              :style="getCharColorVars(char.colorHex)"
               @click="toggleCharacter(char.id)"
             >
               {{ char.name }}
@@ -155,7 +153,7 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { fetchCharacters } from '../api/characters.js';
 import { createSong } from '../api/songs.js';
-import { getCharColorClass } from '../utils/characterColors.js';
+import { getCharColorVars } from '../utils/characterColors.js';
 
 const router = useRouter();
 
