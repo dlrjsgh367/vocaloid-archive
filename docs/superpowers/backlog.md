@@ -248,3 +248,30 @@ Forward-looking items surfaced during Phase 1 reviews. Phase 1 implementations a
 **Why:** YoutubeUtil hard-codes `hqdefault.jpg` (480×360). Higher-resolution `maxresdefault.jpg` exists for many but not all videos and would 404 silently.
 
 **How to apply:** Once design decisions land in Phase 6, decide whether to use `maxresdefault.jpg` with a 404 fallback chain (image element `onerror` or a server-side HEAD probe).
+
+## From 공유 카드 구현 (2026-05-24)
+
+### 공유 카드 — OG 가로형 1200×630 변형
+**Why:** MVP는 1080×1080 정사각을 og:image로 공용. `summary_large_image`(1.91:1)에선 크롭/레터박스됨.
+
+**How to apply:** 렌더러 template에 1200×630 레이아웃 추가 + 별도 엔드포인트(또는 size 파라미터). 트위터 실측 후 우선순위 결정.
+
+### 공유 카드 — 카드 캐시 TTL 청소 / 오브젝트 스토리지
+**Why:** `FileCardCache`는 contentHash로 자연 무효화만 하고 구 파일을 안 지운다. 다중 인스턴스면 공유 안 됨.
+
+**How to apply:** 스케줄러로 N일 미접근 파일 정리, 또는 캐시를 오브젝트 스토리지(OCI Object Storage)로 이전.
+
+### 공유 카드 — 취향 결산 / 곡 추천 카드
+**Why:** 카드 종류 로드맵 2·3순위(스펙 §1.4). 플리 카드 검증 후 확장.
+
+**How to apply:** 같은 렌더러/OG 파이프라인 재사용, 데이터 소스만 교체.
+
+### Song.producer(P명) 필드
+**Why:** 보카로 카드에서 P명은 중요한데 Song에 필드가 없어 트랙 메타를 mood로 대체 중.
+
+**How to apply:** Song에 producer 추가(마이그레이션 + 등록 폼), 카드 트랙 메타를 mood→P명으로 격상 검토.
+
+### 공유 클릭/유입 트래킹
+**Why:** 유입 루프 효과 측정 수단이 없다.
+
+**How to apply:** shareUrl에 UTM, OG/SPA 도착 시 리퍼러·코드별 방문 집계.
