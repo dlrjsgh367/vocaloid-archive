@@ -212,7 +212,7 @@ async function handleSubmit() {
 h1 {
   font-family: var(--font-display);
   font-size: 36px;
-  line-height: 1.2;
+  line-height: 1.35;
   color: var(--text);
   margin: 0 0 10px;
   text-shadow:
@@ -229,6 +229,10 @@ h1 {
   animation: shimmer 4s linear infinite;
   /* h1's offset text-shadow ghosts behind transparent-fill gradient text — drop it here. */
   text-shadow: none;
+  /* background-clip:text means the gradient only fills inside the box; tall Hangul tops (ㅎ in 후)
+     poke above it and vanish. inline-block + top padding extends the gradient over the ascenders. */
+  display: inline-block;
+  padding-top: 0.12em;
 }
 
 .card-header p {

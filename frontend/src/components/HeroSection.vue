@@ -14,7 +14,7 @@
       <p>
         미쿠, 루카, 렌… 좋아하는 캐릭터의 곡을 직접 등록하고<br />
         <span class="kw">태그</span>와 <span class="kw">분위기</span>로 탐색하는
-        <strong>덕후들의 아카이브</strong>
+        <strong>아카이브</strong>
       </p>
       <div class="hero-actions">
         <RouterLink to="/search" class="btn-primary">♪ 탐색 시작하기</RouterLink>
