@@ -29,4 +29,6 @@ app:
 
 logging:
   level:
-    com.vocaloidarchive: DEBUG
+    # INFO is the safe default for docker/prod. Verbose app logging is enabled only in the
+    # local profile (application-local.yml) to keep production logs free of internal detail.
+    com.vocaloidarchive: INFO
