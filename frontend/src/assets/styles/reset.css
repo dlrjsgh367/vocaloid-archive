@@ -21,3 +21,39 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
+
+/* 브라우저 자동완성(Chrome/Safari)은 -webkit-autofill 내부 스타일로 입력칸에
+ * 밝은 배경 + 어두운 글자를 강제로 칠한다. 일반 `background`로는 못 덮어서
+ * 다크 테마에서 자동완성된 칸만 밝게 떠 보인다(로그인 이메일/비번 등).
+ * inset box-shadow 트릭으로 테마 배경색을 다시 칠해 전 입력칸을 테마에 맞춘다.
+ * 앱의 모든 input/textarea가 평소 var(--bg2), 포커스 시 var(--surface) 배경을
+ * 쓰므로 동일 토큰으로 맞춘다. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text);
+  caret-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px var(--bg2) inset;
+  box-shadow: 0 0 0 1000px var(--bg2) inset;
+  /* Chrome이 한 프레임 뒤 자동완성 배경을 다시 칠하므로, 전이 지연을 길게 줘
+   * 우리가 칠한 배경이 덮이지 않게 한다(테마 토글 시엔 즉시 반영되도록 color는 짧게). */
+  transition:
+    background-color 600000s 0s,
+    -webkit-box-shadow 0.15s,
+    box-shadow 0.15s;
+}
+
+/* 포커스 시 입력칸 배경은 var(--surface) + 미쿠색 포커스 링이므로 동일하게 맞춘다. */
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:focus {
+  -webkit-box-shadow:
+    0 0 0 1000px var(--surface) inset,
+    0 0 0 4px var(--miku-lt);
+  box-shadow:
+    0 0 0 1000px var(--surface) inset,
+    0 0 0 4px var(--miku-lt);
+}
